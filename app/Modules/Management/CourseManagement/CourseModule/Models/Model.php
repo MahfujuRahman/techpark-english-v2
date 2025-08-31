@@ -54,4 +54,9 @@ class Model extends EloquentModel
     {
         return $this->hasMany(\App\Modules\Management\CourseManagement\CourseModuleClass\Models\Model::class, 'course_modules_id', 'id');
     }
+
+     public function quizes()
+    {
+        return $this->hasMany(\App\Modules\Management\CourseManagement\CourseModuleClassQuiz\Models\Model::class, 'course_module_id', 'id');
+    }
 }

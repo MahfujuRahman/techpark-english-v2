@@ -9,288 +9,22 @@
 @endphp
 @extends('frontend.layouts.layout', $meta)
 @section('contents')
+
     <section class="course_details_area" id="course_details">
         <div class="container">
             <div class="course_details_part">
                 <div class="course_details">
-                    <div class="course_title">
-                        <h2 class="course_title_text">
-                            {{ $data->title }}
-                        </h2>
-                    </div>
-                    <!-- what is course start -->
-                    <div class="what_is_course">
-                        <h2 class="what_is_course_title">{{ $data->title }} কী?</h2>
-                        <p class="what_is_course_details">
-                            {!! $data->what_is_this_course !!}
-                        </p>
-                    </div>
-                    <!-- /what is course end -->
+                    
 
-                    <!-- why learn this course start -->
-                    <div class="why_learn_this_course">
-                        <h2 class="why_learn_this_course_title">
-                            এই Course টি আপনাকে কিভাবে সাহায্য করবে
-                            {{-- এই কোর্স কেনো করবেন? --}}
-                        </h2>
-                        <div class="why_learn_this_course_details">
-                            <style>
-                                .why_learn_this_course_details>ul {
-                                    padding-left: 30px;
+                    
 
-                                    li {
-                                        list-style-type: disc;
-                                    }
-                                }
-                            </style>
-                            {!! $data->why_is_this_course !!}
-                        </div>
-                    </div>
-                    <!-- /why learn this course end -->
+                    
 
-                    <!-- job possition and frelancing part start -->
-                    <div class="job_possition_and_freelancing" id="course_feature">
-
-                        <div class="job_possition">
-                            <h2 class="job_possition_title">
-                                {{-- আপনি যেসব পজিশনে জব করতে পারবেন --}}
-                                কোর্সটি যেভাবে সাজানো হয়েছে
-                            </h2>
-                            <div class="job_categories">
-                                @foreach ($data->course_job_position()->get() as $item)
-                                    <div class="job_categorie">
-                                        <div class="job_categorie_icon">
-                                            <i class="fa-regular fa-circle-check"></i>
-                                        </div>
-                                        <div class="job_categorie_title">
-                                            {{ $item->title }}
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    <!-- / job possintion and freelanching part end -->
-
-                    <!-- course feature start -->
-                    <div class="course_feature_part">
-                        <ul class="course_features">
-                            <li class="">
-                                <div class="feature_title">
-                                    <div class="feature_name">
-                                        এই কোর্সে যা যা শিখবেন
-                                    </div>
-                                    <div class="feature_acordion_icon">
-                                        <i class="fa-solid fa-chevron-down"></i>
-                                    </div>
-                                </div>
-                                <div class="feature_content">
-                                    <ul style="column-count: unset;width:unset;">
-                                        @foreach ($data->course_you_will_learns()->get() as $item)
-                                            <li>
-                                                <div class="cheak_icon">
-                                                    <i class="fa-regular fa-circle-check"></i>
-                                                </div>
-                                                <div class="feature_content_text">
-                                                    {{ $item->title }}
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="">
-                                <div class="feature_title">
-                                    <div class="feature_name">এই কোর্সটি যাদের জন্য</div>
-                                    <div class="feature_acordion_icon">
-                                        <i class="fa-solid fa-chevron-down"></i>
-                                    </div>
-                                </div>
-                                <div class="feature_content">
-                                    <ul style="column-count: unset;width:unset;">
-                                        @foreach ($data->course_for_whomes()->get() as $item)
-                                            <li>
-                                                <div class="cheak_icon">
-                                                    <i class="fa-regular fa-circle-check"></i>
-                                                </div>
-                                                <div class="feature_content_text">
-                                                    {{ $item->title }}
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="">
-                                <div class="feature_title">
-                                    <div class="feature_name">
-                                        {{-- আপনি কেন আমাদের কাছ থেকে শিখবেন? --}}
-                                        কোর্সের এক্সক্লুসিভ ফিচার
-                                    </div>
-                                    <div class="feature_acordion_icon">
-                                        <i class="fa-solid fa-chevron-down"></i>
-                                    </div>
-                                </div>
-                                <div class="feature_content">
-                                    <ul style="column-count: unset;width:unset;">
-                                        @foreach ($data->course_you_will_learn_for_us()->get() as $item)
-                                            <li>
-                                                <div class="cheak_icon">
-                                                    <i class="fa-regular fa-circle-check"></i>
-                                                </div>
-                                                <div class="feature_content_text">
-                                                    {{ $item->title }}
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="">
-                                <div class="feature_title">
-                                    <div class="feature_name">
-                                        এই কোর্সে আপনি যা যা পাচ্ছেন?
-                                    </div>
-                                    <div class="feature_acordion_icon">
-                                        <i class="fa-solid fa-chevron-down"></i>
-                                    </div>
-                                </div>
-                                <div class="feature_content">
-                                    <ul style="column-count: unset;width:unset;">
-                                        @foreach ($data->course_what_you_will_get()->get() as $item)
-                                            <li class="">
-                                                <div class="cheak_icon">
-                                                    <i class="fa-regular fa-circle-check"></i>
-                                                </div>
-                                                <div class="feature_content_text">
-                                                    {{ $item->title }}
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <script>
-                        [...document.querySelectorAll(".feature_acordion_icon")].forEach(
-                            (el) => {
-                                el.onclick = function(e) {
-                                    e.currentTarget.parentNode.parentNode.classList.toggle(
-                                        "active"
-                                    );
-                                    // console.log(e.currentTarget);
-                                };
-                            }
-                        );
-                    </script>
-                    <!-- / course feature end -->
+                    
 
 
-                    <!-- class module start -->
-                    <div class="class_module">
-                        <div class="class_module_head">
-                            <div class="class_module_title">ক্লাস মডিউল</div>
-                            <ul class="class_module_content">
-                                @foreach ($data->course_module_at_a_glance()->get() as $key => $item)
-                                    <li>{{ $item->title }}</li>
-                                    @if ($key < $data->course_module_at_a_glance()->count() - 1)
-                                        ।
-                                    @endif
-                                @endforeach
-                            </ul>
-                        </div>
+                    
 
-                        <div class="class_module_details">
-
-                            @foreach ($data->course_modules()->orderBy('module_no', 'asc')->get() as $item)
-                                <ul class="class_module_features">
-                                    <li class="active">
-                                        <div class="class_module_title">
-                                            <div class="class_module_title_and_number">
-                                                <div class="class_module_number">
-                                                    মডিউল <span class="number"> {{ $item->module_no }} </span>
-                                                </div>
-                                                <div class="class_module_title_details">
-                                                    <div class="title">{{ $item->title }}</div>
-                                                    <ul class="details">
-                                                        <li>
-                                                            {{ $item->classes()->where('type', 'live')->count() }}
-                                                            টি লাইভ ক্লাস
-                                                        </li>
-
-                                                        <li>
-                                                            {{ $item->classes()->where('type', 'recorded')->count() }}
-                                                            টি রেকর্ডেড ক্লাস
-                                                        </li>
-                                                        ।
-                                                        <li>
-                                                            {{ $item->quizes()->count() }}
-                                                            টি কুইজ
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="class_module_acordion_icon">
-                                                <i class="fa-solid fa-chevron-down"></i>
-                                            </div>
-                                        </div>
-                                        <div class="class_module_feature_content">
-                                            <ul>
-                                                @foreach ($item->classes as $class)
-                                                    {{-- @dd($class)     --}}
-                                                    <li>
-                                                        <div class="class_module_class_no">ক্লাস {{ $class->class_no }}
-                                                        </div>
-                                                        <div class="live_class_and_topic">
-                                                            <div class="live_class_icon">
-                                                                <img src="/assets/images/about_page_image/class_module/podcasts.png"
-                                                                    alt="" />
-                                                            </div>
-                                                            <div class="class_module_live_class">
-                                                                @if ($class->type == 'live')
-                                                                    লাইভ ক্লাসঃ
-                                                                @else
-                                                                    রেকর্ডেড ক্লাসঃ
-                                                                @endif
-                                                            </div>
-                                                            <div class="class_module_topic">{{ $class->title }}</div>
-                                                        </div>
-                                                        @if ($class->class_quiz && $class->class_quiz->quiz)
-                                                            <div class="quiz_and_mcq">
-                                                                <div class="quiz_icon">
-                                                                    <i class="fa-solid fa-file-lines"></i>
-                                                                </div>
-                                                                <div class="quiz">কুইজঃ</div>
-                                                                <div class="mcq">
-                                                                    {{ $class->class_quiz->quiz->title ?? '' }}
-                                                                    {{-- MCQ Question about basics of Bootstrap --}}
-                                                                </div>
-                                                            </div>
-                                                        @endif
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </li>
-                                </ul>
-                            @endforeach
-
-                        </div>
-                    </div>
-                    <script>
-                        [
-                            ...document.querySelectorAll(".class_module_acordion_icon"),
-                        ].forEach((el) => {
-                            el.onclick = function(e) {
-                                e.currentTarget.parentNode.parentNode.classList.toggle(
-                                    "active"
-                                );
-                                console.log(e.currentTarget);
-                            };
-                        });
-                    </script>
-                    <!-- /class module end -->
                     <!-- course trainer start-->
                     @if ($data->course_instructor != null && count($data->course_instructor) > 0)
                         {{-- @dump($data->course_instructor)    --}}
@@ -620,6 +354,8 @@
             </div>
         </div>
     @endif
+
+    
     <script src="/js/plugins/countdown.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {

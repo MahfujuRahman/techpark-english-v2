@@ -57,7 +57,7 @@ Route::get('/trainers', [TeacherController::class, 'trainer_details'])->name("tr
 
 
 Route::get('/courses', [CourseController::class, 'courses'])->name("courses");
-Route::get('/course/{slug}', [WebsiteController::class, 'course_details'])->name("course_details");
+Route::get('/course/{slug}', [CourseController::class, 'course_details'])->name("course_details");
 
 Route::get('/blog', [BlogController::class, 'blog'])->name("blog");
 Route::get('/blog/{slug}', [BlogController::class, 'blog_details'])->name("blog_details");

@@ -72,33 +72,7 @@ class WebsiteController extends Controller
         return ['courses' => $courses, 'course_types' => $course_types];
     }
 
-    public function course_details($slug)
-    {
-
-        $data = Course::active()->where('slug', $slug)->first();
-
-        $instructors = $data->course_instructors()->get();
-
-        $batch_details = $data->course_batch()
-            ->select([
-                'id',
-                'course_id',
-                'admission_end_date',
-                'batch_student_limit',
-                'seat_booked',
-                'course_price',
-                'after_discount_price',
-                'booked_percent'
-            ])
-            ->active()->orderBy('id', 'DESC')->first();
-
-        $check_enrolled = false;
-        if (auth()->check()) {
-            $check_enrolled = EnrollInformation::where('student_id', auth()->user()->id)
-                ->where('course_id', $data->id)->exists();
-        }
-        return view('frontend.pages.course_details', ['batch_details' => $batch_details, 'data' => $data, 'check_enrolled' => $check_enrolled, 'instructors' => $instructors]);
-    }
+    
 
     public function course_enroll($slug)
     {

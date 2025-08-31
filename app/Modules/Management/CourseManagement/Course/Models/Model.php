@@ -5,6 +5,11 @@ namespace App\Modules\Management\CourseManagement\Course\Models;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\Management\CourseManagement\CourseInstructors\Models\Model as CourseInstructors;
+use App\Modules\Management\CourseManagement\CourseHowIsStructured\Models\Model as CourseHowIsStructured;
+use App\Modules\Management\CourseManagement\CourseYouWillLearn\Models\Model as CourseYouWillLearn;
+use App\Modules\Management\CourseManagement\CourseForWhom\Models\Model as CourseForWhom;
+use App\Modules\Management\CourseManagement\CourseWhyYouLearnFromUs\Models\Model as CourseWhyYouLearnFromUs;
 
 class Model extends EloquentModel
 {
@@ -64,5 +69,34 @@ class Model extends EloquentModel
     public function classes()
     {
         return $this->hasMany(\App\Modules\Management\CourseManagement\CourseModuleClass\Models\Model::class, 'course_id', 'id');
+    }
+
+    public function course_instructor()
+    {
+        return $this->hasMany(CourseInstructors::class, 'course_id');
+    }
+
+    public function course_instructors()
+    {
+        return $this->belongsToMany(CourseInstructors::class, 'course_course_instructors', 'course_id', 'instructor_id');
+    }
+
+    public function course_how_is_structured()
+    {
+        return $this->hasMany(CourseHowIsStructured::class, 'course_id');
+    }
+    public function course_you_will_learn()
+    {
+        return $this->hasMany(CourseYouWillLearn::class, 'course_id');
+    }
+
+    public function course_for_whom()
+    {
+        return $this->hasMany(CourseForWhom::class, 'course_id');
+    }
+
+    public function course_why_you_learn_from_us()
+    {
+        return $this->hasMany(CourseWhyYouLearnFromUs::class, 'course_id');
     }
 }
