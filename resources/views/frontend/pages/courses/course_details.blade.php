@@ -24,6 +24,10 @@
 
                     @include('frontend.pages.courses.includes.teachers')
                 </div>
+
+                @include('frontend.pages.courses.includes.course_details_card')
+
+
             </div>
         </div>
     </section>
@@ -31,29 +35,5 @@
     @include('frontend.pages.courses.includes.course_faq')
 
 
-    <script src="/js/plugins/countdown.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const timerElement = document.querySelector('.timer');
-
-            // Function to convert numbers to Bengali numerals
-            function convertToBangla(number) {
-                const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
-                return number.toString().split('').map(digit => banglaDigits[digit] || digit).join('');
-            }
-
-
-        });
-
-        [
-            ...document.querySelectorAll(".general_question_acordion_icon"),
-        ].forEach((element) => {
-            element.onclick = function(e) {
-                e.currentTarget.parentNode.parentNode.classList.toggle(
-                    "active"
-                );
-                // console.log(e.currentTarget.parentNode.classList);
-            };
-        });
-    </script>
+    
 @endsection
