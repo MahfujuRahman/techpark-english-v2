@@ -48,19 +48,13 @@ class WebsiteController extends Controller
     }
 
     public function all_course()
-    {
+    {   dd(request()->slug);
         $course_types = CourseCategory::where('status', 'active')->get();
 
         if (request()->slug) {
             $slug = request()->slug;
-
-            $courseType = DB::table('course_course_categories')
-                ->where('course_type_id', (int) $slug)
-                ->pluck('course_id') // Get an array of course_ids
-                ->toArray();
-
-            $courseIds = !empty($courseType) ? $courseType : [(int) $slug];
-
+            $courseIds = CourseCategory::where('slug', $slug)->first()->id;
+            dd($courseIds);
             $courses = Course::active()
                 ->with(['course_batch' => function ($batch) {
                     $batch->orderBy('id', 'desc')->first();

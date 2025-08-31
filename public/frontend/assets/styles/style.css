@@ -1470,7 +1470,7 @@ html ::-webkit-scrollbar-thumb:hover {
 .our_course_area .our_course_area_content .our_course_all_card {
   display: grid;
   gap: 22px;
-  justify-content: center;
+  justify-content: start;
   grid-template-columns: repeat(auto-fit, minmax(311px, 395px));
   margin: 0px 30px;
 }

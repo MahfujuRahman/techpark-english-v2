@@ -13,14 +13,13 @@ use App\Modules\Management\WebsiteManagement\OurTrainer\Models\Model as OurTrain
 use App\Modules\Management\CourseManagement\CourseBatch\Models\Model as CourseBatches;
 use App\Modules\Management\WebsiteManagement\SuccssStories\Models\Model as SuccessStory;
 use App\Modules\Management\WebsiteManagement\OurSpeciality\Models\Model as OurSpeciality;
-use App\Modules\Management\CourseManagement\Course\Models\Model as CourseOutcomeStepModel;
-use App\Modules\Management\CourseManagement\CourseCategory\Models\Model as CourseCategory;
+
 
 class Home
 {
     static $model = \App\Modules\Management\CommunicationManagement\ContactMessage\Models\Model::class;
 
-    public static function execute()
+    public static function execute($course)
     {
         $cacheKey = 'home_page_html_v1';
         // $ttlMinutes = 60; // cache time-to-live
@@ -37,12 +36,10 @@ class Home
         $our_trainers = OurTrainer::where('status', 1)->orderBy('id', 'desc')->first();
         $seminars = Seminars::where('date_time', '>', Carbon::today())->where('status', 'active')->get();
         $brands = Brand::where('status', 1)->get();
-
-        $course_categories = CourseCategory::where('status', 'active')->get();
-
         $courseBatch = CourseBatches::active()->orderBy('id', 'DESC')->get();
 
-        $course_learning_steps = CourseOutcomeStepModel::get();
+        $courses = $course['courses'];
+        $course_types = $course['course_types'];
 
         $data = [
             'banners' => $banners,
@@ -52,9 +49,9 @@ class Home
             'our_trainers' => $our_trainers,
             "seminars" => $seminars,
             'brands' => $brands,
-            'course_categories' => $course_categories,
-            'course_learning_steps' => $course_learning_steps,
-            'courseBatches' => $courseBatch
+            'courseBatches' => $courseBatch,
+            'courses' => $courses,
+            'course_types' => $course_types,
         ];
 
 
