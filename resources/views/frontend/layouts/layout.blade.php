@@ -82,9 +82,8 @@
                 <div class="logo">
                     <i class="fa-brands fa-facebook-messenger"></i>
                 </div>
-                <p class="text">Chat</p>
+                <a href="{{ setting(key: 'messenger') }}" target="_blank" class="text">chat</a>
             </div>
-
         </div>
         <!-- chating_area end -->
         <!-- go_to_top_area start -->

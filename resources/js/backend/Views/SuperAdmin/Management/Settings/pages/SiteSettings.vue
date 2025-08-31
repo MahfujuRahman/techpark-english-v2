@@ -270,6 +270,27 @@
                                                     )}`" />
                                             </div>
                                         </div>
+                                        <!-- Whatsapp -->
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Whatsapp</label>
+                                            <div class="col-lg-9">
+                                                <input name="whatsapp" class="form-control" type="text"
+                                                    placeholder="https://wa.me/yourphonenumber" :value="`${get_setting_value(
+                                                        'whatsapp'
+                                                    )}`" />
+                                            </div>
+                                        </div>
+
+                                        <!-- Messenger -->
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label form-control-label">Messenger</label>
+                                            <div class="col-lg-9">
+                                                <input name="messenger" class="form-control" type="text"
+                                                    placeholder="https://m.me/yourpage" :value="`${get_setting_value(
+                                                        'messenger'
+                                                    )}`" />
+                                            </div>
+                                        </div>
                                         <!-- Save Button -->
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label"></label>
