@@ -49,6 +49,25 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="booked_percent" class="form-label">Seat Booked (%)</label>
+                                    <input 
+                                        type="number" 
+                                        id="booked_percent"
+                                        v-model="formData.booked_percent"
+                                        class="form-control"
+                                        :class="{ 'is-invalid': errors.booked_percent }"
+                                        placeholder="50"
+                                        min="1"
+                                        required
+                                    >
+                                    <div v-if="errors.booked_percent" class="invalid-feedback">
+                                        {{ errors.booked_percent }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -326,6 +345,7 @@ export default {
                 admission_start_date: '',
                 admission_end_date: '',
                 batch_student_limit: 50,
+                booked_percent: 0,
                 course_price: '',
                 course_discount: 0,
                 after_discount_price: '',

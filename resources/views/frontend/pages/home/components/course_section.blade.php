@@ -60,16 +60,18 @@
                                             $courseBatch = $courseBatches
                                                 ->where('course_id', $course->id)
                                                 ->filter(function ($b) {
-                                                    return !empty($b->admission_end_date)
-                                                        && Carbon\Carbon::parse($b->admission_end_date)->greaterThanOrEqualTo(Carbon\Carbon::now());
+                                                    return !empty($b->admission_end_date) &&
+                                                        Carbon\Carbon::parse(
+                                                            $b->admission_end_date,
+                                                        )->greaterThanOrEqualTo(Carbon\Carbon::now());
                                                 })
                                                 ->sortBy(function ($b) {
                                                     return Carbon\Carbon::parse($b->admission_end_date)->timestamp;
                                                 })
                                                 ->first();
-                                         
+
                                             $admissionEndDate = $courseBatch->admission_end_date ?? null;
-                                    
+
                                         @endphp
 
                                         <span class="day_tex">
@@ -102,15 +104,17 @@
 
 
                                     </div>
-                                    <div class="boking_area">
-                                        <span class="boking_text">
-                                           {{ $courseBatch->booked_percent ?? 0 }}
-                                            %
-                                        </span>
-                                        <span class="boking_text">
-                                            Booked
-                                        </span>
-                                    </div>
+                                    @if ($courseBatch?->show_percentage_on_cards == 'yes')
+                                        <div class="boking_area">
+                                            <span class="boking_text">
+                                                {{ $courseBatch->booked_percent ?? 0 }}
+                                                %
+                                            </span>
+                                            <span class="boking_text">
+                                                Booked
+                                            </span>
+                                        </div>
+                                    @endif
                                 </div>
                                 <!-- day_and_boking_area end -->
 
@@ -122,7 +126,7 @@
                                             <p class="previous_amount">
                                                 <span class="taka"> ৳ </span>
                                                 <span class="taka">
-                                                   {{ number_format($courseBatch->course_price ?? 0, 0, '.', ',') }}
+                                                    {{ number_format($courseBatch->course_price ?? 0, 0, '.', ',') }}
                                                 </span>
                                             </p>
                                         </div>
@@ -130,7 +134,7 @@
                                             <p class="current_amount">
                                                 <span class="taka"> ৳ </span>
                                                 <span class="taka">
-                                                   {{ number_format($courseBatch->after_discount_price ?? 0, 0, '.', ',') }}
+                                                    {{ number_format($courseBatch->after_discount_price ?? 0, 0, '.', ',') }}
                                                 </span>
                                             </p>
                                         </div>
