@@ -22,12 +22,13 @@
 
                     @include('frontend.pages.courses.includes.course_module')
 
+                    @include('frontend.pages.courses.includes.teachers')
                 </div>
             </div>
         </div>
     </section>
 
-
+    @include('frontend.pages.courses.includes.course_faq')
 
 
     <script src="/js/plugins/countdown.js"></script>

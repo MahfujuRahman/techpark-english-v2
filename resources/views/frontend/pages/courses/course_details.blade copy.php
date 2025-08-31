@@ -15,86 +15,13 @@
             <div class="course_details_part">
                 <div class="course_details">
                     
-
-                    
-
-                    
-
-                    
-
-
-                    
-
-                    <!-- course trainer start-->
-                    @if ($data->course_instructor != null && count($data->course_instructor) > 0)
-                        {{-- @dump($data->course_instructor)    --}}
-                        <section class="course_trainers_area">
-                            <div class="container">
-                                <div class="trainers_description">
-                                    <div class="trainers_title">
-                                        <h2 class="trainers_title_bangla">কোর্স প্রশিক্ষক</h2>
-                                    </div>
-                                    <div class="d-flex flex-wrap gap-3">
-                                        @foreach ($data->course_instructor as $teacher)
-                                            <div class="trainers_details mb-4">
-                                                <div class="trainer_details">
-                                                    <div class="trainer_images">
-                                                        <div class="image">
-                                                            <img src="{{ asset($teacher->cover_photo) }}"
-                                                                alt="" />
-                                                        </div>
-                                                        <div class="trainer_info">
-                                                            <div class="trainer_name">{{ $teacher->full_name }}</div>
-                                                            <p>{{ $teacher->designation }}</p>
-                                                            @if ($teacher->social_links)
-                                                                <div class="trainer_link">
-                                                                    @foreach ($teacher->social_links as $link)
-                                                                        @if ($link->media_name == 'twitter')
-                                                                            <a target="_blank"
-                                                                                href="{{ $link->link ?: '#' }}"><i
-                                                                                    class="fa-brands tw fa-square-twitter"></i></a>
-                                                                        @endif
-                                                                        @if ($link->media_name == 'facebook')
-                                                                            <a target="_blank"
-                                                                                href="{{ $link->link ?: '#' }}"><i
-                                                                                    class="fa-brands fb fa-square-facebook"></i></a>
-                                                                        @endif
-                                                                        @if ($link->media_name == 'linkedin')
-                                                                            <a target="_blank"
-                                                                                href="{{ $link->link ?: '#' }}"><i
-                                                                                    class="fa-brands ld fa-linkedin"></i></a>
-                                                                        @endif
-                                                                        @if ($link->media_name == 'instagram')
-                                                                            <a target="_blank"
-                                                                                href="{{ $link->link ?: '#' }}"><i
-                                                                                    class="fa-brands in fa-square-instagram"></i></a>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <div class="trainer_descrip">
-                                                        <p>
-                                                            {{ $teacher->short_description }}
-                                                        </p>
-                                                        {{--
-                                                            <p>
-                                                            তিনি ৫০০+ স্টুডেন্টকে ট্রেনিং করিয়েছেন, যারা বর্তমানে
-                                                            বাংলাদেশের বিভিন্ন স্বনামধন্য প্রতিষ্ঠানে কর্মরত আছেন।
-                                                        </p> --}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-
-                            </div>
-                        </section>
-                    @endif
-                    <!-- /course trainer end -->
                 </div>
+
+
+
+
+
+
                 <div class="course_info">
                     @php
                         $batch_info = $data->course_batch()->first();
@@ -255,53 +182,6 @@
             </div>
         </div>
     </section>
-
-    <!-- trainers area starts -->
-    <section class="trainers_area mt-4">
-        <div class="container">
-            <div class="trainers_description">
-                <div class="trainers_title">
-                    {{-- <h2 class="trainers_title_bangla">{{ $website_about->our_trainers_heading }}</h2> --}}
-                    <h2 class="trainers_title_bangla">ট্রেইনারস</h2>
-                </div>
-                <div class="trainers_details">
-                    @foreach ($instructors as $teacher)
-                        <div class="trainer_details">
-                            <div class="trainer_images">
-                                <div class="image">
-                                    <img src="/{{ $teacher->instructor->photo }}" alt="">
-                                </div>
-                                <div class="trainer_info">
-                                    <div class="trainer_name">{{ $teacher->full_name }}</div>
-                                    <p>{{ $teacher->designation }}</p>
-                                    <div class="trainer_link">
-                                        <i class="fa-brands tw fa-square-twitter"></i>
-                                        <i class="fa-brands fb fa-square-facebook"></i>
-                                        <i class="fa-brands ld fa-linkedin"></i>
-                                        <i class="fa-brands in fa-square-instagram"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="trainer_descrip">
-                                <p>
-                                    {{ $teacher->short_description }}
-                                </p>
-                            </div>
-                            <div class="profational_trainer_button_area mt-4">
-                                <a href="{{ route('teacher.details', ['teacher_name' => str_replace(' ', '-', $teacher->full_name), 'slug' => $teacher->slug]) }}"
-                                    class="button_all">
-                                    <span class="btn_text">বিস্তারিত দেখুন</span>
-                                    <span class="btn_icon"><i class="fa-solid fa-arrow-right"></i></span>
-                                </a>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-            </div>
-        </div>
-    </section>
-    <!-- /trainers area ends -->
 
 
     <!-- general question area start-->

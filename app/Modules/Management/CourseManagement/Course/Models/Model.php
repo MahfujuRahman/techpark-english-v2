@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Management\CourseManagement\CourseInstructors\Models\Model as CourseInstructors;
+use App\Modules\Management\CourseManagement\CourseInstructors\Models\CourseCourseInstructorModel as CourseCourseInstructors;
 use App\Modules\Management\CourseManagement\CourseHowIsStructured\Models\Model as CourseHowIsStructured;
 use App\Modules\Management\CourseManagement\CourseYouWillLearn\Models\Model as CourseYouWillLearn;
 use App\Modules\Management\CourseManagement\CourseForWhom\Models\Model as CourseForWhom;
@@ -71,14 +72,16 @@ class Model extends EloquentModel
         return $this->hasMany(\App\Modules\Management\CourseManagement\CourseModuleClass\Models\Model::class, 'course_id', 'id');
     }
 
-    public function course_instructor()
-    {
-        return $this->hasMany(CourseInstructors::class, 'course_id');
-    }
-
+   
     public function course_instructors()
     {
-        return $this->belongsToMany(CourseInstructors::class, 'course_course_instructors', 'course_id', 'instructor_id');
+        // use the pivot table name, let Eloquent use the default Pivot model
+        return $this->belongsToMany(
+            CourseInstructors::class,
+            (new CourseCourseInstructors())->getTable(),
+            'course_id',
+            'instructor_id'
+        );
     }
 
     public function course_how_is_structured()
@@ -98,5 +101,10 @@ class Model extends EloquentModel
     public function course_why_you_learn_from_us()
     {
         return $this->hasMany(CourseWhyYouLearnFromUs::class, 'course_id');
+    }
+
+    public function course_faqs()
+    {
+        return $this->hasMany(\App\Modules\Management\CourseManagement\CourseFaq\Models\Model::class, 'course_id');
     }
 }
