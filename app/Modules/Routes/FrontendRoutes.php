@@ -56,7 +56,7 @@ Route::get('/teacher/{teacher_name}/{slug}', [TeacherController::class, 'teacher
 Route::get('/trainers', [TeacherController::class, 'trainer_details'])->name("trainer.details");
 
 
-Route::get('/courses', [WebsiteController::class, 'courses'])->name("courses");
+Route::get('/courses', [HomeController::class, 'courses'])->name("courses");
 Route::get('/course/{slug}', [WebsiteController::class, 'course_details'])->name("course_details");
 
 Route::get('/blog', [BlogController::class, 'blog'])->name("blog");
@@ -70,11 +70,7 @@ Route::post('/seminar-subscribe', [SeminerController::class, 'subscribe'])->name
 Route::post('/seminar-review', [SeminerController::class, 'review'])->name("seminar.review");
 Route::post('/seminar-review-reply/{id}', [SeminerController::class, 'review_reply'])->name("seminar.review.reply");
 
-Route::get('/it-solution-services', [WebsiteController::class, 'it_solution_services'])->name("it_solution_services");
-
 Route::get('/stories', [HomeController::class, 'stories'])->name("stories");
-
-Route::post('/career-counseling', [WebsiteController::class, 'career_counseling'])->name("career.counseling");
 
 // Policy Routes
 Route::get('/privacy-policy', [PolicyController::class, 'privacy_policy'])->name("privacy.policy");

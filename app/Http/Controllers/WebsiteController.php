@@ -153,25 +153,6 @@ class WebsiteController extends Controller
     }
 
 
-    public function courses()
-    {
-        $course_categories = CourseCategory::where('status', 'active')->get();
-
-        $all = $this->all_course();
-        $courses = $all['courses'];
-        $course_types = $all['course_types'];
-
-        $courseBatch = CourseBatches::active()->orderBy('id', 'DESC')->get();
-
-        return view('frontend.pages.courses', [
-            'course_categories' => $course_categories,
-            'course_types' => $course_types,
-            'courses' => $courses,
-            'courseBatches' => $courseBatch
-        ]);
-    }
-
-
 
     public function it_solution_services()
     {
