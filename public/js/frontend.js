@@ -92,6 +92,14 @@ document.addEventListener("turbolinks:render", function (event) {
 });
 
 function showVideo(video_link) {
+    console.log('showVideo called with:', video_link);
+
+    if (!video_link) {
+        console.error('No video link provided');
+        alert('Video link is not available');
+        return;
+    }
+
     // Extract YouTube video ID and start time from the link
     const match = video_link.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^\s&#]+)(?:.*[?&]t=(\d+))?/);
     let embedUrl = video_link;
@@ -99,12 +107,37 @@ function showVideo(video_link) {
         const videoId = match[1];
         const startTime = match[2] ? `?start=${match[2]}` : '';
         embedUrl = `https://www.youtube.com/embed/${videoId}${startTime}`;
+        console.log('Converted to embed URL:', embedUrl);
+    } else {
+        console.warn('Not a YouTube URL, using as-is:', video_link);
     }
-    document.querySelector("#story_modal .modal-body").innerHTML = `
+
+    const modalElement = document.getElementById('story_modal');
+    if (!modalElement) {
+        console.error('Modal #story_modal not found');
+        alert('Video modal is not available');
+        return;
+    }
+
+    const modalBody = modalElement.querySelector('.modal-body');
+    if (!modalBody) {
+        console.error('Modal body not found');
+        alert('Video modal body is not available');
+        return;
+    }
+
+    modalBody.innerHTML = `
         <iframe width="100%" height="450" src="${embedUrl}" frameborder="0" allow="autoplay" allowfullscreen></iframe>
     `;
-    var modal1 = new bootstrap.Modal(document.getElementById('story_modal'));
-    modal1.toggle();
+
+    try {
+        var modal1 = new bootstrap.Modal(modalElement);
+        modal1.toggle();
+        console.log('Modal opened successfully');
+    } catch (error) {
+        console.error('Error opening modal:', error);
+        alert('Error opening video modal');
+    }
 }
 
 function showCourseVideo(video_link) {
