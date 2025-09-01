@@ -2,67 +2,28 @@
 
 namespace App\Http\Controllers\Course;
 
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Course\Actions\CourseDetails;
+use App\Http\Controllers\Course\Actions\Course as CourseAction;
 use App\Modules\Management\UserManagement\User\Models\Model as User;
 use App\Modules\Management\CourseManagement\Course\Models\Model as Course;
-use App\Modules\Management\CourseManagement\CourseCategory\Models\Model as CourseCategory;
 use App\Modules\Management\CourseManagement\CourseBatch\Models\Model as CourseBatches;
-use  App\Modules\Management\EnrollInformation\Models\Model as EnrollInformation;
+use App\Modules\Management\CourseManagement\CourseCategory\Models\Model as CourseCategory;
 
 
 class CourseController extends Controller
 {
     public function courses()
     {
-        $course_categories = CourseCategory::where('status', 'active')->get();
-
-        $all = $this->all_course();
-        $courses = $all['courses'];
-        $course_types = $all['course_types'];
-
-        $courseBatch = CourseBatches::active()->orderBy('id', 'DESC')->get();
-
-        return view('frontend.pages.courses.index', [
-            'course_categories' => $course_categories,
-            'course_types' => $course_types,
-            'courses' => $courses,
-            'courseBatches' => $courseBatch
-        ]);
+        $data = CourseAction::execute();
+        return $data;
     }
 
     public function course_details($slug)
     {
-        $data = Course::active()->where('slug', $slug)->first();
-
-        $instructors = $data->course_instructors()->get();
-
-        $batch_details = $data->course_batch()
-            ->select([
-                'id',
-                'course_id',
-                'admission_end_date',
-                'batch_student_limit',
-                'seat_booked',
-                'course_price',
-                'after_discount_price',
-                'booked_percent'
-            ])
-            ->active()->orderBy('id', 'DESC')->first();
-
-        $check_enrolled = false;
-        if (auth()->check()) {
-            $check_enrolled = EnrollInformation::where('student_id', auth()->user()->id)
-                ->where('course_id', $data->id)->exists();
-        }
-        return view(
-            'frontend.pages.courses.course_details',
-            [
-                'batch_details' => $batch_details,
-                'data' => $data,
-                'check_enrolled' => $check_enrolled,
-                'instructors' => $instructors
-            ]
-        );
+        $data = CourseDetails::execute($slug);
+        return $data;
     }
 
     public function all_course()
@@ -89,6 +50,45 @@ class CourseController extends Controller
         }
 
         return ['courses' => $courses, 'course_types' => $course_types];
+    }
+
+    public function course_batch_details($course_id)
+    {
+        // use a consistent timezone for parsing/comparison; change 'UTC' to config('app.timezone') if you prefer app timezone
+        $courseBatch = CourseBatches::active()->orderBy('id', 'DESC')->get();
+
+        $tz = env('TIMEZONE', config('app.timezone', 'UTC'));
+
+        $batch = $courseBatch->where('course_id', $course_id)
+            ->filter(function ($b) use ($tz) {
+                return !empty($b->admission_end_date) &&
+                    Carbon::parse($b->admission_end_date, $tz)->greaterThanOrEqualTo(Carbon::now($tz));
+            })
+            ->sortBy(function ($b) use ($tz) {
+                return Carbon::parse($b->admission_end_date, $tz)->timestamp;
+            })
+            ->first();
+
+        // If no active batch details found, get the latest batch details
+        if (!$batch) {
+            $batch = CourseBatches::where('course_id', $course_id)
+                ->select([
+                    'id',
+                    'course_id',
+                    'admission_end_date',
+                    'batch_student_limit',
+                    'seat_booked',
+                    'course_price',
+                    'after_discount_price',
+                    'booked_percent'
+                ])
+                ->active()
+                ->orderBy('admission_end_date', 'DESC')
+                ->orderBy('id', 'DESC')
+                ->first();
+        }
+
+        return ['batch' => $batch, 'tz' => $tz];
     }
 
     public function myCourse()

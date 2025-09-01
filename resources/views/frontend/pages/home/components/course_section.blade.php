@@ -57,28 +57,20 @@
                                                 alt="clock, tech park it" />
                                         </span>
                                         @php
-                                            $courseBatch = $courseBatches
-                                                ->where('course_id', $course->id)
-                                                ->filter(function ($b) {
-                                                    return !empty($b->admission_end_date) &&
-                                                        Carbon\Carbon::parse(
-                                                            $b->admission_end_date,
-                                                        )->greaterThanOrEqualTo(Carbon\Carbon::now());
-                                                })
-                                                ->sortBy(function ($b) {
-                                                    return Carbon\Carbon::parse($b->admission_end_date)->timestamp;
-                                                })
-                                                ->first();
+                                            $course_controller = new App\Http\Controllers\Course\CourseController();
+                                            $data = $course_controller->course_batch_details($course->id);
+                                            $courseBatch = $data['batch'] ?? null;
 
+                                            $tz = $data['tz'] ?? 'UTC';
                                             $admissionEndDate = $courseBatch->admission_end_date ?? null;
-
+                                
                                         @endphp
 
                                         <span class="day_tex">
                                             @if ($admissionEndDate)
                                                 @php
-                                                    $admissionEndDate = Carbon\Carbon::parse($admissionEndDate);
-                                                    $now = Carbon\Carbon::now();
+                                                    $admissionEndDate = Carbon\Carbon::parse($admissionEndDate,$tz ?? 'UTC');
+                                                    $now = Carbon\Carbon::now($tz ?? 'UTC');
 
                                                     if ($now->greaterThanOrEqualTo($admissionEndDate)) {
                                                         $remainingTime = 0 . ' Days';

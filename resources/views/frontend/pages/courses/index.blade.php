@@ -39,7 +39,6 @@
                 <!-- course_schedule_name end-->
 
                 <div class="our_course_all_card">
-
                     @foreach ($courses as $course)
                         <div class="c_card graphic_designer">
                             <!-- card_img start -->
@@ -66,28 +65,48 @@
                                                 <img src="{{ asset('frontend') }}/assets/images/clock.png"
                                                     alt="clock, tech park it" />
                                             </span>
-                                            @php
-                                                $courseBatch = $courseBatches
+                                            {{-- @php
+                                                // use a consistent timezone for parsing/comparison; change 'UTC' to config('app.timezone') if you prefer app timezone
+                                                $tz = env('TIMEZONE', config('app.timezone', 'UTC'));
+                                                $courseBatche = $courseBatches
                                                     ->where('course_id', $course->id)
-                                                    ->filter(function ($b) {
+                                                    ->filter(function ($b) use ($tz) {
                                                         return !empty($b->admission_end_date) &&
                                                             Carbon\Carbon::parse(
                                                                 $b->admission_end_date,
-                                                            )->greaterThanOrEqualTo(Carbon\Carbon::now());
+                                                                $tz,
+                                                            )->greaterThanOrEqualTo(Carbon\Carbon::now($tz));
                                                     })
-                                                    ->sortBy(function ($b) {
-                                                        return Carbon\Carbon::parse($b->admission_end_date)->timestamp;
+                                                    ->sortBy(function ($b) use ($tz) {
+                                                        return Carbon\Carbon::parse(
+                                                            $b->admission_end_date,
+                                                            $tz,
+                                                        )->timestamp;
                                                     })
                                                     ->first();
 
+                                                $admissionEndDate = $courseBatche->admission_end_date ?? null;
+                                            @endphp --}}
+
+                                            @php
+                                                $course_controller = new App\Http\Controllers\Course\CourseController();
+                                                $data = $course_controller->course_batch_details($course->id);
+                                                $courseBatch = $data['batch'] ?? null;
+
+                                                $tz = $data['tz'] ?? 'UTC';
                                                 $admissionEndDate = $courseBatch->admission_end_date ?? null;
+
                                             @endphp
 
                                             <span class="day_tex">
                                                 @if ($admissionEndDate)
                                                     @php
-                                                        $admissionEndDate = Carbon\Carbon::parse($admissionEndDate);
-                                                        $now = Carbon\Carbon::now();
+                                                        // parse and compare in the same timezone used above ($tz), default to UTC if not set
+                                                        $admissionEndDate = Carbon\Carbon::parse(
+                                                            $admissionEndDate,
+                                                            $tz ?? 'UTC',
+                                                        );
+                                                        $now = Carbon\Carbon::now($tz ?? 'UTC');
 
                                                         if ($now->greaterThanOrEqualTo($admissionEndDate)) {
                                                             $remainingTime = 0 . ' Days';
@@ -168,7 +187,7 @@
                     @endforeach
 
                 </div>
-                
+
                 @if ($courses->count() === 0)
                     <div class="w-100 d-flex justify-content-center align-items-center my-5">
                         <div class="text-center" style="max-width:420px;">

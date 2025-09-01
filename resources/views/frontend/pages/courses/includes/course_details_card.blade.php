@@ -1,6 +1,6 @@
  <div class="course_info">
      @php
-         $batch_info = $data->course_batch()->first();
+         $batch_info = $batch_details;
      @endphp
      <div class="course_info_div">
          {{-- <div onclick="showCourseVideo(`{{ $data->intro_video }}`)" --}}
@@ -9,7 +9,7 @@
                  <img class="img-fluid course_main_img" src="{{ asset($data->image) }}" alt="">
              </div>
              <div class="course_info_icon">
-                 <img src="{{ asset('frontend/') }}/assets/images/course_details_image/course_info_icon.png"
+                 <img src="{{ asset('frontend/') }}/assets/images/course_info_icon.png"
                      alt="">
              </div>
          </div>
@@ -17,15 +17,6 @@
              <div class="time_have">
                  <div class="time_have_title">সময় বাকী আছে</div>
                  <ul class="timer">
-                     @php
-                         use Carbon\Carbon;
-
-                         $admissionEndDate = optional($batch_details)->admission_end_date;
-                         $formattedDate = $admissionEndDate
-                             ? Carbon::parse($admissionEndDate)->format('Y-m-d H:i:s')
-                             : null;
-                     @endphp
-
                      <li class="d-none">
                          <div class="amount" data-years></div>
                          <div class="title">Years</div>
