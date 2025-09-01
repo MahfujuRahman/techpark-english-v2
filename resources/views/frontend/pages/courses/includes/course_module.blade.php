@@ -20,24 +20,24 @@
                     <div class="class_module_title">
                         <div class="class_module_title_and_number">
                             <div class="class_module_number">
-                                মডিউল <span class="number"> {{ $item->module_no }} </span>
+                                Module <span class="number"> {{ $item->module_no }} </span>
                             </div>
                             <div class="class_module_title_details">
                                 <div class="title">{{ $item->title }}</div>
                                 <ul class="details">
                                     <li>
                                         {{ $item->classes()->where('type', 'live')->count() }}
-                                        টি লাইভ ক্লাস
+                                        Live Classes
                                     </li>
-
+                                    ।
                                     <li>
                                         {{ $item->classes()->where('type', 'recorded')->count() }}
-                                        টি রেকর্ডেড ক্লাস
+                                        Recorded Classes
                                     </li>
                                     ।
                                     <li>
                                         {{ $item->quizes()->count() }}
-                                        টি কুইজ
+                                        Quizzes
                                     </li>
                                 </ul>
                             </div>
@@ -49,9 +49,8 @@
                     <div class="class_module_feature_content">
                         <ul>
                             @foreach ($item->classes as $class)
-                                {{-- @dd($class)     --}}
                                 <li>
-                                    <div class="class_module_class_no">ক্লাস {{ $class->class_no }}
+                                    <div class="class_module_class_no">Class {{ $class->class_no }}
                                     </div>
                                     <div class="live_class_and_topic">
                                         <div class="live_class_icon">
@@ -60,9 +59,9 @@
                                         </div>
                                         <div class="class_module_live_class">
                                             @if ($class->type == 'live')
-                                                লাইভ ক্লাসঃ
+                                               Live Class:
                                             @else
-                                                রেকর্ডেড ক্লাসঃ
+                                                Recorded Class:
                                             @endif
                                         </div>
                                         <div class="class_module_topic">{{ $class->title }}</div>
@@ -74,7 +73,7 @@
                                                 <div class="quiz_icon">
                                                     <i class="fa-solid fa-file-lines"></i>
                                                 </div>
-                                                <div class="quiz">কুইজঃ</div>
+                                                <div class="quiz">Quiz:</div>
                                                 <div class="mcq">
                                                     {{ $quiz->quiz->title ?? '' }}
                                                 </div>

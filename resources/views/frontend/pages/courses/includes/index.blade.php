@@ -6,7 +6,7 @@
 
 <!-- what is course start -->
 <div class="what_is_course">
-    <h2 class="what_is_course_title">{{ $data->title }} কী?</h2>
+    <h2 class="what_is_course_title">What is {{ $data->title }}?</h2>
     <p class="what_is_course_details">
         {!! $data->what_is_this_course !!}
     </p>
@@ -16,8 +16,7 @@
 <!-- why learn this course start -->
 <div class="why_learn_this_course">
     <h2 class="why_learn_this_course_title">
-        এই Course টি আপনাকে কিভাবে সাহায্য করবে
-        {{-- এই কোর্স কেনো করবেন? --}}
+        How will this course help you?
     </h2>
     <div class="why_learn_this_course_details">
         <style>

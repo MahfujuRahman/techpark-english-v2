@@ -112,4 +112,9 @@ class Model extends EloquentModel
     {
         return $this->hasMany(\App\Modules\Management\CourseManagement\CourseWhatYouWillGet\Models\Model::class, 'course_id');
     }
+
+    public function course_essential_requirements()
+    {
+        return $this->hasMany(\App\Modules\Management\CourseManagement\CourseEssentialRequirement\Models\Model::class, 'course_id');
+    }
 }

@@ -5,9 +5,9 @@
             <div class="general_questions">
                 <div class="general_question_details">
                     <div class="general_question_head">
-                        <div class="general_question_heading_title">সাধারণ জিজ্ঞাসা</div>
+                        <div class="general_question_heading_title">General Questions</div>
                         <div class="general_question_heading_brief">
-                            আপনার কোন জিজ্ঞাসা থাকলে এখান থেকে খুঁজে দেখতে পারেন
+                            You can search here if you have any questions.
                         </div>
                     </div>
                     <ul class="general_question_all" style="width: 600px;">

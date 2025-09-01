@@ -151,6 +151,15 @@
                             <div>Faq Questions</div>
                         </router-link>
                     </li>
+                    <li v-if="currentCourse">
+                        <router-link 
+                            :to="{ name: 'CourseEssentialRequirements', params: { id: currentCourse.slug } }" 
+                            class="nav-item"
+                        >
+                            <i class="far fa-circle mr-1"></i>
+                            <div>Essential Requirements</div>
+                        </router-link>
+                    </li>
                 </ul>
             </div>
             

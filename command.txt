@@ -30,7 +30,7 @@ php artisan make:table CourseManagement/Course/CourseOutcomeStep [course_id:bigi
 php artisan make:table CourseManagement/Course/CourseForWhom [course_id:bigint,title:text] --model
 php artisan make:table CourseManagement/Course/CourseJobWork [course_id:bigint,title:text] --model
 php artisan make:table CourseManagement/Course/CourseModuleAtAGlance [course_id:bigint,title:text] --model
-php artisan make:table CourseManagement/Course/CourseEssentialRequirement [course_id:bigint,title:text] --model
+php artisan make:module CourseManagement/CourseEssentialRequirement [course_id:bigint,title:text]
 php artisan make:module CourseManagement/Course/CourseWhatYouWillGet [course_id:bigint,title:text]
 
 php artisan make:module CourseManagement/CourseYouWillLearn [course_id:bigint,title:text]

@@ -5,11 +5,11 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">
                         <i class="fas fa-list mr-2"></i>
-                        What You Will Get - All Items
+                        Essential Requirements - All Items
                     </h5>
                     <div class="header-actions">
                         <router-link 
-                            :to="{ name: 'CourseWhatGetCreate', params: { id: $route.params.id } }"
+                            :to="{ name: 'CourseEssentialRequirementsCreate', params: { id: $route.params.id } }"
                             class="btn btn-sm btn-primary"
                         >
                             <i class="fas fa-plus mr-1"></i>
@@ -50,14 +50,14 @@
                                 </div>
                                 <div class="item-actions">
                                     <router-link 
-                                        :to="{ name: 'CourseWhatGetDetails', params: { id: $route.params.id, slug: item.slug } }"
+                                        :to="{ name: 'CourseEssentialRequirementsDetails', params: { id: $route.params.id, slug: item.slug } }"
                                         class="btn btn-sm btn-outline-info"
                                         title="View Details"
                                     >
                                         <i class="fas fa-eye"></i>
                                     </router-link>
                                     <router-link 
-                                        :to="{ name: 'CourseWhatGetEdit', params: { id: $route.params.id, slug: item.slug } }"
+                                        :to="{ name: 'CourseEssentialRequirementsEdit', params: { id: $route.params.id, slug: item.slug } }"
                                         class="btn btn-sm btn-outline-primary ml-1"
                                         title="Edit"
                                     >
@@ -82,16 +82,16 @@
                         <div class="empty-icon mb-3">
                             <i class="fas fa-graduation-cap fa-4x text-muted"></i>
                         </div>
-                        <h5 class="text-muted">No "What You Will Get" Items Found</h5>
+                        <h5 class="text-muted">No Essential Requirement Items Found</h5>
                         <p class="text-muted mb-4">
-                            Start by adding what students will get from this course.
+                            Start by adding the essential requirements for this course.
                         </p>
                         <router-link 
-                            :to="{ name: 'CourseWhatGetCreate', params: { id: $route.params.id } }"
+                            :to="{ name: 'CourseEssentialRequirementsCreate', params: { id: $route.params.id } }"
                             class="btn btn-primary"
                         >
                             <i class="fas fa-plus mr-1"></i>
-                            Add First What You Will Get item
+                            Add First Essential Requirement
                         </router-link>
                     </div>
                 </div>
@@ -105,7 +105,7 @@ import { mapState, mapActions } from 'pinia';
 import { useCourseDetailsStore } from '../../../Store/courseDetailsStore.js';
 
 export default {
-    name: 'CourseWhatLearnAll',
+    name: 'CourseEssentialRequirementsAll',
     
     data() {
         return {
@@ -141,22 +141,22 @@ export default {
                     return;
                 }
 
-                console.log('Fetching learning items for course ID:', courseId);
-                const response = await axios.get(`course-what-you-will-gets?course_id=${courseId}`);
+                console.log('Fetching items for course ID:', courseId);
+                const response = await axios.get(`course-essential-requirements?course_id=${courseId}`);
 
                 console.log('API Response:', response.data);
 
                 // Check if response has the expected structure
                 if (response.data && response.data.status === 'success') {
                     this.learningItems = response.data.data?.data || [];
-                    console.log('Loaded learning items:', this.learningItems);
+                    console.log('Loaded items:', this.learningItems);
                 } else {
                     console.error('Unexpected response structure:', response.data);
                     this.learningItems = [];
                 }
             } catch (error) {
-                console.error('Error fetching learning items:', error);
-                window.s_error('Failed to load learning items!');
+                console.error('Error fetching items:', error);
+                window.s_error('Failed to load items!');
                 this.learningItems = [];
             } finally {
                 this.loading = false;
@@ -175,15 +175,15 @@ export default {
                 
                 try {
                     const itemSlug = item.slug;
-                    console.log('Deleting learning item with slug:', itemSlug);
+                    console.log('Deleting item with slug:', itemSlug);
                     
-                    await axios.post(`course-what-you-will-gets/destroy/${itemSlug}`);
-                    
-                    window.s_alert('Learning item deleted successfully!');
+                    await axios.post(`course-essential-requirements/destroy/${itemSlug}`);
+
+                    window.s_alert('Item deleted successfully!');
                     await this.getLearningItems(); // Refresh the list
                 } catch (error) {
-                    console.error('Error deleting learning item:', error);
-                    window.s_error('Failed to delete learning item!');
+                    console.error('Error deleting item:', error);
+                    window.s_error('Failed to delete item!');
                 } finally {
                     this.deleting = false;
                     this.deletingId = null;

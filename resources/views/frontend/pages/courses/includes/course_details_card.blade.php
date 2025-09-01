@@ -1,7 +1,6 @@
 <div class="course_info">
     @php
         $batch_info = $batch_details;
-        //  optional($data)->intro_video
     @endphp
     <div class="course_info_div">
         <div class="course_info_thubnail_and_icon my-0">
@@ -124,40 +123,40 @@
                 </div>
             </div>
         </div>
-        <div class="course_needed">
-            <div class="course_needed_title">কোর্সটি করার জন্য যা যা লাগবে</div>
-            {{-- @if ($data->course_essentials)
-                 @foreach ($data->course_essentials as $course_essential)
-                     <div class="course_needed_internet">
-                         <i class="fa-regular fa-circle-dot"></i>
-                         {{ $course_essential->title }}
-                     </div>
-                 @endforeach
-             @endif --}}
-            <div class="course_hotline_and_schedule">
-                <div class="course_hotline" style="display: unset; padding: 20px;">
-                    <div class="course_hotline_title">
-                        যেকোনো প্রয়োজনে কল করুনঃ
-                    </div>
-                    @php
-                        $phone_numbers = setting('phone_numbers', true);
-                        // If $phone_numbers is an array with 'setting_values', extract that
-                        if (is_array($phone_numbers) && isset($phone_numbers[0]['setting_values'])) {
-                            $phone_numbers = $phone_numbers[0]['setting_values'];
-                        }
-                    @endphp
-                    @foreach ($phone_numbers as $item)
-                        @php
-                            $phone_number = is_array($item) ? $item['value'] ?? '' : $item;
-                        @endphp
-                        <div class="d-flex mt-2 gap-2 align-items-center justify-content-center">
-                            <i class="fa-solid fa-phone"></i>
-                            <a class="course_hotline_number" href="tel:{{ $phone_number }}"> {{ $phone_number }} </a>
-                        </div>
-                    @endforeach
+    </div>
+    <div class="course_needed">
+        <div class="course_needed_title">Requirements to take this course</div>
+        @if ($data->course_essential_requirements)
+            @foreach ($data->course_essential_requirements as $course_essential)
+                <div class="course_needed_internet">
+                    <i class="fa-regular fa-circle-dot"></i>
+                    {{ $course_essential->title }}
                 </div>
-                <div class="course_schedule">(10 AM to 8 PM)</div>
+            @endforeach
+        @endif
+        <div class="course_hotline_and_schedule">
+            <div class="course_hotline" style="display: unset; padding: 20px;">
+                <div class="course_hotline_title">
+                    Call us for any assistance:
+                </div>
+                @php
+                    $phone_numbers = setting('phone_numbers', true);
+                    // If $phone_numbers is an array with 'setting_values', extract that
+                    if (is_array($phone_numbers) && isset($phone_numbers[0]['setting_values'])) {
+                        $phone_numbers = $phone_numbers[0]['setting_values'];
+                    }
+                @endphp
+                @foreach ($phone_numbers as $item)
+                    @php
+                        $phone_number = is_array($item) ? $item['value'] ?? '' : $item;
+                    @endphp
+                    <div class="d-flex mt-2 gap-2 align-items-center justify-content-center">
+                        <i class="fa-solid fa-phone"></i>
+                        <a class="course_hotline_number" href="tel:{{ $phone_number }}"> {{ $phone_number }} </a>
+                    </div>
+                @endforeach
             </div>
+            <div class="course_schedule">(10 AM to 8 PM)</div>
         </div>
     </div>
 </div>

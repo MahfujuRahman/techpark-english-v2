@@ -4,7 +4,7 @@
         <li class="">
             <div class="feature_title">
                 <div class="feature_name">
-                    এই কোর্সে যা যা শিখবেন
+                    What you will learn in this course?
                 </div>
                 <div class="feature_acordion_icon">
                     <i class="fa-solid fa-chevron-down"></i>
@@ -27,7 +27,7 @@
         </li>
         <li class="">
             <div class="feature_title">
-                <div class="feature_name">এই কোর্সটি যাদের জন্য</div>
+                <div class="feature_name">Whom is this course for?</div>
                 <div class="feature_acordion_icon">
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
@@ -50,8 +50,7 @@
         <li class="">
             <div class="feature_title">
                 <div class="feature_name">
-                    {{-- আপনি কেন আমাদের কাছ থেকে শিখবেন? --}}
-                    কোর্সের এক্সক্লুসিভ ফিচার
+                    Why you learn from us?
                 </div>
                 <div class="feature_acordion_icon">
                     <i class="fa-solid fa-chevron-down"></i>
@@ -75,7 +74,7 @@
         <li class="">
             <div class="feature_title">
                 <div class="feature_name">
-                    এই কোর্সে আপনি যা যা পাচ্ছেন?
+                    What you will get in this course?
                 </div>
                 <div class="feature_acordion_icon">
                     <i class="fa-solid fa-chevron-down"></i>

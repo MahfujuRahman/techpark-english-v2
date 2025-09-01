@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Modules\Management\CourseManagement\Course\Models;
+namespace App\Modules\Management\CourseManagement\CourseEssentialRequirement\Models;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class CourseEssentialRequirementModel extends EloquentModel
+class Model extends EloquentModel
 {
     use SoftDeletes;
     protected $table = "course_essential_requirements";
     protected $guarded = [];
-
     protected static function booted()
     {
         static::created(function ($data) {
@@ -39,5 +38,4 @@ class CourseEssentialRequirementModel extends EloquentModel
      public function scopeTrased($q)
     {
         return $q->onlyTrashed();
-    }
-}
+    }}

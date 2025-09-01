@@ -81,6 +81,11 @@ import CourseWhatGetAll from '../Views/Pages/CourseWhatGet/All.vue';
 import CourseWhatGetForm from '../Views/Pages/CourseWhatGet/Form.vue';
 import CourseWhatGetDetails from '../Views/Pages/CourseWhatGet/Details.vue';
 
+//Course Essential Requirements
+import CourseEssentialRequirementsLayout from '../Views/Pages/CourseEssentialRequirements/Layout.vue';
+import CourseEssentialRequirementsAll from '../Views/Pages/CourseEssentialRequirements/All.vue';
+import CourseEssentialRequirementsForm from '../Views/Pages/CourseEssentialRequirements/Form.vue';
+import CourseEssentialRequirementsDetails from '../Views/Pages/CourseEssentialRequirements/Details.vue';
 
 // Course Routines
 import CourseRoutines from '../Views/Pages/CourseRoutine/CourseRoutine.vue';
@@ -337,6 +342,38 @@ export default [
                                 path: ':slug/details',
                                 name: 'CourseWhatGetDetails',
                                 component: CourseWhatGetDetails,
+                            },
+                        ]
+                    },
+                    // Course Course Essential Requirements
+                    {
+                        path: 'course-essential-requirements',
+                        component: CourseEssentialRequirementsLayout,
+                        children: [
+                            {
+                                path: '',
+                                name: 'CourseEssentialRequirements',
+                                component: CourseEssentialRequirementsAll,
+                            },
+                            {
+                                path: 'all',
+                                name: 'CourseEssentialRequirementsAll',
+                                component: CourseEssentialRequirementsAll,
+                            },
+                            {
+                                path: 'create',
+                                name: 'CourseEssentialRequirementsCreate',
+                                component: CourseEssentialRequirementsForm,
+                            },
+                            {
+                                path: ':slug/edit',
+                                name: 'CourseEssentialRequirementsEdit',
+                                component: CourseEssentialRequirementsForm,
+                            },
+                            {
+                                path: ':slug/details',
+                                name: 'CourseEssentialRequirementsDetails',
+                                component: CourseEssentialRequirementsDetails,
                             },
                         ]
                     },

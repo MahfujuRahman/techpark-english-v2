@@ -3,8 +3,7 @@
 
     <div class="job_possition">
         <h2 class="job_possition_title">
-            {{-- আপনি যেসব পজিশনে জব করতে পারবেন --}}
-            কোর্সটি যেভাবে সাজানো হয়েছে
+            How the course is structured
         </h2>
         <div class="job_categories">
             @foreach ($data->course_how_is_structured()->get() as $item)

@@ -88,3 +88,4 @@ include_once base_path("app/Modules/Management/WebsiteManagement/RefundPolicy/Ro
 include_once base_path("app/Modules/Management/WebsiteManagement/CookiePolicy/Routes/Route.php");
 include_once base_path("app/Modules/Management/WebsiteManagement/TermConditionPolicy/Routes/Route.php");
 include_once base_path("app/Modules/Management/CourseManagement/CourseWhatYouWillGet/Routes/Route.php");
+include_once base_path("app/Modules/Management/CourseManagement/CourseEssentialRequirement/Routes/Route.php");
