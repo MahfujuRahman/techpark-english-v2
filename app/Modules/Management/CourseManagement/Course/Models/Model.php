@@ -72,7 +72,6 @@ class Model extends EloquentModel
         return $this->hasMany(\App\Modules\Management\CourseManagement\CourseModuleClass\Models\Model::class, 'course_id', 'id');
     }
 
-   
     public function course_instructors()
     {
         // use the pivot table name, let Eloquent use the default Pivot model

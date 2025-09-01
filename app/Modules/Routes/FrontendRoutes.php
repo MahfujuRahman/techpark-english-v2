@@ -15,6 +15,7 @@ use App\Http\Controllers\Gallery\GalleryController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Seminer\SeminerController;
 use App\Http\Controllers\Teacher\TeacherController;
+use App\Http\Controllers\Course\CourseEnrollController;
 use App\Modules\Controllers\Frontend\Auth\AuthController as BackendAuthController;
 
 
@@ -81,12 +82,12 @@ Route::get('/sitemap', [PolicyController::class, 'sitemap'])->name("sitemap.poli
 
 // Authenticated Routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/course/enroll/{slug}', [WebsiteController::class, 'course_enroll'])->name("course_enroll");
-    Route::post('/course/enroll/submit/{slug}', [WebsiteController::class, 'course_enroll_submit'])->name("course_enroll_submit");
+    Route::get('/course/enroll/{slug}', [CourseEnrollController::class, 'course_enroll'])->name("course_enroll");
+    Route::post('/course/enroll/submit/{slug}', [CourseEnrollController::class, 'course_enroll_submit'])->name("course_enroll_submit");
 
     // User Course Routes
     Route::get('/my-course', [CourseController::class, 'myCourse'])->name("myCourse");
-    Route::get('/my-course/{slug}', [WebsiteController::class, 'myCourseDetails'])->name("mycourse_details");
+    Route::get('/my-course/{slug}', [CourseEnrollController::class, 'myCourseDetails'])->name("mycourse_details");
     Route::get('/quizes', [WebsiteController::class, 'quizes'])->name("website.quizes");
     Route::get('/quiz-attend/{id}', [WebsiteController::class, 'quiz_attend'])->name("website.quiz_attend");
     Route::get('/quizes/details/{id}', [WebsiteController::class, 'quiz_details'])->name("website.quizes.details");

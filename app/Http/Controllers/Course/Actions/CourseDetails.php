@@ -48,6 +48,7 @@ class CourseDetails
             $check_enrolled = EnrollInformation::where('student_id', auth()->user()->id)
                 ->where('course_id', $data->id)->exists();
         }
+        
         return view(
             'frontend.pages.courses.course_details',
             [

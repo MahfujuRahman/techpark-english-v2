@@ -27,13 +27,10 @@
 
                 @include('frontend.pages.courses.includes.course_details_card')
 
-
             </div>
         </div>
     </section>
 
     @include('frontend.pages.courses.includes.course_faq')
 
-
-    
 @endsection

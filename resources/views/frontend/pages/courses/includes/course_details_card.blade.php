@@ -124,6 +124,7 @@
             </div>
         </div>
     </div>
+    
     <div class="course_needed">
         <div class="course_needed_title">Requirements to take this course</div>
         @if ($data->course_essential_requirements)

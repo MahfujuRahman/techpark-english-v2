@@ -21,9 +21,9 @@
                             style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);">
                             <h5 class="mb-0 fw-bold">
                                 <i class="fas fa-mobile-alt me-2"></i>
-                                পেমেন্ট তথ্য
+                                Payment Information
                             </h5>
-                            <small class="opacity-75">Payment Information</small>
+                            <small class="opacity-75">There are many payment methods available</small>
                         </div>
                         <div class="card-body p-0">
                             <div style="background-color: #fff;">
@@ -31,7 +31,7 @@
                                     style="transition: background-color 0.2s;">
                                     <div class="d-flex align-items-center gap-3">
                                         <div>
-                                            <img src="{{ asset('frontend/assets/images/course_enrollment_page_image/bank_image/bkash.png') }}"
+                                            <img src="{{ asset('frontend/assets/images/bkash.png') }}"
                                                 alt="bKash" style="height:35px; width:auto;">
                                         </div>
                                         <div>
@@ -48,7 +48,7 @@
                                     style="transition: background-color 0.2s;">
                                     <div class="d-flex align-items-center gap-3">
                                         <div>
-                                            <img src="{{ asset('frontend/assets/images/course_enrollment_page_image/bank_image/roket.png') }}"
+                                            <img src="{{ asset('frontend/assets/images/roket.png') }}"
                                                 alt="Rocket" style="height:35px; width:auto;">
                                         </div>
                                         <div>
@@ -65,7 +65,7 @@
                                     style="transition: background-color 0.2s;">
                                     <div class="d-flex align-items-center gap-3">
                                         <div>
-                                            <img src="{{ asset('frontend/assets/images/course_enrollment_page_image/bank_image/nogot.png') }}"
+                                            <img src="{{ asset('frontend/assets/images/nogot.png') }}"
                                                 alt="Nagad" style="height:35px; width:auto;">
                                         </div>
                                         <div>
@@ -82,7 +82,7 @@
                                     style="transition: background-color 0.2s;">
                                     <div class="d-flex align-items-center gap-3">
                                         <div>
-                                            <img src="{{ asset('frontend/assets/images/course_enrollment_page_image/bank_image/cellz_fin.png') }}"
+                                            <img src="{{ asset('frontend/assets/images/cellz_fin.png') }}"
                                                 alt="CellFin" style="height:35px; width:auto;">
                                         </div>
                                         <div>
@@ -121,22 +121,32 @@
                             <h4 class="fw-bold text-dark mb-1">পেমেন্ট সম্পন্ন করুন</h4>
                             <small class="text-muted">Complete Your Payment</small>
                         </div>
-                        <div class="d-flex align-items-center mb-4 gap-4 flex-column flex-md-row bg-light rounded-4 shadow-sm p-3 border border-2 border-primary-subtle">
+                        <div
+                            class="d-flex align-items-center mb-4 gap-4 flex-column flex-md-row bg-light rounded-4 shadow-sm p-3 border border-2 border-primary-subtle">
 
                             <div class="flex-shrink-0 text-center">
                                 <img src="{{ asset($course->image) }}" class="img-fluid rounded-2 shadow border "
-                                alt="{{ $course->title }}" style="max-width: 100px; background: #fff;">
+                                    alt="{{ $course->title }}" style="max-width: 100px; background: #fff;">
                             </div>
                             <div class="flex-grow-1 text-center text-md-start">
                                 <h4 class="fw-bold text-dark mb-1">{{ $course->title }}</h4>
-                                <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2">
-                                    @php $batch_info = $course->course_batch()->first(); @endphp
+                                <div
+                                    class="d-flex align-items-center justify-content-center justify-content-md-start gap-2">
+                                    @php
+                                        $course_controller = new App\Http\Controllers\Course\CourseController();
+                                        $data = $course_controller->course_batch_details($course->id);
+                                        $batch_info = $data['batch'] ?? null;
+                                    @endphp
+
                                     @if ($batch_info->after_discount_price != null && $batch_info->after_discount_price > 0)
-                                        <span class="text-decoration-line-through text-muted fs-6">৳{{ number_format($batch_info->course_price) }}</span>
-                                        <span class="fw-bold text-success fs-5">৳{{ number_format($batch_info->after_discount_price) }}</span>
+                                        <span
+                                            class="text-decoration-line-through text-muted fs-6">৳{{ number_format($batch_info->course_price) }}</span>
+                                        <span
+                                            class="fw-bold text-success fs-5">৳{{ number_format($batch_info->after_discount_price) }}</span>
                                         <span class="badge bg-success-subtle text-success ms-2">Discount</span>
                                     @else
-                                        <span class="fw-bold text-primary fs-5">৳{{ number_format($batch_info->course_price) }}</span>
+                                        <span
+                                            class="fw-bold text-primary fs-5">৳{{ number_format($batch_info->course_price) }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -208,28 +218,28 @@
                 <div class="col-auto">
                     <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap">
                         <div class="text-center">
-                            <img src="{{ asset('frontend/assets/images/course_enrollment_page_image/bank_image/bkash.png') }}"
+                            <img src="{{ asset('frontend/assets/images/bkash.png') }}"
                                 alt="bKash" class="img-fluid"
                                 style="height: 45px; filter: grayscale(20%); transition: all 0.3s; cursor: pointer;"
                                 onmouseover="this.style.filter='grayscale(0%); transform: scale(1.1)'"
                                 onmouseout="this.style.filter='grayscale(20%); transform: scale(1)'">
                         </div>
                         <div class="text-center">
-                            <img src="{{ asset('frontend/assets/images/course_enrollment_page_image/bank_image/roket.png') }}"
+                            <img src="{{ asset('frontend/assets/images/roket.png') }}"
                                 alt="Rocket" class="img-fluid"
                                 style="height: 45px; filter: grayscale(20%); transition: all 0.3s; cursor: pointer;"
                                 onmouseover="this.style.filter='grayscale(0%); transform: scale(1.1)'"
                                 onmouseout="this.style.filter='grayscale(20%); transform: scale(1)'">
                         </div>
                         <div class="text-center">
-                            <img src="{{ asset('frontend/assets/images/course_enrollment_page_image/bank_image/nogot.png') }}"
+                            <img src="{{ asset('frontend/assets/images/nogot.png') }}"
                                 alt="Nagad" class="img-fluid"
                                 style="height: 45px; filter: grayscale(20%); transition: all 0.3s; cursor: pointer;"
                                 onmouseover="this.style.filter='grayscale(0%); transform: scale(1.1)'"
                                 onmouseout="this.style.filter='grayscale(20%); transform: scale(1)'">
                         </div>
                         <div class="text-center">
-                            <img src="{{ asset('frontend/assets/images/course_enrollment_page_image/bank_image/cellz_fin.png') }}"
+                            <img src="{{ asset('frontend/assets/images/cellz_fin.png') }}"
                                 alt="CellFin" class="img-fluid"
                                 style="height: 45px; filter: grayscale(20%); transition: all 0.3s; cursor: pointer;"
                                 onmouseover="this.style.filter='grayscale(0%); transform: scale(1.1)'"
