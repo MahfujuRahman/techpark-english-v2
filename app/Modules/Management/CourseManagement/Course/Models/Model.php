@@ -107,4 +107,9 @@ class Model extends EloquentModel
     {
         return $this->hasMany(\App\Modules\Management\CourseManagement\CourseFaq\Models\Model::class, 'course_id');
     }
+
+    public function course_what_you_will_get()
+    {
+        return $this->hasMany(\App\Modules\Management\CourseManagement\CourseWhatYouWillGet\Models\Model::class, 'course_id');
+    }
 }

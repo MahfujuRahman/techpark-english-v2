@@ -4,7 +4,6 @@
         //  optional($data)->intro_video
     @endphp
     <div class="course_info_div">
-        {{-- <div onclick="showCourseVideo(`{{ $data->intro_video }}`)" --}}
         <div class="course_info_thubnail_and_icon my-0">
             <div class="course_info_thubnail">
                 <img class="img-fluid course_main_img" src="{{ assetHelper(optional($data)->image) }}"

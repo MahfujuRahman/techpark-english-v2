@@ -31,7 +31,7 @@ php artisan make:table CourseManagement/Course/CourseForWhom [course_id:bigint,t
 php artisan make:table CourseManagement/Course/CourseJobWork [course_id:bigint,title:text] --model
 php artisan make:table CourseManagement/Course/CourseModuleAtAGlance [course_id:bigint,title:text] --model
 php artisan make:table CourseManagement/Course/CourseEssentialRequirement [course_id:bigint,title:text] --model
-php artisan make:table CourseManagement/Course/CourseWhatYouWillGet [course_id:bigint,title:text] --model
+php artisan make:module CourseManagement/Course/CourseWhatYouWillGet [course_id:bigint,title:text]
 
 php artisan make:module CourseManagement/CourseYouWillLearn [course_id:bigint,title:text]
 php artisan make:module CourseManagement/CourseHowIsStructured [course_id:bigint,serial:tinyint,title:text]

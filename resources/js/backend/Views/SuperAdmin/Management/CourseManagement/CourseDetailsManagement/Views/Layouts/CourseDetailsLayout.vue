@@ -33,21 +33,21 @@
                     
                     <li v-if="currentCourse">
                         <router-link 
-                            :to="{ name: 'CourseWhatLearn', params: { id: currentCourse.slug } }" 
-                            class="nav-item"
-                        >
-                            <i class="far fa-circle mr-1"></i>
-                            <div>What You Will Learn</div>
-                        </router-link>
-                    </li>
-                    
-                    <li v-if="currentCourse">
-                        <router-link 
                             :to="{ name: 'CourseHowIsStructured', params: { id: currentCourse.slug } }" 
                             class="nav-item"
                         >
                             <i class="far fa-circle mr-1"></i>
                             <div>How Is Structured</div>
+                        </router-link>
+                    </li>
+
+                    <li v-if="currentCourse">
+                        <router-link 
+                            :to="{ name: 'CourseWhatLearn', params: { id: currentCourse.slug } }" 
+                            class="nav-item"
+                        >
+                            <i class="far fa-circle mr-1"></i>
+                            <div>What You Will Learn</div>
                         </router-link>
                     </li>
                     
@@ -68,6 +68,16 @@
                         >
                             <i class="far fa-circle mr-1"></i>
                             <div>Why you Learn From Us</div>
+                        </router-link>
+                    </li>
+
+                    <li v-if="currentCourse">
+                        <router-link 
+                            :to="{ name: 'CourseWhatGet', params: { id: currentCourse.slug } }" 
+                            class="nav-item"
+                        >
+                            <i class="far fa-circle mr-1"></i>
+                            <div>What You Will Get</div>
                         </router-link>
                     </li>
 

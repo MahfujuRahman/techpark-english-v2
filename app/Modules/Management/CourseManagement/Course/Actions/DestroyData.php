@@ -20,6 +20,7 @@ class DestroyData
     static $classRoutineModel = \App\Modules\Management\CourseManagement\CourseModuleClassRoutine\Models\Model::class;
     static $whyYouLearnFromUsModel = \App\Modules\Management\CourseManagement\CourseWhyYouLearnFromUs\Models\Model::class;
     static $youWillLearnModel = \App\Modules\Management\CourseManagement\CourseYouWillLearn\Models\Model::class;
+    static $whatyouwillgetModel = \App\Modules\Management\CourseManagement\CourseWhatYouWillGet\Models\Model::class;
     static $course_modules_class_quizzes = \App\Modules\Management\CourseManagement\CourseModuleClassQuiz\Models\Model::class;
     static $quiz_submissions = \App\Modules\Management\QuizManagement\Quiz\Models\QuizSubmissionModel::class;
     static $quiz_submission_results = \App\Modules\Management\QuizManagement\QuizSubmissionResult\Models\Model::class;
@@ -57,6 +58,7 @@ class DestroyData
             self::$classRoutineModel::where('course_id', $data->id)->forceDelete();
             self::$whyYouLearnFromUsModel::where('course_id', $data->id)->forceDelete();
             self::$youWillLearnModel::where('course_id', $data->id)->forceDelete();
+            self::$whatyouwillgetModel::where('course_id', $data->id)->forceDelete();
 
             // Delete course related quizzes
             self::$course_modules_class_quizzes::where('course_id', $data->id)->forceDelete();

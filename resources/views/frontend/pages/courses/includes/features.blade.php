@@ -12,7 +12,7 @@
             </div>
             <div class="feature_content">
                 <ul style="column-count: unset;width:unset;">
-                    @foreach ($data->course_you_will_learn()->get() as $item)
+                    @foreach ($data->course_you_will_learn()->where('status', 'active')->get() as $item)
                         <li>
                             <div class="cheak_icon">
                                 <i class="fa-regular fa-circle-check"></i>
@@ -34,7 +34,7 @@
             </div>
             <div class="feature_content">
                 <ul style="column-count: unset;width:unset;">
-                    @foreach ($data->course_for_whom()->get() as $item)
+                    @foreach ($data->course_for_whom()->where('status', 'active')->get() as $item)
                         <li>
                             <div class="cheak_icon">
                                 <i class="fa-regular fa-circle-check"></i>
@@ -59,7 +59,7 @@
             </div>
             <div class="feature_content">
                 <ul style="column-count: unset;width:unset;">
-                    @foreach ($data->course_why_you_learn_from_us()->get() as $item)
+                    @foreach ($data->course_why_you_learn_from_us()->where('status', 'active')->get() as $item)
                         <li>
                             <div class="cheak_icon">
                                 <i class="fa-regular fa-circle-check"></i>
@@ -72,7 +72,7 @@
                 </ul>
             </div>
         </li>
-        {{-- <li class="">
+        <li class="">
             <div class="feature_title">
                 <div class="feature_name">
                     এই কোর্সে আপনি যা যা পাচ্ছেন?
@@ -83,7 +83,7 @@
             </div>
             <div class="feature_content">
                 <ul style="column-count: unset;width:unset;">
-                    @foreach ($data->course_what_you_will_get()->get() as $item)
+                    @foreach ($data->course_what_you_will_get()->where('status', 'active')->get() as $item)
                         <li class="">
                             <div class="cheak_icon">
                                 <i class="fa-regular fa-circle-check"></i>
@@ -95,7 +95,7 @@
                     @endforeach
                 </ul>
             </div>
-        </li> --}}
+        </li>
     </ul>
 </div>
 <script>

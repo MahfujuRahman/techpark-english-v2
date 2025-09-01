@@ -139,12 +139,3 @@ function showVideo(video_link) {
         alert('Error opening video modal');
     }
 }
-
-function showCourseVideo(video_link) {
-    
-    document.querySelector("#story_modal .modal-body").innerHTML = `
-        <iframe width="100%" height="450" src="${video_link}" frameborder="0" allow="autoplay" allowfullscreen></iframe>
-    `;
-    var modal2 = new bootstrap.Modal(document.getElementById('story_modal'));
-    modal2.toggle();
-}

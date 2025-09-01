@@ -75,6 +75,13 @@ import CourseQuizAll from '../Views/Pages/CourseQuiz/All.vue';
 import CourseQuizForm from '../Views/Pages/CourseQuiz/Form.vue';
 import CourseQuizDetails from '../Views/Pages/CourseQuiz/Details.vue';
 
+//Course What will you get
+import CourseWhatGetLayout from '../Views/Pages/CourseWhatGet/Layout.vue';
+import CourseWhatGetAll from '../Views/Pages/CourseWhatGet/All.vue';
+import CourseWhatGetForm from '../Views/Pages/CourseWhatGet/Form.vue';
+import CourseWhatGetDetails from '../Views/Pages/CourseWhatGet/Details.vue';
+
+
 // Course Routines
 import CourseRoutines from '../Views/Pages/CourseRoutine/CourseRoutine.vue';
 
@@ -298,6 +305,38 @@ export default [
                                 path: ':slug/details',
                                 name: 'CourseWhyLearnDetails',
                                 component: CourseWhyLearnDetails,
+                            },
+                        ]
+                    },
+                    // Course What You Will Get Routes
+                    {
+                        path: 'what-you-will-get',
+                        component: CourseWhatGetLayout,
+                        children: [
+                            {
+                                path: '',
+                                name: 'CourseWhatGet',
+                                component: CourseWhatGetAll,
+                            },
+                            {
+                                path: 'all',
+                                name: 'CourseWhatGetAll',
+                                component: CourseWhatGetAll,
+                            },
+                            {
+                                path: 'create',
+                                name: 'CourseWhatGetCreate',
+                                component: CourseWhatGetForm,
+                            },
+                            {
+                                path: ':slug/edit',
+                                name: 'CourseWhatGetEdit',
+                                component: CourseWhatGetForm,
+                            },
+                            {
+                                path: ':slug/details',
+                                name: 'CourseWhatGetDetails',
+                                component: CourseWhatGetDetails,
                             },
                         ]
                     },
