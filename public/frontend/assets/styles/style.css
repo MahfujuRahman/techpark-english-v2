@@ -7141,7 +7141,7 @@ html ::-webkit-scrollbar-thumb:hover {
 .course_details_area .course_details_part .course_info .course_info_div .course_info_time .time_have ul li {
   color: var(--mute-color-100, #1c1c1c);
   font-family: Baloo Da 2;
-  font-size: 20px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 600;
   line-height: 100%; /* 26px */
@@ -7384,7 +7384,7 @@ html ::-webkit-scrollbar-thumb:hover {
   color: var(--mute-color-100, #1c1c1c);
   /* Body Regular 16 */
   font-family: Baloo Da 2;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 160%; /* 25.6px */

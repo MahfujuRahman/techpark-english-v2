@@ -20,16 +20,7 @@ class CourseDetails
             ->where('course_id', $data->id)
             ->whereNotNull('admission_end_date')
             ->where('admission_end_date', '>=', Carbon::now())
-            ->select([
-                'id',
-                'course_id',
-                'admission_end_date',
-                'batch_student_limit',
-                'seat_booked',
-                'course_price',
-                'after_discount_price',
-                'booked_percent'
-            ])
+            ->select(['*'])
             ->active()
             ->orderBy('admission_end_date', 'ASC')
             ->orderBy('id', 'DESC')
@@ -39,22 +30,12 @@ class CourseDetails
         if (!$batch_details) {
             $batch_details = $data->course_batch()
                 ->where('course_id', $data->id)
-                ->select([
-                    'id',
-                    'course_id',
-                    'admission_end_date',
-                    'batch_student_limit',
-                    'seat_booked',
-                    'course_price',
-                    'after_discount_price',
-                    'booked_percent'
-                ])
+                ->select(['*'])
                 ->active()
                 ->orderBy('admission_end_date', 'DESC')
                 ->orderBy('id', 'DESC')
                 ->first();
         }
-
 
         $admissionEndDate = $batch_details->admission_end_date ?? null;
 

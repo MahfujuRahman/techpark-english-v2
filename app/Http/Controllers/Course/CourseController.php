@@ -72,16 +72,7 @@ class CourseController extends Controller
         // If no active batch details found, get the latest batch details
         if (!$batch) {
             $batch = CourseBatches::where('course_id', $course_id)
-                ->select([
-                    'id',
-                    'course_id',
-                    'admission_end_date',
-                    'batch_student_limit',
-                    'seat_booked',
-                    'course_price',
-                    'after_discount_price',
-                    'booked_percent'
-                ])
+                ->select(['*'])
                 ->active()
                 ->orderBy('admission_end_date', 'DESC')
                 ->orderBy('id', 'DESC')
