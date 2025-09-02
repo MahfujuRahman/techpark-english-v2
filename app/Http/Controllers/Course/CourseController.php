@@ -6,10 +6,12 @@ use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Course\Actions\MyCourse;
 use App\Http\Controllers\Course\Actions\CourseDetails;
+use App\Http\Controllers\Course\Actions\MyCourseDetails;
 use App\Http\Controllers\Course\Actions\Course as CourseAction;
 use App\Modules\Management\CourseManagement\Course\Models\Model as Course;
 use App\Modules\Management\CourseManagement\CourseBatch\Models\Model as CourseBatches;
 use App\Modules\Management\CourseManagement\CourseCategory\Models\Model as CourseCategory;
+use App\Modules\Management\CourseManagement\CourseModuleClassRoutine\Models\Model as CourseModuleClassRoutines;
 
 
 class CourseController extends Controller
@@ -29,6 +31,12 @@ class CourseController extends Controller
     public function myCourse()
     {
         $data = MyCourse::execute();
+        return $data;
+    }
+
+    public function myCourseDetails($slug)
+    {
+        $data = MyCourseDetails::execute($slug);
         return $data;
     }
 
@@ -86,5 +94,29 @@ class CourseController extends Controller
         }
 
         return ['batch' => $batch, 'tz' => $tz];
+    }
+
+     public function routine_details($course_id)
+    {
+        $course_routines = CourseModuleClassRoutines::select('id', 'course_id', 'date')->where('course_id', $course_id)->get();
+        $month = [];
+        
+        if (count($course_routines) > 0) {
+            foreach ($course_routines as $course_routine) {
+                // dd($course_routine->date->format('m'));
+                $formated_date = Carbon::parse($course_routine->date)->format('m');
+                array_push($month, $formated_date);
+            }
+        }
+
+        $months = array_unique($month);
+        sort($months);
+        $month_wise_routines = [];
+        foreach ($months as $key => $value) {
+            $month_name = Carbon::parse("2023-$value-01")->format('F');
+            $month_wise_routines[$month_name] = CourseModuleClassRoutines::where('course_id', $course_id)->with(['class'])->whereMonth('date', $value)->get();
+        }
+
+        return $month_wise_routines;
     }
 }

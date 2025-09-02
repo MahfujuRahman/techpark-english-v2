@@ -97,7 +97,7 @@ Route::middleware(['auth'])->group(function () {
 
     // User Course Routes
     Route::get('/my-course', [CourseController::class, 'myCourse'])->name("myCourse");
-    Route::get('/my-course/{slug}', [CourseEnrollController::class, 'myCourseDetails'])->name("mycourse_details");
+    Route::get('/my-course/{slug}', [CourseController::class, 'myCourseDetails'])->name("mycourse_details");
     Route::get('/quizes', [WebsiteController::class, 'quizes'])->name("website.quizes");
     Route::get('/quiz-attend/{id}', [WebsiteController::class, 'quiz_attend'])->name("website.quiz_attend");
     Route::get('/quizes/details/{id}', [WebsiteController::class, 'quiz_details'])->name("website.quizes.details");

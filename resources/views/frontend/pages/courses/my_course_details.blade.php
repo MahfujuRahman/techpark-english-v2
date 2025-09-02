@@ -57,12 +57,12 @@
                 <div class="mearn_course_detail_module">
 
                     <div>
-                        @foreach ($course->course_mile_stones as $course_mile_stone)
-                            @if ($course_mile_stone->course_modules->count())
+                        @foreach ($course->milestones as $course_mile_stone)
+                            @if ($course_mile_stone->modules->count())
                                 <h5 class="mb-3"><b>{{ $course_mile_stone->milestone_no }}</b>:
                                     {{ $course_mile_stone->title }}</h5>
                                 <div class="class_module_details">
-                                    @foreach ($course_mile_stone->course_modules as $key => $item)
+                                    @foreach ($course_mile_stone->modules as $key => $item)
                                         <ul class="class_module_features">
                                             <li>
                                                 <div class="class_module_title">
@@ -130,8 +130,7 @@
 
                                                                 <div data-key="{{ $key }}"
                                                                     data-link="`{{ $class->link }}`"
-                                                                    class="live_class_and_topic"
-                                                                    style="cursor: pointer"
+                                                                    class="live_class_and_topic" style="cursor: pointer"
                                                                     onclick="getClassVideolink(`{{ $class->class_video_link }}`)">
                                                                     @if ($class->is_complete)
                                                                         <div class="live_class_icon">
@@ -266,7 +265,8 @@
         </div>
     </div>
 
-    <div class="modal fade modal-xl" id="routine_modal" tabindex="-1" aria-labelledby="routine_modalLabel" aria-hidden="true">
+    <div class="modal fade modal-xl" id="routine_modal" tabindex="-1" aria-labelledby="routine_modalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 {{-- <div class="modal-header">
@@ -281,7 +281,6 @@
                             </div>
                             <div class="class_routine_table">
                                 @foreach ($course->routines as $month => $routine)
-
                                     <div class="class_routine_month">{{ $month }} 2023</div>
                                     <div class="table_div">
                                         <table>
@@ -296,12 +295,19 @@
                                             <tbody>
                                                 @foreach ($routine as $class_routine)
                                                     <tr>
-                                                        <td>ক্লাস {{ $class_routine->class ? $class_routine->class->class_no : '' }}</td>
-                                                        <td>{{ $class_routine->date->format('d F') }} - {{ $class_routine->date->format('l') }}</td>
-                                                        <td>রাত {{ Carbon\Carbon::parse($class_routine->time)->format('g:i A') }}</td>
+                                                        <td>ক্লাস
+                                                            {{ $class_routine->class ? $class_routine->class->class_no : '' }}
+                                                        </td>
+                                                        <td>{{ \Carbon\Carbon::parse($class_routine->date)->format('d F') }}
+                                                            -
+                                                            {{ \Carbon\Carbon::parse($class_routine->date)->format('l') }}
+                                                        </td>
+                                                        <td>রাত
+                                                            {{ \Carbon\Carbon::parse($class_routine->time)->format('g:i A') }}
+                                                        </td>
                                                         <td>
                                                             <div>
-                                                                @if($class_routine->class && $class_routine->class->type == 'recorded')
+                                                                @if ($class_routine->class && $class_routine->class->type == 'recorded')
                                                                     রেকর্ডেড ক্লাসঃ {{ $class_routine->topic }}
                                                                 @else
                                                                     লাইভ ক্লাসঃ {{ $class_routine->topic }}
@@ -369,8 +375,14 @@
                 };
             }
         );
+
         function getClassVideolink(link) {
             console.log(link);
+            // Convert YouTube watch URL to embed URL if needed
+            if (link.includes('youtube.com/watch')) {
+                const videoId = link.split('v=')[1].split('&')[0];
+                link = `https://www.youtube.com/embed/${videoId}`;
+            }
             document.getElementById('class_video_link').src = link;
             document.getElementById("course_section").scrollIntoView();
         }
