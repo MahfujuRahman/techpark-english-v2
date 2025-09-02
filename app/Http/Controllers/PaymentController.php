@@ -26,7 +26,6 @@ class PaymentController extends Controller
 
     public function success(Request $request)
     {
-    
         $validate = SSLCommerz::validate_payment($request);
         if ($validate) {
             $bankID = $request->bank_tran_id;   //  KEEP THIS bank_tran_id FOR REFUNDING ISSUE
@@ -68,11 +67,14 @@ class PaymentController extends Controller
                     'payment_status' => 'paid',
                 ]);
 
+            $course_slug = session('course_id');
+
             session()->forget('customer_email');
             session()->forget('customer_name');
             session()->forget('order_id');
+            session()->forget('course_id');
 
-            return redirect('my-course/' . $orderInfo->slug)->with('success', 'You are enrolled!');
+            return redirect('my-course/' . $course_slug)->with('success', 'You are enrolled!');
         }
     }
 
@@ -85,39 +87,53 @@ class PaymentController extends Controller
             return redirect('/login');
         }
 
-        session()->put('order_failed', true);
-        $tran_id = $request->input('tran_id');
+        $orderInfo = DB::table('orders')->where('trx_id', $request->tran_id)->first();
 
-        $order_details = DB::table('orders')
-            ->where('trx_id', $tran_id)
-            ->select('trx_id', 'payment_status', 'order_status', 'total')->first();
+        DB::table('order_payments')->insert([
+            'order_id' => $orderInfo->id,
+            'payment_through' => "sslcommerz",
+            'tran_id' => $request->tran_id,
+            'bank_tran_id' => $request->bank_tran_id,
+            'val_id' => $request->val_id,
+            'amount' => $request->amount,
+            'card_type' => $request->card_type,
+            'store_amount' => $request->store_amount,
+            'card_no' => $request->card_no,
+            'status' => $request->status,
+            'tran_date' => $request->tran_date,
+            'currency' => $request->currency,
+            'card_issuer' => $request->card_issuer,
+            'card_brand' => $request->card_brand,
+            'card_sub_brand' => $request->card_sub_brand,
+            'card_issuer_country' => $request->card_issuer_country,
+            'created_at' => Carbon::now()
+        ]);
 
-        if ($order_details->order_status == 0) {
-            $update_product = DB::table('orders')
-                ->where('trx_id', $tran_id)
-                ->update(['order_status' => 0, 'payment_status' => 2, 'payment_method' => 4]); // 6 => Cancelled, 2 => Failed
+        DB::table('orders')
+            ->where('id', $orderInfo->id)
+            ->update([
+                'payment_status' => 2, //failed
+            ]);
 
-            session()->forget('customer_email');
-            session()->forget('customer_name');
-            session()->forget('coupon');
-            session()->forget('discount');
-            session()->forget('delivery_cost');
-            session()->forget('cart');
-            session()->forget('order_data');
+        DB::table('enroll_informations')
+            ->where('trx_id', $request->tran_id)
+            ->update([
+                'payment_status' => 'failed',
+            ]);
 
-            Toastr::error('Transaction Cancled');
-            return session('cart') && count(session('cart')) > 0
-                ? redirect('/checkout')
-                : redirect('/home');
-        } else {
-            Toastr::error('Transaction Cancled');
-            Log::info('else log', []);
-            return redirect('/checkout');
-        }
+        $course_slug = session('course_id');
+        session()->forget('customer_email');
+        session()->forget('customer_name');
+        session()->forget('order_id');
+        session()->forget('course_id');
+
+        return redirect('course/enroll/' . $course_slug)->with('error', 'Payment failed! Please try again.');
     }
 
     public function cancel(Request $request)
     {
+        dd("cancle", $request->all());
+
         session()->put('order_failed', true);
         $tran_id = $request->input('tran_id');
 

@@ -94,6 +94,7 @@ class CourseEnrollController extends Controller
                     ]);
 
                     session([
+                        'course_id' => $course->slug,
                         'order_id' => $orderId,
                         'customer_name' => auth()->user()->first_name . ' ' . auth()->user()->last_name,
                         'customer_email' => auth()->user()->email,
