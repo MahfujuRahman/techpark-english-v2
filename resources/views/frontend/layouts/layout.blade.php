@@ -65,6 +65,11 @@
             window.toaster("{{ session()->get('warning') }}", 'warning');
         </script>
     @endif
+    @if (session()->has('error'))
+        <script>
+            window.toaster("{{ session()->get('error') }}", 'error');
+        </script>
+    @endif
 
     @include('frontend.layouts.header')
 

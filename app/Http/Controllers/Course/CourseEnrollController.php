@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Course;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use App\Modules\Management\CourseManagement\Course\Models\Model as Course;
 use App\Modules\Management\EnrollInformation\Models\Model as EnrollInformation;
 use App\Modules\Management\CourseManagement\CourseBatch\Models\Model as CourseBatches;
@@ -24,35 +27,88 @@ class CourseEnrollController extends Controller
 
     public function course_enroll_submit($slug)
     {
-        $this->validate(request(), [
-            "trx_id" => ["required"],
-        ]);
-
         $course = Course::active()->where('slug', $slug)->select('id', 'slug', 'title')->first();
-        $batch = CourseBatches::active()->where('course_id', $course->id)
-            ->orderBy('id', 'DESC')->select('id', 'batch_name')->first();
+
+        $course_controller = new CourseController();
+        $data = $course_controller->course_batch_details($course->id);
+        $batch = $data['batch'];
 
         $course_std_check = CourseBatchStudent::where('student_id', auth()->user()->id)
-            ->where('batch_id', $batch->id)->where('course_id', $course->id)->exists();
+            ->where('batch_id', $batch->id)
+            ->where('course_id', $course->id)
+            ->exists();
+
+        $subtotal = $batch->course_price ? $batch->course_price : 0;
+        $discount = $batch->course_discount ? $batch->course_discount : 0;
+        $total = round($batch->after_discount_price ? $batch->after_discount_price : 0);
 
         if (!$course_std_check) {
-            $enroll_payment = new EnrollInformation();
-            $enroll_payment->course_id = $course->id;
-            $enroll_payment->student_id = auth()->user()->id;
-            $enroll_payment->batch_id = $batch->id;
-            $enroll_payment->trx_id = request()->trx_id;
-            $enroll_payment->payment_type = 'online';
-            $enroll_payment->save();
+            try {
+                return DB::transaction(function () use ($course, $batch, $subtotal, $discount, $total) {
 
-            $course_batch_student = new CourseBatchStudent();
-            $course_batch_student->course_id = $enroll_payment->course_id;
-            $course_batch_student->batch_id = $enroll_payment->batch_id;
-            $course_batch_student->student_id = $enroll_payment->student_id;
-            $course_batch_student->status = 'active';
-            $course_batch_student->save();
-            return redirect('/')->with('success', 'Course Enrolled Successfully!');
+                    $orderData = [
+                        'order_no' => time() . rand(100, 999),
+                        'user_id' => auth()->user() ? auth()->user()->id : null,
+                        'order_date' => date("Y-m-d H:i:s"),
+                        'payment_method' => 1, //sslcommerz
+                        'payment_status' => 0, //unpaid
+                        'trx_id' => time() . Str::random(5),
+                        'sub_total' => $subtotal,
+                        'discount' => $discount,
+                        'total' => $total,
+                        'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
+                    ];
+
+                    $orderId = DB::table('orders')->insertGetId($orderData);
+                    $orderData['id'] = $orderId;
+
+                    DB::table('order_details')->insert([
+                        'order_id' => $orderId,
+                        'product_id' => $batch->id,
+                        'qty' => 1,
+                        'unit_price' => $total,
+                        'total_price' => $total,
+                    ]);
+
+                    DB::table('enroll_informations')->insert([
+                        'course_id' => $course->id,
+                        'student_id' => auth()->user()->id,
+                        'batch_id' => $batch->id,
+                        'trx_id' =>  $orderData['trx_id'],
+                        'payment_type' => 'online',
+                        'payment_by' => auth()->user()->id,
+                        'payment_status' => 'unpaid',
+                        'total_amount' => $total,
+                        'paid_amount' => 0,
+                        'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
+
+                    ]);
+
+                    DB::table('course_batch_students')->insert([
+                        'course_id' => $course->id,
+                        'batch_id' => $batch->id,
+                        'student_id' => auth()->user()->id,
+                        'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
+
+                    ]);
+
+                    session([
+                        'order_id' => $orderId,
+                        'customer_name' => auth()->user()->first_name . ' ' . auth()->user()->last_name,
+                        'customer_email' => auth()->user()->email,
+                    ]);
+
+                    //trigger sslcommerz payment
+                    return redirect('sslcommerz/order');
+                });
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                Log::error('Course enrollment failed: ' . $e->getMessage());
+
+                return redirect()->back()->with('error', 'Enrollment failed. Please try again.');
+            }
         } else {
-            return redirect()->back()->with('warning', 'You are already enrolled!');
+            return redirect()->back()->with('error', 'You are already enrolled!');
         }
     }
 }

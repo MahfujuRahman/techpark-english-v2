@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Management\PaymentGateways\Seeder;
 
 use Illuminate\Database\Seeder as SeederClass;
@@ -18,11 +19,12 @@ class Seeder extends SeederClass
         self::$model::truncate();
 
         for ($i = 1; $i <= 100; $i++) {
-            self::$model::create([                'provider_name' => $faker->randomElement(array (
-  0 => 'bkash',
-  1 => 'nagad',
-  2 => 'sslcommerze',
-)),
+            self::$model::create([
+                'provider_name' => $faker->randomElement(array(
+                    0 => 'bkash',
+                    1 => 'nagad',
+                    2 => 'sslcommerze',
+                )),
                 'api_key' => $faker->text(255),
                 'secret_key' => $faker->text(255),
                 'username' => $faker->text(255),

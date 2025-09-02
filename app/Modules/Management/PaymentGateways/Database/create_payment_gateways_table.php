@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('secret_key', 255)->nullable();
             $table->string('username', 255)->nullable();
             $table->string('password', 255)->nullable();
-            $table->tinyInteger('live')->default(0);
+            $table->tinyInteger('live')->default(0)->comment('0=>Sandbox; 1=>Live');
 
             $table->bigInteger('creator')->unsigned()->nullable();
             $table->string('slug', 50)->nullable();

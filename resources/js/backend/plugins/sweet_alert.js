@@ -36,7 +36,7 @@ window.s_confirm = async (
 window.s_warning = async (title) => {
     let result = Swal.fire({
         icon: "error",
-        title: "Error",
+        title: "error",
         html: `<h5 class='text-danger'>${title}</h5>`,
     });
     return result;
@@ -45,7 +45,7 @@ window.s_warning = async (title) => {
 window.s_error = async (title) => {
     let result = Swal.fire({
         icon: "error",
-        title: "Error",
+        title: "error",
         html: `<h5 class='text-danger'>${title}</h5>`,
     });
     return result;
