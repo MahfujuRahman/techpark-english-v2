@@ -27,11 +27,23 @@ class CourseEnrollController extends Controller
 
     public function course_enroll_submit($slug)
     {
+
         $course = Course::active()->where('slug', $slug)->select('id', 'slug', 'title')->first();
 
+        // Retrieve course batch details using the centralized CourseController method
         $course_controller = new CourseController();
         $data = $course_controller->course_batch_details($course->id);
         $batch = $data['batch'];
+
+        // Check if admission has started
+        // if (Carbon::now()->lt(Carbon::parse($batch->admission_start_date))) {
+        //     return redirect()->back()->with('error', 'Admission has not started yet.');
+        // }
+
+        // // Check if admission has ended
+        // if (Carbon::now()->gt(Carbon::parse($batch->admission_end_date))) {
+        //     return redirect()->back()->with('error', 'Admission period has ended.');
+        // }
 
         $course_std_check = CourseBatchStudent::where('student_id', auth()->user()->id)
             ->where('batch_id', $batch->id)
@@ -42,73 +54,85 @@ class CourseEnrollController extends Controller
         $discount = $batch->course_discount ? $batch->course_discount : 0;
         $total = round($batch->after_discount_price ? $batch->after_discount_price : 0);
 
+ 
         if (!$course_std_check) {
-            try {
-                return DB::transaction(function () use ($course, $batch, $subtotal, $discount, $total) {
+            //trigger sslcommerz payment
+            return redirect()->route(
+                'payment.order',
+                [
+                    'subtotal' => $subtotal,
+                    'discount' => $discount,
+                    'total' => $total,
+                    'course_slug' => $course->slug,
+                    'batch_id' => $batch->id,
+                    'customer_name' => auth()->user()->first_name . ' ' . auth()->user()->last_name,
+                    'customer_email' => auth()->user()->email,
+                ]
+            );
 
-                    $orderData = [
-                        'order_no' => time() . rand(100, 999),
-                        'user_id' => auth()->user() ? auth()->user()->id : null,
-                        'order_date' => date("Y-m-d H:i:s"),
-                        'payment_method' => 1, //sslcommerz
-                        'payment_status' => 0, //unpaid
-                        'trx_id' => time() . Str::random(5),
-                        'sub_total' => $subtotal,
-                        'discount' => $discount,
-                        'total' => $total,
-                        'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
-                    ];
+            // try {
+            //     return DB::transaction(function () use ($course, $batch, $subtotal, $discount, $total) {
 
-                    $orderId = DB::table('orders')->insertGetId($orderData);
-                    $orderData['id'] = $orderId;
+            //         $orderData = [
+            //             'order_no' => time() . rand(100, 999),
+            //             'user_id' => auth()->user() ? auth()->user()->id : null,
+            //             'order_date' => date("Y-m-d H:i:s"),
+            //             'payment_method' => 1, //sslcommerz
+            //             'payment_status' => 0, //unpaid
+            //             'trx_id' => time() . Str::random(5),
+            //             'sub_total' => $subtotal,
+            //             'discount' => $discount,
+            //             'total' => $total,
+            //             'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
+            //         ];
 
-                    DB::table('order_details')->insert([
-                        'order_id' => $orderId,
-                        'product_id' => $batch->id,
-                        'qty' => 1,
-                        'unit_price' => $total,
-                        'total_price' => $total,
-                    ]);
+            //         $orderId = DB::table('orders')->insertGetId($orderData);
+            //         $orderData['id'] = $orderId;
 
-                    DB::table('enroll_informations')->insert([
-                        'course_id' => $course->id,
-                        'student_id' => auth()->user()->id,
-                        'batch_id' => $batch->id,
-                        'trx_id' =>  $orderData['trx_id'],
-                        'payment_type' => 'online',
-                        'payment_by' => auth()->user()->id,
-                        'payment_status' => 'unpaid',
-                        'total_amount' => $total,
-                        'paid_amount' => 0,
-                        'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
+            //         DB::table('order_details')->insert([
+            //             'order_id' => $orderId,
+            //             'product_id' => $batch->id,
+            //             'qty' => 1,
+            //             'unit_price' => $total,
+            //             'total_price' => $total,
+            //         ]);
 
-                    ]);
+            //         DB::table('enroll_informations')->insert([
+            //             'course_id' => $course->id,
+            //             'student_id' => auth()->user()->id,
+            //             'batch_id' => $batch->id,
+            //             'trx_id' =>  $orderData['trx_id'],
+            //             'payment_type' => 'online',
+            //             'payment_by' => auth()->user()->id,
+            //             'payment_status' => 'unpaid',
+            //             'total_amount' => $total,
+            //             'paid_amount' => 0,
+            //             'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
 
-                    DB::table('course_batch_students')->insert([
-                        'course_id' => $course->id,
-                        'batch_id' => $batch->id,
-                        'student_id' => auth()->user()->id,
-                        'is_complete' => 'incomplete',
-                        'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
+            //         ]);
 
-                    ]);
+            //         DB::table('course_batch_students')->insert([
+            //             'course_id' => $course->id,
+            //             'batch_id' => $batch->id,
+            //             'student_id' => auth()->user()->id,
+            //             'is_complete' => 'incomplete',
+            //             'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
 
-                    session([
-                        'course_id' => $course->slug,
-                        'order_id' => $orderId,
-                        'customer_name' => auth()->user()->first_name . ' ' . auth()->user()->last_name,
-                        'customer_email' => auth()->user()->email,
-                    ]);
+            //         ]);
 
-                    //trigger sslcommerz payment
-                    return redirect('sslcommerz/order');
-                });
-            } catch (\Exception $e) {
-                // Log the error for debugging
-                Log::error('Course enrollment failed: ' . $e->getMessage());
+            //         session([
+            //             'course_id' => $course->slug,
+            //             'order_id' => $orderId,
+            //             'customer_name' => auth()->user()->first_name . ' ' . auth()->user()->last_name,
+            //             'customer_email' => auth()->user()->email,
+            //         ]);
+            //     });
+            // } catch (\Exception $e) {
+            //     // Log the error for debugging
+            //     Log::error('Course enrollment failed: ' . $e->getMessage());
 
-                return redirect()->back()->with('error', 'Enrollment failed. Please try again.');
-            }
+            //     return redirect()->back()->with('error', 'Enrollment failed. Please try again.');
+            // }
         } else {
             return redirect()->back()->with('error', 'You are already enrolled!');
         }

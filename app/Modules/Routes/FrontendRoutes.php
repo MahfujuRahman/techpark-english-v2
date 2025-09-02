@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\WebsiteController;
 
 use App\Http\Controllers\Auth\AuthController;
@@ -106,5 +106,4 @@ Route::middleware(['auth'])->group(function () {
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'profileUpdate'])->name('update_profile');
-
 });

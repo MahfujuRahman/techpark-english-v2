@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Gateways\SSLCommerz;
 
@@ -82,7 +82,7 @@ class SSLCommerzParams extends SSLCommerzParamVars
         $this->ship_state = $postal;
         $this->ship_postcode = $state;
         $this->ship_country = $country;
-        return $this;   
+        return $this;
     }
 
     public function setAirlineTicketProfile($flight_type, $hours_till_departure, $pnr, $journey_from_to, $third_party_booking)
@@ -125,17 +125,20 @@ class SSLCommerzParams extends SSLCommerzParamVars
         return $this;
     }
 
-    public function setExtras($extra1 = null, $extra2 = null, $extra3 = null, $extra4 = null)
+    public function setExtras($extra1 = null, $extra2 = null, $extra3 = null, $extra4 = null, $extra5 = null)
     {
         $this->value_a = $extra1;
         $this->value_b = $extra2;
         $this->value_c = $extra3;
         $this->value_d = $extra4;
+        $this->value_e = $extra5;
         return $this;
     }
 
     protected function __initialize_defaults()
     {
+
+
         $this->allowed_bin = null;
         $this->emi_option = 0;
         $this->emi_max_inst_option = null;
@@ -167,9 +170,10 @@ class SSLCommerzParams extends SSLCommerzParamVars
         $this->vat = null;
         $this->discount_amount = null;
         $this->convenience_fee = null;
-        $this->value_a = null;
-        $this->value_b = null;
-        $this->value_c = null;
-        $this->value_d = null;
+        $this->value_a = request()->input('subtotal');
+        $this->value_b = request()->input('discount');
+        $this->value_c = request()->input('total');
+        $this->value_d = request()->input('course_slug');
+        $this->value_e = request()->input('batch_id');
     }
 }

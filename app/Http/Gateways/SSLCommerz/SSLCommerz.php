@@ -35,7 +35,7 @@ class SSLCommerz extends SSLCommerzParams
 
     public function make_payment($initiate_only = false)
     {
-
+        
         try {
             $client = new Client([
                 'base_uri'  =>  $this->getDomain(),

@@ -1,41 +1,75 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Payment;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
-use App\Http\Gateways\SSLCommerz\SSLCommerz;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Gateways\SSLCommerz\SSLCommerz;
+use App\Modules\Management\CourseManagement\Course\Models\Model as Course;
 
 class PaymentController extends Controller
 {
     public function order()
     {
-        $orderData = DB::table('orders')->where('id', session('order_id'))->first();
         $sslc = new SSLCommerz();
-        $sslc->amount($orderData->total)
-            ->trxid($orderData->trx_id)
+        $sslc->amount(request()->input('total'))
+            ->trxid(time() . Str::random(5))
             ->product('Products From TechPark English')
-            ->customer(session('customer_name'), session('customer_email'));
+            ->customer(request()->input('customer_name'), request()->input('customer_email'));
 
         return $sslc->make_payment();
     }
 
+
     public function success(Request $request)
     {
+        dd($request->all());
+        $trx_id = request()->tran_id;
+        $subtotal = request()->value_a;
+        $discount = request()->value_b;
+        $total = request()->value_c;
+        $course_slug = request()->value_d;
+
+        $course = Course::active()->where('slug', $course_slug)->select('id', 'slug', 'title')->first();
+
+        dd("success", $request->all(), request()->input('subtotal'), $subtotal);
         $validate = SSLCommerz::validate_payment($request);
         if ($validate) {
             $bankID = $request->bank_tran_id;   //  KEEP THIS bank_tran_id FOR REFUNDING ISSUE
             //  Do the rest database saving works
             //  take a look at dd($request->all()) to see what you need
 
-            $orderInfo = DB::table('orders')->where('trx_id', $request->tran_id)->first();
+            $orderId = DB::table('orders')->insertGetId(
+                [
+                    'order_no' => time() . rand(100, 999),
+                    'user_id' => auth()->user() ? auth()->user()->id : null,
+                    'order_date' => date("Y-m-d H:i:s"),
+                    'payment_method' => 1, //sslcommerz
+                    'payment_status' => 1, //paid
+                    'trx_id' => $trx_id,
+                    'sub_total' => $subtotal,
+                    'discount' => $discount,
+                    'total' => $total,
+                    'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
+                ]
+            );
+
+            DB::table('order_details')->insert([
+                'order_id' => $orderId,
+                'product_id' => $batch->id,
+                'qty' => 1,
+                'unit_price' => $total,
+                'total_price' => $total,
+            ]);
 
             DB::table('order_payments')->insert([
-                'order_id' => $orderInfo->id,
+                'order_id' => $orderId,
                 'payment_through' => "sslcommerz",
                 'tran_id' => $request->tran_id,
                 'bank_tran_id' => $bankID,
@@ -54,18 +88,28 @@ class PaymentController extends Controller
                 'created_at' => Carbon::now()
             ]);
 
-            DB::table('orders')
-                ->where('id', $orderInfo->id)
-                ->update([
-                    'payment_status' => 1, //paid
-                ]);
+            DB::table('enroll_informations')->insert([
+                'course_id' => $course->id,
+                'student_id' => auth()->user()->id,
+                'batch_id' => $batch->id,
+                'trx_id' =>  $trx_id,
+                'payment_type' => 'online',
+                'payment_by' => auth()->user()->id,
+                'payment_status' => 'paid',
+                'total_amount' => $total,
+                'paid_amount' => 0,
+                'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
 
-            DB::table('enroll_informations')
-                ->where('trx_id', $request->tran_id)
-                ->update([
-                    'paid_amount' => $request->amount,
-                    'payment_status' => 'paid',
-                ]);
+            ]);
+
+            DB::table('course_batch_students')->insert([
+                'course_id' => $course->id,
+                'batch_id' => $batch->id,
+                'student_id' => auth()->user()->id,
+                'is_complete' => 'incomplete',
+                'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
+
+            ]);
 
             $course_slug = session('course_id');
 
