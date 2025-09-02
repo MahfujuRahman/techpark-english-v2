@@ -72,7 +72,7 @@ class PaymentController extends Controller
             session()->forget('customer_name');
             session()->forget('order_id');
 
-            return redirect('my-course/' . $orderInfo->slug);
+            return redirect('my-course/' . $orderInfo->slug)->with('success', 'You are enrolled!');
         }
     }
 

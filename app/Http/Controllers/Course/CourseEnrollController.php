@@ -88,6 +88,7 @@ class CourseEnrollController extends Controller
                         'course_id' => $course->id,
                         'batch_id' => $batch->id,
                         'student_id' => auth()->user()->id,
+                        'is_complete' => 'incomplete',
                         'slug' => Str::slug($course->title . '-' . time() . '-' . Str::random(6))
 
                     ]);
