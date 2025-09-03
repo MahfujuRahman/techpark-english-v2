@@ -12,6 +12,8 @@ class CourseDetails
 {
     public static function execute($slug)
     {
+        $tz = env('TIMEZONE', config('app.timezone', 'UTC'));
+
         $data = Course::active()->where('slug', $slug)->first();
 
         $instructors = $data->course_instructors()->get();
@@ -48,7 +50,20 @@ class CourseDetails
             $check_enrolled = EnrollInformation::where('student_id', auth()->user()->id)
                 ->where('course_id', $data->id)->exists();
         }
-        
+
+        // Check if admission has started (using Bangladesh time)
+        $is_admission_open = false;
+        $is_admission_closed = false;
+        $now = Carbon::now($tz);
+        if ($now->lt(Carbon::parse($batch_details->admission_start_date, $tz))) {
+            $is_admission_open = true;
+        }
+
+        // Check if admission has ended (using Bangladesh time)
+        if ($now->gt(Carbon::parse($batch_details->admission_end_date, $tz))) {
+            $is_admission_closed = true;
+        }
+    
         return view(
             'frontend.pages.courses.course_details',
             [
@@ -56,7 +71,9 @@ class CourseDetails
                 'data' => $data,
                 'check_enrolled' => $check_enrolled,
                 'instructors' => $instructors,
-                'formattedDate' => $formattedDate
+                'formattedDate' => $formattedDate,
+                'is_admission_open' => $is_admission_open,
+                'is_admission_closed' => $is_admission_closed
             ]
         );
     }

@@ -71,6 +71,11 @@
                     <div class="admit_course_title">View Course</div>
                     <div class="admit_course_icon"><i class="fa-solid fa-angle-right"></i></div>
                 </a>
+            @elseif ($is_admission_open || $is_admission_closed)
+                <div class="admit_course_title_and_icon" style="cursor: not-allowed; opacity: 0.5;">
+                    <div class="admit_course_title">Enrollment Closed</div>
+                    <div class="admit_course_icon"><i class="fa-solid fa-angle-right"></i></div>
+                </div>
             @else
                 <a href="{{ route('course_enroll', $data->slug) }}" class="admit_course_title_and_icon">
                     <div class="admit_course_title">Enroll in Course</div>
@@ -124,7 +129,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="course_needed">
         <div class="course_needed_title">Requirements to take this course</div>
         @if ($data->course_essential_requirements)
