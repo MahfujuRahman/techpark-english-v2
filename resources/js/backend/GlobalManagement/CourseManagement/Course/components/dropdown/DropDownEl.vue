@@ -108,10 +108,10 @@ export default {
     }, 500),
     set_selected: function (item, event) {
       if (!this.multiple) {
-  this.selected = [item];
-  // notify parent about change (single select)
-  try { this.$emit('selected-changed', item.id || item); } catch(e){}
-  return;
+        this.selected = [item];
+        // notify parent about change (single select)
+        try { this.$emit('selected-changed', item.id || item); } catch (e) { }
+        return;
       }
       // Defensive: event may be undefined when called from watcher
       const checked = event && event.target ? event.target.checked : true;
@@ -128,7 +128,7 @@ export default {
     },
     remove_item: function (item) {
       this.selected = this.selected.filter((i) => i.id != item.id);
-  try { this.$emit('selected-changed', null); } catch(e){}
+      try { this.$emit('selected-changed', null); } catch (e) { }
     },
   },
   computed: {

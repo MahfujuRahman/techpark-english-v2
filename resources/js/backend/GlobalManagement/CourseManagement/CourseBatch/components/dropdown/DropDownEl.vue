@@ -73,18 +73,27 @@ export default {
             default: [],
         },
     },
-    created: function () {
-        // if a course_id is provided, set it as a filter criteria before fetching
+    created: async function () {
+        // if a course_id is provided, normalize and set it as a filter criteria before fetching
         if (this.course_id) {
             try {
-                this.set_filter_criteria({ course_id: this.course_id });
+                const normalizedCourseId = (typeof this.course_id === 'object' && this.course_id !== null) ? (this.course_id.id || this.course_id) : this.course_id;
+                // set via action
+                await this.set_filter_criteria({ course_id: normalizedCourseId });
+                // also set directly on the store to be certain the async fetch sees it
+                try {
+                    const storeInstance = store();
+                    storeInstance.filter_criteria = { ...(storeInstance.filter_criteria || {}), course_id: normalizedCourseId };
+                } catch (e) {}
+                // also set a global override so store action always includes it
+                try { window.__course_id_override = normalizedCourseId; } catch (e) {}
             } catch (e) {
                 // ignore
             }
         }
 
         if (!this.all?.data?.length) {
-            this.get_all();
+            await this.get_all();
         }
         this.$watch("value", function (v) {
             // If value is an array of objects, set selected directly
@@ -108,12 +117,37 @@ export default {
         // watch course_id prop changes to refetch filtered batches
         this.$watch('course_id', async function (newVal, oldVal) {
             // update filter criteria in the store
-            await this.set_filter_criteria({ course_id: newVal });
+            const normalized = (typeof newVal === 'object' && newVal !== null) ? (newVal.id || newVal) : newVal;
+            await this.set_filter_criteria({ course_id: normalized });
+            try { window.__course_id_override = normalized; } catch (e) {}
             // clear current selection when course changes
             this.selected = [];
             // refetch data for the new course
             await this.get_all();
         }, { immediate: false });
+
+        // When the store data arrives (useful in edit mode), ensure the selected item matches the incoming value
+        this.$watch(() => (this.all && this.all.data), function (newData) {
+            if (!newData || !newData.length) return;
+            // if already selected, skip
+            if (this.selected && this.selected.length) return;
+
+            const v = this.value;
+            try {
+                if (Array.isArray(v) && v.length && typeof v[0] !== 'object') {
+                    // array of ids
+                    this.selected = this.all.data.filter(item => v.includes(item.id));
+                } else if ((typeof v === 'string' || typeof v === 'number')) {
+                    const item = this.all.data.find(item => item.id == v);
+                    if (item) this.selected = [item];
+                } else if (typeof v === 'object' && v !== null && v.id) {
+                    const item = this.all.data.find(item => item.id == v.id);
+                    this.selected = item ? [item] : [v];
+                }
+            } catch (e) {
+                // ignore errors silently
+            }
+        }, { immediate: true });
     },
     data: () => ({
         selected: [],
@@ -121,10 +155,21 @@ export default {
         setup,
     }),
     methods: {
-    ...mapActions(store, ["get_all", "set_paginate", "set_page", "set_filter_criteria"]),
+        ...mapActions(store, ["get_all", "set_paginate", "set_page", "set_filter_criteria"]),
         search_item: debounce(async function (event) {
             let value = event.target.value;
             this.search_key = value;
+            // ensure course_id filter is sent along with search (normalize id)
+            if (this.course_id) {
+                try {
+                    const normalizedCourseId = (typeof this.course_id === 'object' && this.course_id !== null) ? (this.course_id.id || this.course_id) : this.course_id;
+                    await this.set_filter_criteria({ course_id: normalizedCourseId });
+                    try {
+                        const storeInstance = store();
+                        storeInstance.filter_criteria = { ...(storeInstance.filter_criteria || {}), course_id: normalizedCourseId };
+                    } catch (e) {}
+                } catch (e) {}
+            }
             this.only_latest_data = true;
             await this.get_all();
             this.only_latest_data = false;
