@@ -48,7 +48,7 @@ class DataStoreValidation extends FormRequest
             'payment_type' => 'required | sometimes',
             'payment_by' => 'required | sometimes',
             'receipt_id' => 'required | sometimes',
-            'trx_id' => 'required | sometimes',
+            'trx_id' => 'sometimes',
             'payment_status' => 'required | sometimes',
             'total_amount' => 'required | sometimes',
             'paid_amount' => 'required | sometimes',

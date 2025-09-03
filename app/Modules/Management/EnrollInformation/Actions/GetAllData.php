@@ -18,7 +18,8 @@ class GetAllData
             $start_date = request()->input('start_date');
             $end_date = request()->input('end_date');
 
-                            $with = [];
+            $with = ['course_id', 'student_id', 'batch_id'];
+
 
             $condition = [];
 
@@ -27,31 +28,30 @@ class GetAllData
             if (request()->has('search') && request()->input('search')) {
                 $searchKey = request()->input('search');
                 $data = $data->where(function ($q) use ($searchKey) {
-    $q->where('course_id', 'like', '%' . $searchKey . '%');    
+                    $q->where('course_id', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('student_id', 'like', '%' . $searchKey . '%');    
+                    $q->orWhere('student_id', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('batch_id', 'like', '%' . $searchKey . '%');    
+                    $q->orWhere('batch_id', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('payment_type', 'like', '%' . $searchKey . '%');    
+                    $q->orWhere('payment_type', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('payment_by', 'like', '%' . $searchKey . '%');    
+                    $q->orWhere('payment_by', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('receipt_id', 'like', '%' . $searchKey . '%');    
+                    $q->orWhere('receipt_id', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('trx_id', 'like', '%' . $searchKey . '%');    
+                    $q->orWhere('trx_id', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('payment_status', 'like', '%' . $searchKey . '%');    
+                    $q->orWhere('payment_status', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('total_amount', 'like', '%' . $searchKey . '%');    
+                    $q->orWhere('total_amount', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('paid_amount', 'like', '%' . $searchKey . '%');              
-
+                    $q->orWhere('paid_amount', 'like', '%' . $searchKey . '%');
                 });
             }
 
             if ($start_date && $end_date) {
-                 if ($end_date > $start_date) {
+                if ($end_date > $start_date) {
                     $data->whereBetween('created_at', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
                 } elseif ($end_date == $start_date) {
                     $data->whereDate('created_at', $start_date);
@@ -71,7 +71,7 @@ class GetAllData
                     ->limit($pageLimit)
                     ->orderBy($orderByColumn, $orderByType)
                     ->get();
-                     return entityResponse($data);
+                return entityResponse($data);
             } else if ($status == 'trased') {
                 $data = $data
                     ->with($with)
@@ -95,7 +95,6 @@ class GetAllData
                 "inactive_data_count" => self::$model::inactive()->count(),
                 "trased_data_count" => self::$model::trased()->count(),
             ]);
-
         } catch (\Exception $e) {
             return messageResponse($e->getMessage(), [], 500, 'server_error');
         }

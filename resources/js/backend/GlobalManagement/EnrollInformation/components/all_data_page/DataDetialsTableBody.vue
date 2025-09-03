@@ -120,15 +120,18 @@ export default {
             second: "2-digit",
           }).format(new Date(content));
         }
-        return content.length > 50 ? content.substring(0, 50) + "..." : content;
+        return content.length > 50 ? content.substring(0, 25) + "..." : content;
       }
       if (content && typeof content === "object") {
         for (const key of Object.keys(content)) {
           if (key === "title" && content.title) {
             return content.title;
           }
-          if (key === "name" && content.name) {
-            return content.name;
+          if (key === "first_name" && content.first_name) {
+            return content.first_name + " " + content.last_name;
+          }
+          if (key === "batch_name" && content.batch_name) {
+            return content.batch_name;
           }
         }
       }

@@ -123,7 +123,7 @@ php artisan make:module GalleryManagement/Gallery [gallery_category_id:bigint{Ga
 | EnrollInformation
 |--------------------------------------------------------------------------
 */ 
-php artisan make:module EnrollInformation [course_id:bigint,student_id:bigint,batch_id:bigint,payment_type:enum-offline.online,payment_by:string-50,receipt_id:string-255,trx_id:string-255,payment_status:enum-paid.unpaid.failed,total_amount:float,paid_amount:float] --vue
+php artisan make:module EnrollInformation [course_id:bigint{CourseManagement/Course},student_id:bigint{UserManagement/User},batch_id:bigint{CourseManagement/CourseBatch},payment_type:enum-offline.online,payment_by:string-50,receipt_id:string-255,trx_id:string-255,payment_status:enum-paid.unpaid.failed,total_amount:float,paid_amount:float] --vue
 
 /*
 |--------------------------------------------------------------------------

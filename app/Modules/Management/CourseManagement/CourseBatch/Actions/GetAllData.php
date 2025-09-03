@@ -7,7 +7,7 @@ class GetAllData
     static $model = \App\Modules\Management\CourseManagement\CourseBatch\Models\Model::class;
 
     public static function execute()
-    {   
+    {
         try {
             $course_id = request()->query('course_id');
             $pageLimit = request()->input('limit') ?? 10;

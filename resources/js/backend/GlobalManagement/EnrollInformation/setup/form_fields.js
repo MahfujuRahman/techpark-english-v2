@@ -1,26 +1,5 @@
 export default [
 	{
-		name: "course_id",
-		label: "Enter your course id",
-		type: "number",
-		value: "",
-	},
-
-	{
-		name: "student_id",
-		label: "Enter your student id",
-		type: "number",
-		value: "",
-	},
-
-	{
-		name: "batch_id",
-		label: "Enter your batch id",
-		type: "number",
-		value: "",
-	},
-
-	{
 		name: "payment_type",
 		label: "Enter your payment type",
 		type: "select",

@@ -38,4 +38,16 @@ class Model extends EloquentModel
      public function scopeTrased($q)
     {
         return $q->onlyTrashed();
-    }}
+    }
+    public function course_id()
+{
+    return $this->belongsTo("App\Modules\Management\CourseManagement\Course\Models\Model", "course_id");
+}
+    public function student_id()
+{
+    return $this->belongsTo("App\Modules\Management\UserManagement\User\Models\Model", "student_id");
+}
+    public function batch_id()
+{
+    return $this->belongsTo("App\Modules\Management\CourseManagement\CourseBatch\Models\Model", "batch_id");
+}}

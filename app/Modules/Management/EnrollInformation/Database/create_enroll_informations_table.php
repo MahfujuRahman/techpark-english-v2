@@ -14,9 +14,9 @@ return new class extends Migration
     {
         Schema::create('enroll_informations', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('course_id')->nullable();
-            $table->bigInteger('student_id')->nullable();
-            $table->bigInteger('batch_id')->nullable();
+            $table->string('course_id', 100)->nullable();
+            $table->string('student_id', 100)->nullable();
+            $table->string('batch_id', 100)->nullable();
             $table->enum('payment_type', ['offline','online'])->nullable();
             $table->string('payment_by', 50)->nullable();
             $table->string('receipt_id', 255)->nullable();

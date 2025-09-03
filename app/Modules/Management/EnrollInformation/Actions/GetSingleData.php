@@ -11,7 +11,7 @@ class GetSingleData
     public static function execute($slug)
     {
         try {
-                             $with = [];
+            $with = ['course_id','student_id','batch_id'];
 
             $fields = request()->input('fields') ?? ['*'];
             if (!$data = self::$model::query()->with($with)->select($fields)->where('slug', $slug)->first()) {
