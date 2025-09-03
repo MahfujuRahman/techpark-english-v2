@@ -89,7 +89,18 @@ class MyCourseDetails
         }
 
         // dd($data->toArray());
+        $total_class_attend = CourseModuleTaskCompleteByUserModel::where('course_id', $data->id)
+            ->where('user_id', auth()->user()->id)
+            ->count();
 
-        return view('frontend.pages.courses.my_course_details', ['course' => $data]);
+        $total_class = $data->milestones->sum(function ($milestone) {
+            return $milestone->modules->sum(function ($module) {
+                return $module->classes->count();
+            });
+        });
+
+        $progress = round(($total_class_attend / $total_class) * 100, 2);
+    
+        return view('frontend.pages.courses.my_course_details', ['course' => $data, 'progress' => $progress]);
     }
 }

@@ -17,15 +17,15 @@
                 </div>
                 <div class="course_progress_area">
                     <div class="course_progress">
-                        <div class="course_progress_title">কোর্স প্রোগ্রেস ৭%</div>
+                        <div class="course_progress_title">কোর্স প্রোগ্রেস {{ $progress }} %</div>
                         <div class="course_progress_bar">
-                            <div class="course_progress_bar_complete"></div>
+                            <div class="course_progress_bar_complete" style="width: {{ $progress }}%;"></div>
                         </div>
-                        <div class="course_progress_info">
+                        {{-- <div class="course_progress_info">
                             কোর্স সার্টিফিকেট পেতে কোর্সটি সম্পুর্ণ করুন
-                        </div>
+                        </div> --}}
                     </div>
-                    <div class="course_certificate">
+                    {{-- <div class="course_certificate">
                         <div class="course_certificate_image">
                             <img class="img-fluid" src="/frontend/assets/images/course_details_image/course_certificate.png"
                                 alt="" />
@@ -33,7 +33,7 @@
                         <div class="course_certificate_lock">
                             <i class="fa-solid fa-lock"></i>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <div class="class_routine">
@@ -100,38 +100,13 @@
                                                                 <div class="class_module_class_no">ক্লাস
                                                                     {{ $class->class_no }}</div>
 
-
-                                                                {{-- <div data-key="{{ $key }}"
-                                                                    data-link="`{{ $class->link }}`"
-                                                                    class="live_class_and_topic"
-                                                                    style="cursor: {{ $class->is_complete ? 'pointer;' : 'not-allowed;' }};"
-                                                                    @if ($class->is_complete) onclick="getClassVideolink(`{{ $class->class_video_link }}`)" @endif>
-                                                                    @if ($class->is_complete)
-                                                                        <div class="live_class_icon">
-                                                                            <i
-                                                                                class="fa-solid fa-circle-check text-success"></i>
-                                                                        </div>
-                                                                    @else
-                                                                        <div class="live_class_icon">
-                                                                            <img src="/frontend/assets/images/about_page_image/class_module/podcasts.png"
-                                                                                alt="" />
-                                                                        </div>
-                                                                    @endif
-                                                                    <div class="class_module_live_class">
-                                                                        @if ($class->type == 'live')
-                                                                            লাইভ ক্লাসঃ
-                                                                        @else
-                                                                            রেকর্ডেড ক্লাসঃ
-                                                                        @endif
-                                                                    </div>
-                                                                    <div class="class_module_topic cursor_pointer">
-                                                                        {{ $class->title }}</div>
-                                                                </div> --}}
-
                                                                 <div data-key="{{ $key }}"
                                                                     data-link="`{{ $class->link }}`"
                                                                     class="live_class_and_topic" style="cursor: pointer"
-                                                                    onclick="getClassVideolink(`{{ $class->class_video_link }}`)">
+                                                                    onclick="getClassVideolink(`{{ $class->class_video_link }}`)"
+                                                                    courseCompletion('{{ $course->id }}',
+                                                                    {{ $course_mile_stone->id }}, {{ $item->id }},
+                                                                    {{ $class->id }})">
                                                                     @if ($class->is_complete)
                                                                         <div class="live_class_icon">
                                                                             <i
@@ -210,56 +185,25 @@
 
                         <div class="course_lession_video">
                             <div class="course_lession_video_thum">
-                                {{-- <img src="/frontend/assets/images/course_details_image/course_lessson_video_thum.png"
-                                        alt="" /> --}}
 
                                 <iframe id="class_video_link" width="100%" height="450"
-                                    src="https://www.youtube.com/embed/oakcMR7BzTk?si=tjMD3j4srWgDXMVE"
+                                    src=""
                                     title="YouTube video player" frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"
                                     allowfullscreen>
                                 </iframe>
                             </div>
-                            {{-- <div class="course_lession_video_icon">
-                                    <img src="/frontend/assets/images/course_details_image/course_info_icon.png" alt="" />
-                                </div> --}}
+                          
 
                         </div>
 
                         <div class="course_lession_video_next_btn">
-                            <div class="next_btn">
+                            <div class="next_btn" onclick="nextVideo()">
                                 নেক্সট লেসন <i class="fa-solid fa-angle-right"></i>
                             </div>
                         </div>
                     </div>
                 </div>
-                {{-- <div class="bootstrap_grid_quiz_part">
-                    <div class="bootstrap_grid_empty_space"></div>
-                    <div class="bootstrap_grid_quiz_space">
-                        <div class="bootstrap_grid_quiz">
-                            <div class="bootstrap_grid_quiz_question">
-                                কুইজ ১ঃ বুটস্ট্রােপ গ্রিডে গাটার স্পেসিং কত?
-                            </div>
-                            <div class="bootstrap_grid_text_area">
-                                <textarea name="" id="" cols="30" rows="10" placeholder="আপনার উত্তর লিখুন"></textarea>
-                            </div>
-                            <div class="character_length_and_submit_btn">
-                                <div class="character_length_title">Carecter 0/1000</div>
-                                <div class="bootstrap_grid_submit_btn">
-                                    সাবমিট করুন
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mearn_course_previos_and_next_button">
-                            <div class="previous_btn">
-                                <i class="fa-solid fa-angle-left"></i>পূর্বের লেসন
-                            </div>
-                            <div class="next_btn">
-                                নেক্সট লেসন<i class="fa-solid fa-angle-right"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
 
             </div>
         </div>
@@ -269,19 +213,15 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                {{-- <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="routine_modalLabel">Modal title</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div> --}}
                 <div class="modal-body">
                     <div class="course_details_quiz_area">
                         <div class="class_routine">
-                            <div class="class_routine_title_and_details">
+                            <div class="class_routine_title_and_details justify-content-center">
                                 <div class="class_routine_title">ক্লাস রুটিন</div>
                             </div>
                             <div class="class_routine_table">
                                 @foreach ($course->routines as $month => $routine)
-                                    <div class="class_routine_month">{{ $month }} 2023</div>
+                                    <div class="class_routine_month">{{ $month }}</div>
                                     <div class="table_div">
                                         <table>
                                             <thead>
@@ -301,6 +241,8 @@
                                                         <td>{{ \Carbon\Carbon::parse($class_routine->date)->format('d F') }}
                                                             -
                                                             {{ \Carbon\Carbon::parse($class_routine->date)->format('l') }}
+                                                            -
+                                                            {{ \Carbon\Carbon::parse($class_routine->date)->format('Y') }}
                                                         </td>
                                                         <td>রাত
                                                             {{ \Carbon\Carbon::parse($class_routine->time)->format('g:i A') }}
@@ -321,52 +263,58 @@
                                         </table>
                                     </div>
                                 @endforeach
-                                {{-- <div class="class_routine_month">মে 2023</div>
-                                <div class="table_div">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td>ক্লাস ১</td>
-                                                <td>১২ এপ্রিল - বুধবার</td>
-                                                <td>রাত ০৮ঃ৩০ - রাত ১১ঃ৩০</td>
-                                                <td>
-                                                    <div>রেকর্ডেড ক্লাসঃ Basici JS</div>
-                                                    <div>কুইজঃMCQ Question about basics of Bootstrap</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>ক্লাস ১</td>
-                                                <td>১২ এপ্রিল - বুধবার</td>
-                                                <td>রাত ০৮ঃ৩০ - রাত ১১ঃ৩০</td>
-                                                <td>
-                                                    <div>রেকর্ডেড ক্লাসঃ Basici JS</div>
-                                                    <div>কুইজঃMCQ Question about basics of Bootstrap</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>ক্লাস ১</td>
-                                                <td>১২ এপ্রিল - বুধবার</td>
-                                                <td>রাত ০৮ঃ৩০ - রাত ১১ঃ৩০</td>
-                                                <td>
-                                                    <div>রেকর্ডেড ক্লাসঃ Basici JS</div>
-                                                    <div>কুইজঃMCQ Question about basics of Bootstrap</div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div> --}}
+
                             </div>
                         </div>
                     </div>
                 </div>
-                {{-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div> --}}
             </div>
         </div>
     </div>
     <script>
+        let classVideos = [];
+        let currentIndex = 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Populate classVideos array
+            @php
+                $allClasses = [];
+                foreach ($course->milestones as $milestone) {
+                    if ($milestone->modules->count()) {
+                        foreach ($milestone->modules as $module) {
+                            if ($module->classes->count()) {
+                                foreach ($module->classes as $class) {
+                                    $allClasses[] = $class;
+                                }
+                            }
+                        }
+                    }
+                }
+            @endphp
+            @foreach($allClasses as $class)
+                classVideos.push('{{ $class->class_video_link }}');
+            @endforeach
+
+            // Get the first class video link
+            @php
+                $firstClass = null;
+                foreach ($course->milestones as $milestone) {
+                    if ($milestone->modules->count()) {
+                        foreach ($milestone->modules as $module) {
+                            if ($module->classes->count()) {
+                                $firstClass = $module->classes->first();
+                                break 2;
+                            }
+                        }
+                    }
+                }
+                $firstVideoLink = $firstClass ? $firstClass->class_video_link : '';
+            @endphp
+            if ('{{ $firstVideoLink }}') {
+                getClassVideolink('{{ $firstVideoLink }}');
+            }
+        });
+
         [...document.querySelectorAll(".class_module_acordion_icon")].forEach(
             (el) => {
                 el.onclick = function(e) {
@@ -376,15 +324,34 @@
             }
         );
 
+        function nextVideo() {
+            if (currentIndex < classVideos.length - 1) {
+            currentIndex++;
+            getClassVideolink(classVideos[currentIndex]);
+            } else {
+            alert('No more videos in this course.');
+            }
+        }
+
         function getClassVideolink(link) {
             console.log(link);
+            // Set current index based on the original link before conversion
+            currentIndex = classVideos.indexOf(link);
             // Convert YouTube watch URL to embed URL if needed
+            let embedLink = link;
             if (link.includes('youtube.com/watch')) {
-                const videoId = link.split('v=')[1].split('&')[0];
-                link = `https://www.youtube.com/embed/${videoId}`;
+            const videoId = link.split('v=')[1].split('&')[0];
+            embedLink = `https://www.youtube.com/embed/${videoId}`;
             }
-            document.getElementById('class_video_link').src = link;
+            document.getElementById('class_video_link').src = embedLink;
             document.getElementById("course_section").scrollIntoView();
         }
+
+        function courseCompletion(courseId, milestoneId, moduleId, classId) {
+            // Placeholder: Implement logic to mark the class as complete
+            console.log('Marking class as complete:', courseId, milestoneId, moduleId, classId);
+            // Add AJAX call or other logic here to update completion status
+        }
+
     </script>
 @endsection
