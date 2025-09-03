@@ -134,134 +134,21 @@ class PaymentController extends Controller
     public function failure(Request $request)
     {
         $auth = auth()->user();
+        $course_slug = $request->value_a;
 
         if (!$auth) {
             $this->cancel($request);
             return redirect('/login');
         }
 
-        $orderInfo = DB::table('orders')->where('trx_id', $request->tran_id)->first();
-
-        DB::table('order_payments')->insert([
-            'order_id' => $orderInfo->id,
-            'payment_through' => "sslcommerz",
-            'tran_id' => $request->tran_id,
-            'bank_tran_id' => $request->bank_tran_id,
-            'val_id' => $request->val_id,
-            'amount' => $request->amount,
-            'card_type' => $request->card_type,
-            'store_amount' => $request->store_amount,
-            'card_no' => $request->card_no,
-            'status' => $request->status,
-            'tran_date' => $request->tran_date,
-            'currency' => $request->currency,
-            'card_issuer' => $request->card_issuer,
-            'card_brand' => $request->card_brand,
-            'card_sub_brand' => $request->card_sub_brand,
-            'card_issuer_country' => $request->card_issuer_country,
-            'created_at' => Carbon::now()
-        ]);
-
-        DB::table('orders')
-            ->where('id', $orderInfo->id)
-            ->update([
-                'payment_status' => 2, //failed
-            ]);
-
-        DB::table('enroll_informations')
-            ->where('trx_id', $request->tran_id)
-            ->update([
-                'payment_status' => 'failed',
-            ]);
-
-        $course_slug = session('course_id');
-        session()->forget('customer_email');
-        session()->forget('customer_name');
-        session()->forget('order_id');
-        session()->forget('course_id');
-
         return redirect('course/enroll/' . $course_slug)->with('error', 'Payment failed! Please try again.');
     }
 
     public function cancel(Request $request)
     {
-        dd("cancle", $request->all());
+        $course_slug = $request->value_a;
 
-        session()->put('order_failed', true);
-        $tran_id = $request->input('tran_id');
-
-        $order_details = DB::table('orders')
-            ->where('trx_id', $tran_id)
-            ->select('trx_id', 'payment_status', 'order_status', 'total', 'id')->first();
-
-        if ($order_details->order_status == 0) {
-            // $update_product = DB::table('orders')
-            //     ->where('trx_id', $tran_id)
-            //     ->update(['order_status' => 6, 'payment_status' => 2, 'payment_method' => 4]); // 6 => Cancelled, 2 => Failed
-
-            // Adjust stock for products and product_variants
-            $orderItems = DB::table('order_details')
-                ->where('order_id', $order_details->id)->get();
-
-            foreach ($orderItems as $item) {
-                // Check if product has variants
-                $hasVariant = DB::table('products')
-                    ->where('id', $item->product_id)
-                    ->value('has_variant');
-
-                if ($hasVariant) {
-                    // Adjust variant stock
-                    DB::table('product_variants')
-                        ->where('product_id', $item->product_id)
-                        ->when($item->color_id, function ($query) use ($item) {
-                            return $query->where('color_id', $item->color_id);
-                        })
-                        ->when($item->size_id, function ($query) use ($item) {
-                            return $query->where('size_id', $item->size_id);
-                        })
-                        ->increment('stock', $item->qty);
-                } else {
-                    // Adjust product stock
-                    DB::table('products')
-                        ->where('id', $item->product_id)
-                        ->increment('stock', $item->qty);
-                }
-            }
-
-            $deleteProduct = DB::table('orders')
-                ->where('trx_id', $tran_id)
-                ->delete();
-
-            $orderProgress = DB::table('order_progress')
-                ->where('order_id', $order_details->id)
-                ->delete();
-
-            $orderDetails = DB::table('order_details')
-                ->where('order_id', $order_details->id)
-                ->delete();
-
-            $orderShipping = DB::table('shipping_infos')
-                ->where('order_id', $order_details->id)
-                ->delete();
-
-            $orderBilling = DB::table('billing_addresses')
-                ->where('order_id', $order_details->id)
-                ->delete();
-
-            $orderPayment = DB::table('order_payments')
-                ->where('order_id', $order_details->id)
-                ->delete();
-
-
-            Toastr::error('Transaction Cancled');
-            return session('cart') && count(session('cart')) > 0
-                ? redirect('/checkout')
-                : redirect('/home');
-        } else {
-            Toastr::error('Transaction Cancled');
-
-            return redirect('/checkout');
-        }
+        return redirect('course/enroll/' . $course_slug)->with('error', 'Order Canceled! Please try again.');
     }
 
     public function refund($bankID)
@@ -339,46 +226,46 @@ class PaymentController extends Controller
         }
     }
 
-    public function ipn(Request $request)
-    {
-        #Received all the payement information from the gateway
-        if ($request->input('tran_id')) #Check transation id is posted or not.
-        {
+    // public function ipn(Request $request)
+    // {
+    //     #Received all the payement information from the gateway
+    //     if ($request->input('tran_id')) #Check transation id is posted or not.
+    //     {
 
-            $tran_id = $request->input('tran_id');
+    //         $tran_id = $request->input('tran_id');
 
-            #Check order status in order tabel against the transaction id or order id.
-            $order_details = DB::table('orders')
-                ->where('transaction_id', $tran_id)
-                ->select('transaction_id', 'status', 'currency', 'amount')->first();
+    //         #Check order status in order tabel against the transaction id or order id.
+    //         $order_details = DB::table('orders')
+    //             ->where('transaction_id', $tran_id)
+    //             ->select('transaction_id', 'status', 'currency', 'amount')->first();
 
-            if ($order_details->status == 'Pending') {
-                $sslc = new SslCommerzNotification();
-                $validation = $sslc->orderValidate($request->all(), $tran_id, $order_details->amount, $order_details->currency);
-                if ($validation == TRUE) {
-                    /*
-                    That means IPN worked. Here you need to update order status
-                    in order table as Processing or Complete.
-                    Here you can also sent sms or email for successful transaction to customer
-                    */
-                    $update_product = DB::table('orders')
-                        ->where('transaction_id', $tran_id)
-                        ->update(['status' => 'Processing']);
+    //         if ($order_details->status == 'Pending') {
+    //             $sslc = new SslCommerzNotification();
+    //             $validation = $sslc->orderValidate($request->all(), $tran_id, $order_details->amount, $order_details->currency);
+    //             if ($validation == TRUE) {
+    //                 /*
+    //                 That means IPN worked. Here you need to update order status
+    //                 in order table as Processing or Complete.
+    //                 Here you can also sent sms or email for successful transaction to customer
+    //                 */
+    //                 $update_product = DB::table('orders')
+    //                     ->where('transaction_id', $tran_id)
+    //                     ->update(['status' => 'Processing']);
 
-                    echo "Transaction is successfully Completed";
-                }
-            } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
+    //                 echo "Transaction is successfully Completed";
+    //             }
+    //         } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
 
-                #That means Order status already updated. No need to udate database.
+    //             #That means Order status already updated. No need to udate database.
 
-                echo "Transaction is already successfully Completed";
-            } else {
-                #That means something wrong happened. You can redirect customer to your product page.
+    //             echo "Transaction is already successfully Completed";
+    //         } else {
+    //             #That means something wrong happened. You can redirect customer to your product page.
 
-                echo "Invalid Transaction";
-            }
-        } else {
-            echo "Invalid Data";
-        }
-    }
+    //             echo "Invalid Transaction";
+    //         }
+    //     } else {
+    //         echo "Invalid Data";
+    //     }
+    // }
 }
