@@ -6815,6 +6815,15 @@ html ::-webkit-scrollbar-thumb:hover {
 .course_details_area .course_details_part .course_details .class_module .class_module_details .class_module_features li .class_module_feature_content {
   display: none;
 }
+.course_details_area .course_details_part .course_details .class_module .class_module_details .class_module_features .milestone-item .milestone-content {
+  display: none;
+}
+.course_details_area .course_details_part .course_details .class_module .class_module_details .class_module_features .milestone-item.active .milestone-content {
+  display: block;
+}
+.course_details_area .course_details_part .course_details .class_module .class_module_details .class_module_features .module-item.active .class_module_feature_content {
+  display: block;
+}
 .course_details_area .course_details_part .course_details .class_module .class_module_details .class_module_features li .class_module_feature_content ul li {
   margin: 0px 17px;
   padding: 8px 0px;
