@@ -72,8 +72,6 @@ class SSLCommerzParamVars
     public $value_b;
     public $value_c;
     public $value_d;
-    public $value_e;
-
     public function makeBody()
     {
         $body['store_id'] = $this->store_id;
@@ -145,7 +143,6 @@ class SSLCommerzParamVars
         $body['value_b'] = $this->value_b;
         $body['value_c'] = $this->value_c;
         $body['value_d'] = $this->value_d;
-        $body['value_e'] = $this->value_e;
 
         return $body;
     }

@@ -125,13 +125,12 @@ class SSLCommerzParams extends SSLCommerzParamVars
         return $this;
     }
 
-    public function setExtras($extra1 = null, $extra2 = null, $extra3 = null, $extra4 = null, $extra5 = null)
+    public function setExtras($extra1 = null, $extra2 = null, $extra3 = null, $extra4 = null)
     {
         $this->value_a = $extra1;
         $this->value_b = $extra2;
         $this->value_c = $extra3;
         $this->value_d = $extra4;
-        $this->value_e = $extra5;
         return $this;
     }
 
@@ -170,10 +169,9 @@ class SSLCommerzParams extends SSLCommerzParamVars
         $this->vat = null;
         $this->discount_amount = null;
         $this->convenience_fee = null;
-        $this->value_a = request()->input('subtotal');
-        $this->value_b = request()->input('discount');
-        $this->value_c = request()->input('total');
-        $this->value_d = request()->input('course_slug');
-        $this->value_e = request()->input('batch_id');
+        $this->value_a = request()->input('course_slug');
+        $this->value_b = request()->input('batch_id');
+        $this->value_c = null;
+        $this->value_d = null;
     }
 }
