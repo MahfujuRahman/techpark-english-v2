@@ -79,9 +79,9 @@ class BlogController extends Controller
 
         if ($validator->fails()) {
             return redirect()->back()
-            ->withErrors($validator)
-            ->withInput()
-            ->with('error', 'Subscription failed. ' . $validator->errors()->first());
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Subscription failed. ' . $validator->errors()->first());
         }
 
         // Subscribe the user to the blog

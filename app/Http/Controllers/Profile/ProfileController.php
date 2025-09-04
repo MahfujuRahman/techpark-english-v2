@@ -14,7 +14,7 @@ class ProfileController extends Controller
     public function profile()
     {
         $user = User::with('address', 'studentDetails')->find(auth()->user()->id);
-        return view('frontend.pages.profile', compact('user'));
+        return view('frontend.pages.profile.profile', compact('user'));
     }
 
     public function profileUpdate(Request $request)
