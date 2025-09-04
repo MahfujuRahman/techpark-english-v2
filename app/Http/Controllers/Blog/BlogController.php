@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Blog;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-use App\Modules\Management\BlogManagement\BlogCategory\Models\Model as BlogsCategories;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Management\BlogManagement\Blog\Models\Model as Blogs;
 use App\Modules\Management\BlogManagement\BlogTag\Models\Model as BlogTags;
 use App\Modules\Management\BlogManagement\BlogWriter\Models\Model as BlogWriters;
+use App\Modules\Management\BlogManagement\BlogCategory\Models\Model as BlogsCategories;
 use App\Modules\Management\CommunicationManagement\Subscriber\Models\Model as BlogSubscribers;
 
 
@@ -68,9 +69,20 @@ class BlogController extends Controller
 
     public function subscribe(Request $request)
     {
-        $validateData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:subscribers,email',
+        ], [
+            'email.required' => 'Email is required.',
+            'email.email'    => 'Please enter a valid email address.',
+            'email.unique'   => 'This email is already subscribed.',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+            ->withErrors($validator)
+            ->withInput()
+            ->with('error', 'Subscription failed. ' . $validator->errors()->first());
+        }
 
         // Subscribe the user to the blog
         BlogSubscribers::create([
