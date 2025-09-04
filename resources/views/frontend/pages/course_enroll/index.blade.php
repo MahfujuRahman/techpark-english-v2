@@ -31,68 +31,60 @@
                                     style="transition: background-color 0.2s;">
                                     <div class="d-flex align-items-center gap-3">
                                         <div>
-                                            <img src="{{ asset('frontend/assets/images/bkash.png') }}"
-                                                alt="bKash" style="height:35px; width:auto;">
-                                        </div>
-                                        <div>
                                             <span class="fw-bold fs-6">bKash</span>
                                             <small class="d-block text-muted">Personal</small>
                                         </div>
                                     </div>
                                     <div class="text-end">
-                                        <span class="badge text-white fs-6 px-3 py-2 rounded-pill"
-                                            style="background-color: #e91e63;">01700-000000</span>
+                                        <div>
+                                            <img src="{{ asset('frontend/assets/images/bkash.png') }}" alt="bKash"
+                                                style="height:35px; width:auto;">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between p-3 border-bottom"
                                     style="transition: background-color 0.2s;">
                                     <div class="d-flex align-items-center gap-3">
-                                        <div>
-                                            <img src="{{ asset('frontend/assets/images/roket.png') }}"
-                                                alt="Rocket" style="height:35px; width:auto;">
-                                        </div>
                                         <div>
                                             <span class="fw-bold fs-6">Rocket</span>
                                             <small class="d-block text-muted">Personal</small>
                                         </div>
                                     </div>
                                     <div class="text-end">
-                                        <span class="badge text-white fs-6 px-3 py-2 rounded-pill"
-                                            style="background-color: #7b1fa2;">01800-000000</span>
+                                        <div>
+                                            <img src="{{ asset('frontend/assets/images/roket.png') }}" alt="Rocket"
+                                                style="height:35px; width:auto;">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between p-3 border-bottom"
                                     style="transition: background-color 0.2s;">
                                     <div class="d-flex align-items-center gap-3">
                                         <div>
-                                            <img src="{{ asset('frontend/assets/images/nogot.png') }}"
-                                                alt="Nagad" style="height:35px; width:auto;">
-                                        </div>
-                                        <div>
                                             <span class="fw-bold fs-6">Nagad</span>
                                             <small class="d-block text-muted">Personal</small>
                                         </div>
                                     </div>
                                     <div class="text-end">
-                                        <span class="badge text-white fs-6 px-3 py-2 rounded-pill"
-                                            style="background-color: #ff9800;">01900-000000</span>
+                                        <div>
+                                            <img src="{{ asset('frontend/assets/images/nogot.png') }}" alt="Nagad"
+                                                style="height:35px; width:auto;">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between p-3"
                                     style="transition: background-color 0.2s;">
                                     <div class="d-flex align-items-center gap-3">
                                         <div>
-                                            <img src="{{ asset('frontend/assets/images/cellz_fin.png') }}"
-                                                alt="CellFin" style="height:35px; width:auto;">
-                                        </div>
-                                        <div>
                                             <span class="fw-bold fs-6">CellFin</span>
                                             <small class="d-block text-muted">Personal</small>
                                         </div>
                                     </div>
                                     <div class="text-end">
-                                        <span
-                                            class="badge bg-danger text-white fs-6 px-3 py-2 rounded-pill">01600-000000</span>
+                                        <div>
+                                            <img src="{{ asset('frontend/assets/images/cellz_fin.png') }}" alt="CellFin"
+                                                style="height:35px; width:auto;">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -100,12 +92,8 @@
                                 <div class="d-flex align-items-start gap-2">
                                     <i class="fas fa-info-circle text-info mt-1"></i>
                                     <div>
-                                        <small class="text-dark fw-medium">
-                                            উপরের যেকোনো নম্বরে পেমেন্ট পাঠান এবং ট্রানজেকশন আইডি ফর্মে প্রবেশ করান।
-                                        </small>
-                                        <br>
                                         <small class="text-muted">
-                                            Send payment to any number above and enter transaction ID in the form.
+                                            Click the Pay Now button to send payment.
                                         </small>
                                     </div>
                                 </div>
@@ -118,8 +106,7 @@
                 <div class="col-12 col-lg-6">
                     <div class="payment_form_area p-4 rounded-3 shadow-sm bg-white border">
                         <div class="form-header mb-4">
-                            <h4 class="fw-bold text-dark mb-1">পেমেন্ট সম্পন্ন করুন</h4>
-                            <small class="text-muted">Complete Your Payment</small>
+                            <h4 class="fw-bold text-dark mb-1">Complete Your Payment</h4>
                         </div>
                         <div
                             class="d-flex align-items-center mb-4 gap-4 flex-column flex-md-row bg-light rounded-4 shadow-sm p-3 border border-2 border-primary-subtle">
@@ -154,22 +141,11 @@
                         <form action="{{ route('course_enroll_submit', $course->slug) }}" method="POST">
                             @csrf
                             <div class="form_area">
-                                <div class="form_content mb-3">
-                                    <label for="trx_id" class="form-label fw-semibold">ট্রান্সেকশন আইডি *</label>
-                                    <input type="text" name="trx_id" id="trx_id" class="form-control form-control-lg"
-                                        placeholder="পেইমেন্ট ট্রান্সেকশন আইডি লিখুন">
-                                    @error('trx_id')
-                                        <div class="text-danger mt-1 small">
-                                            <i class="fas fa-exclamation-circle me-1"></i>{{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
                                 <div class="pricing-details border rounded p-3 mb-3" style="background-color: #f8f9fa;">
                                     <div class="row g-3">
                                         <div class="col-12">
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <span class="text-muted">মূল মূল্য:</span>
+                                                <span class="text-muted">Price :</span>
                                                 <span class="fw-bold">৳
                                                     {{ number_format($batch_info->course_price) }}</span>
                                             </div>
@@ -177,7 +153,7 @@
                                         @if ($batch_info->after_discount_price != null && $batch_info->after_discount_price > 0)
                                             <div class="col-12">
                                                 <div class="d-flex justify-content-between align-items-center">
-                                                    <span class="text-muted">ছাড়:</span>
+                                                    <span class="text-muted">Discount :</span>
                                                     <span class="text-success fw-bold">- ৳
                                                         {{ number_format($batch_info->course_price - $batch_info->after_discount_price) }}</span>
                                                 </div>
@@ -186,7 +162,7 @@
                                         <hr class="my-2">
                                         <div class="col-12">
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <span class="fw-bold fs-5">সর্বমোট:</span>
+                                                <span class="fw-bold fs-5">Total :</span>
                                                 <span class="fw-bold fs-4 text-primary">৳
                                                     {{ number_format($batch_info->after_discount_price ? $batch_info->after_discount_price : $batch_info->course_price) }}</span>
                                             </div>
@@ -196,7 +172,7 @@
                             </div>
                             <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold">
                                 <i class="fas fa-credit-card me-2"></i>
-                                পেমেন্ট সম্পন্ন করুন
+                                Pay Now
                             </button>
                         </form>
                     </div>
@@ -218,29 +194,26 @@
                 <div class="col-auto">
                     <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap">
                         <div class="text-center">
-                            <img src="{{ asset('frontend/assets/images/bkash.png') }}"
-                                alt="bKash" class="img-fluid"
+                            <img src="{{ asset('frontend/assets/images/bkash.png') }}" alt="bKash" class="img-fluid"
                                 style="height: 45px; filter: grayscale(20%); transition: all 0.3s; cursor: pointer;"
                                 onmouseover="this.style.filter='grayscale(0%); transform: scale(1.1)'"
                                 onmouseout="this.style.filter='grayscale(20%); transform: scale(1)'">
                         </div>
                         <div class="text-center">
-                            <img src="{{ asset('frontend/assets/images/roket.png') }}"
-                                alt="Rocket" class="img-fluid"
+                            <img src="{{ asset('frontend/assets/images/roket.png') }}" alt="Rocket" class="img-fluid"
                                 style="height: 45px; filter: grayscale(20%); transition: all 0.3s; cursor: pointer;"
                                 onmouseover="this.style.filter='grayscale(0%); transform: scale(1.1)'"
                                 onmouseout="this.style.filter='grayscale(20%); transform: scale(1)'">
                         </div>
                         <div class="text-center">
-                            <img src="{{ asset('frontend/assets/images/nogot.png') }}"
-                                alt="Nagad" class="img-fluid"
+                            <img src="{{ asset('frontend/assets/images/nogot.png') }}" alt="Nagad" class="img-fluid"
                                 style="height: 45px; filter: grayscale(20%); transition: all 0.3s; cursor: pointer;"
                                 onmouseover="this.style.filter='grayscale(0%); transform: scale(1.1)'"
                                 onmouseout="this.style.filter='grayscale(20%); transform: scale(1)'">
                         </div>
                         <div class="text-center">
-                            <img src="{{ asset('frontend/assets/images/cellz_fin.png') }}"
-                                alt="CellFin" class="img-fluid"
+                            <img src="{{ asset('frontend/assets/images/cellz_fin.png') }}" alt="CellFin"
+                                class="img-fluid"
                                 style="height: 45px; filter: grayscale(20%); transition: all 0.3s; cursor: pointer;"
                                 onmouseover="this.style.filter='grayscale(0%); transform: scale(1.1)'"
                                 onmouseout="this.style.filter='grayscale(20%); transform: scale(1)'">
