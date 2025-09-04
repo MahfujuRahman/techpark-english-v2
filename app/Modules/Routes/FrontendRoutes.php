@@ -99,21 +99,16 @@ Route::middleware(['auth'])->group(function () {
     // User Course Routes
     Route::get('/my-course', [CourseController::class, 'myCourse'])->name("myCourse");
     Route::get('/my-course/{slug}', [CourseController::class, 'myCourseDetails'])->name("mycourse_details");
-    Route::get('/quizes', [WebsiteController::class, 'quizes'])->name("website.quizes");
-    Route::get('/quiz-attend/{id}', [WebsiteController::class, 'quiz_attend'])->name("website.quiz_attend");
-    Route::get('/quizes/details/{id}', [WebsiteController::class, 'quiz_details'])->name("website.quizes.details");
-    Route::any('/quiz-submit', [WebsiteController::class, 'quiz_submit'])->name("quiz_submit");
+    Route::get('/quiz/{quiz_id}', [QuizGivenController::class, 'showQuiz'])->name('quiz.show');
+    Route::post('/quiz/submit', [QuizGivenController::class, 'submitQuiz'])->name('quiz.submit');
+    Route::post('/course_completion', [QuizGivenController::class, 'course_completion'])->name('course_completion');
+
+    Route::post('/clear-return-to-module', function () {
+        request()->session()->forget('return_to_module');
+        return response()->noContent();
+    })->name('clear.return.to.module');
 
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'profileUpdate'])->name('update_profile');
 });
-
-Route::get('/quiz/{quiz_id}', [QuizGivenController::class, 'showQuiz'])->name('quiz.show');
-Route::post('/quiz/submit', [QuizGivenController::class, 'submitQuiz'])->name('quiz.submit');
-Route::post('/course_completion', [QuizGivenController::class, 'course_completion'])->name('course_completion');
-
-Route::post('/clear-return-to-module', function () {
-    request()->session()->forget('return_to_module');
-    return response()->noContent();
-})->name('clear.return.to.module');
