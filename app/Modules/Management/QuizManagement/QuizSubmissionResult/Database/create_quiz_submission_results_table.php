@@ -20,6 +20,7 @@ return new class extends Migration
             $table->tinyInteger('submission_no')->default(0);
             $table->string('course_module_class_id', 100)->nullable();
             $table->float('quiz_mark')->nullable();
+            $table->float('pass_mark')->nullable();
             $table->float('obtain_mark')->nullable();
             $table->datetime('submission_datetime')->nullable();
 

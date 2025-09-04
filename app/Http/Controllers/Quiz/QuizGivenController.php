@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Quiz;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-
-
-
 use App\Modules\Management\CourseManagement\CourseModuleClass\Models\CourseModuleTaskCompleteByUserModel;
 use App\Modules\Management\QuizManagement\Quiz\Models\Model as Quiz;
 use App\Modules\Management\QuizManagement\Quiz\Models\QuizQuizQuestionModel as QuizQuizQuestion;
 use  App\Modules\Management\QuizManagement\QuizQuestion\Models\Model as QuizQuestion;
+
 
 class QuizGivenController extends Controller
 {
@@ -26,7 +24,7 @@ class QuizGivenController extends Controller
         if ($referrer && strpos($referrer, 'my-course') !== false) {
             request()->session()->put('return_to_module', $referrer);
         }
-       
+
         $quiz = Quiz::where('slug', $quizSlug)->first();
 
         $topic = QuizQuizQuestion::where('quiz_id', $quiz->id)
@@ -37,7 +35,7 @@ class QuizGivenController extends Controller
             ])
             ->get();
 
-        return view('frontend.pages.quizShow', compact('quiz', 'topic', 'courseId', 'classId'));
+        return view('frontend.pages.quiz.quiz', compact('quiz', 'topic', 'courseId', 'classId'));
     }
 
     public function submitQuiz(Request $request)
@@ -151,6 +149,10 @@ class QuizGivenController extends Controller
             ->where('user_id', auth()->user()->id)
             ->where('quiz_id', $data['quiz_id'])
             ->count();
+            
+        $quiz = Quiz::find($data['quiz_id']);
+        $quizSlug = $quiz->slug;
+        $pass_mark = $quiz->pass_mark;
 
         // // Insert the result of this submission
         DB::table('quiz_submission_results')->insert([
@@ -162,13 +164,11 @@ class QuizGivenController extends Controller
             'submission_no' => $count_submission + 1,
             'quiz_mark' => $total_mark,
             'obtain_mark' => $obtain_mark,
-            // 'pass_mark' => null,
+            'pass_mark' => $pass_mark,
             'submission_datetime' => now(),
             'created_at' => now(),
             'slug' => 'submission-' . auth()->user()->id . '-' . $data['quiz_id'] . '-' . ($count_submission + 1) . '-' . time(),
         ]);
-
-        $quizSlug = Quiz::find($data['quiz_id'])->slug;
 
         // Return user answers and score to the session
         return redirect()->route('quiz.show', $quizSlug)
