@@ -11,7 +11,7 @@ class MyCourse
         $user = User::find(auth()->user()->id);
 
         $userWithCourses = $user->with([
-            'batchStudents' => function ($query) {
+            'batchStudents' => function ($query): void {
                 $query->select('id', 'course_id', 'batch_id', 'student_id', 'course_percent', 'is_complete');
             },
             'batchStudents.course' => function ($query) {

@@ -8,6 +8,8 @@ use App\Modules\Management\CourseManagement\Course\Models\Model as Course;
 use  App\Modules\Management\EnrollInformation\Models\Model as EnrollInformation;
 use App\Http\Controllers\Course\CourseController;
 use App\Modules\Management\CourseManagement\CourseModuleClass\Models\CourseModuleTaskCompleteByUserModel;
+use App\Modules\Management\CourseManagement\CourseBatchStudent\Models\Model as CourseBatchStudent;
+
 
 class MyCourseDetails
 {
@@ -100,7 +102,20 @@ class MyCourseDetails
         });
 
         $progress = round(($total_class_attend / $total_class) * 100, 2);
-    
+
+        $course_percentage = CourseBatchStudent::where('student_id', auth()->user()->id)
+            ->where('batch_id', request()->input('batch_id'))
+            ->where('course_id', $data->id)
+            ->first();
+
+        if ($course_percentage) {
+            $course_percentage->update(['course_percent' => $progress]);
+            if ($progress == 100) {
+                $course_percentage->update(['is_complete' => 'complete']);
+            }
+        }
+
+
         return view('frontend.pages.courses.my_course_details', ['course' => $data, 'progress' => $progress]);
     }
 }

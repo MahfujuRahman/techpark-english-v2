@@ -47,7 +47,7 @@
                     @foreach ($incomplete_courses as $item)
                         <div class="c_card graphic_designer">
                             <!-- card_img start -->
-                            <a href="{{ route('mycourse_details', $item->course->slug) }}" class="card_img_area">
+                            <a href="{{ route('mycourse_details', $item->course->slug) . '?batch_id=' . $item->batch->id }}" class="card_img_area">
                                 <div class="card_img">
                                     <img src="{{ assetHelper(optional($item->course)->image) }}"
                                         alt="{{ $item->course->title }}" loading="lazy">
@@ -58,7 +58,7 @@
                             <!-- card_title_area start -->
                             <div class="card_title_area">
                                 <!-- card_title start -->
-                                <a href="{{ route('mycourse_details', $item->course->slug) }}" class="card_title">
+                                <a href="{{ route('mycourse_details', $item->course->slug) . '?batch_id=' . $item->batch->id }}" class="card_title">
                                     <p class="title_text">{{ $item->course->title }}</p>
                                 </a>
                                 <br>
@@ -88,8 +88,7 @@
                                 <div class="amount_and_button_area">
 
                                     <!-- button_area start -->
-                                    <a href="{{ route('mycourse_details', $item->course->slug) }}"
-                                        class="text-center button_all">
+                                    <a href="{{ route('mycourse_details', $item->course->slug) . '?batch_id=' . $item->batch->id }}" class="text-center button_all">
                                         <span class="btn-text">Course Details</span>
                                         <span class="btn_icon">
                                             <i class="fa-solid fa-arrow-right"></i>
@@ -123,7 +122,7 @@
                                 <!-- card_title_area start -->
                                 <div class="card_title_area">
                                     <!-- card_title start -->
-                                    <a href="{{ route('mycourse_details', $comp_item->course->slug) }}" class="card_title">
+                                    <a href="{{ route('mycourse_details', $comp_item->course->slug) . '?batch_id=' . $comp_item->batch->id }}" class="card_title">
                                         <p class="title_text">{{ $comp_item->course->title }}</p>
                                     </a>
                                     <!-- card_title end -->
