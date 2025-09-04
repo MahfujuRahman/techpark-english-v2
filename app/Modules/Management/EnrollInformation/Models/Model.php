@@ -2,9 +2,10 @@
 
 namespace App\Modules\Management\EnrollInformation\Models;
 
-use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 use App\Modules\Management\CourseManagement\CourseBatchStudent\Models\Model as CourseBatchStudent;
 
 class Model extends EloquentModel
@@ -60,10 +61,23 @@ class Model extends EloquentModel
 
         // Remove on delete
         static::deleted(function ($enroll) {
-            CourseBatchStudent::where('course_id',  $enroll->course_id)
-                ->where('batch_id',   $enroll->batch_id)
+            // Delete course_batch_students
+            DB::table('course_batch_students')
+                ->where('course_id', $enroll->course_id)
+                ->where('batch_id', $enroll->batch_id)
                 ->where('student_id', $enroll->student_id)
                 ->delete();
+
+            // Delete orders and cascade order_details + order_payments
+            $orders = DB::table('orders')
+                ->where('trx_id', $enroll->trx_id)
+                ->pluck('id');
+
+            if ($orders->count() > 0) {
+                DB::table('order_details')->whereIn('order_id', $orders)->delete();
+                DB::table('order_payments')->whereIn('order_id', $orders)->delete();
+                DB::table('orders')->whereIn('id', $orders)->delete();
+            }
         });
     }
 

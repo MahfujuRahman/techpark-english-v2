@@ -86,9 +86,21 @@ class StoreData
                 'card_issuer_country' => null,
                 'created_at'         => Carbon::now()
             ]);
-
+    
             // Insert into enroll_informations
-            $data = self::$model::query()->create($requestData);
+            $data = DB::table('enroll_informations')->insert([
+                'course_id'     => $course_id,
+                'student_id'    => $student_id,
+                'batch_id'      => $batch_id,
+                'trx_id'        => $trx_id,
+                'payment_type'  =>  $payment_type,
+                'payment_by'    =>  $payment_by,
+                'receipt_id'    =>  $receipt_id,
+                'payment_status' =>  $payment_status,
+                'total_amount'  => $total_amount,
+                'paid_amount'   => $paid_amount,
+                'slug'          => Str::slug('Tp'. '-' . time() . '-' . Str::random(6))
+            ]);
 
             // Insert into course_batch_students
             DB::table('course_batch_students')->insert([
