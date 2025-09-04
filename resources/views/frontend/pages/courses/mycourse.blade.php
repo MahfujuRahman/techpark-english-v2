@@ -38,71 +38,76 @@
                 </div>
             </div>
 
+            @if ($incomplete_courses->count() > 0)
+                <div class="my_contunued_courses">
+                    <div class="my_contunued_courses_title">Incomplete Courses</div>
+                    <div class="contunued_courses_border"></div>
+                    <div class="my_contunued_all_courses">
 
-            <div class="my_contunued_courses">
-                <div class="my_contunued_courses_title">Incomplete Courses</div>
-                <div class="contunued_courses_border"></div>
-                <div class="my_contunued_all_courses">
-
-                    @foreach ($incomplete_courses as $item)
-                        <div class="c_card graphic_designer">
-                            <!-- card_img start -->
-                            <a href="{{ route('mycourse_details', $item->course->slug) . '?batch_id=' . $item->batch->id }}" class="card_img_area">
-                                <div class="card_img">
-                                    <img src="{{ assetHelper(optional($item->course)->image) }}"
-                                        alt="{{ $item->course->title }}" loading="lazy">
-                                </div>
-                            </a>
-                            <!-- card_img end -->
-
-                            <!-- card_title_area start -->
-                            <div class="card_title_area">
-                                <!-- card_title start -->
-                                <a href="{{ route('mycourse_details', $item->course->slug) . '?batch_id=' . $item->batch->id }}" class="card_title">
-                                    <p class="title_text">{{ $item->course->title }}</p>
+                        @foreach ($incomplete_courses as $item)
+                            <div class="c_card graphic_designer">
+                                <!-- card_img start -->
+                                <a href="{{ route('mycourse_details', $item->course->slug) . '?batch_id=' . $item->batch->id }}"
+                                    class="card_img_area">
+                                    <div class="card_img">
+                                        <img src="{{ assetHelper(optional($item->course)->image) }}"
+                                            alt="{{ $item->course->title }}" loading="lazy">
+                                    </div>
                                 </a>
-                                <br>
-                                <div class="card_title">
-                                    <p class="batch_text">Batch: {{ $item->batch->batch_name }}</p>
-                                </div>
+                                <!-- card_img end -->
 
-                                <!-- card_title end -->
-
-                                <!-- day_and_boking_area start -->
-                                <div class="day_and_boking_area">
-                                    <div class="day_area">
-                                        <span class="day_tex">
-                                            Completed:
-                                        </span>
-                                    </div>
-                                    <div
-                                        class="boking_area d-flex justify-content-center align-items-center pt-0 fw-bolder">
-                                        <span class="boking_text">
-                                            {{ $item->course_percent }} %
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- day_and_boking_area end -->
-
-                                <!-- amount_and_button_area start -->
-                                <div class="amount_and_button_area">
-
-                                    <!-- button_area start -->
-                                    <a href="{{ route('mycourse_details', $item->course->slug) . '?batch_id=' . $item->batch->id }}" class="text-center button_all">
-                                        <span class="btn-text">Course Details</span>
-                                        <span class="btn_icon">
-                                            <i class="fa-solid fa-arrow-right"></i>
-                                        </span>
+                                <!-- card_title_area start -->
+                                <div class="card_title_area">
+                                    <!-- card_title start -->
+                                    <a href="{{ route('mycourse_details', $item->course->slug) . '?batch_id=' . $item->batch->id }}"
+                                        class="card_title">
+                                        <p class="title_text">{{ $item->course->title }}</p>
                                     </a>
-                                    <!-- button_area end-->
+                                    <br>
+                                    <div class="card_title">
+                                        <p class="batch_text">Batch: {{ $item->batch->batch_name }}</p>
+                                    </div>
+
+                                    <!-- card_title end -->
+
+                                    <!-- day_and_boking_area start -->
+                                    <div class="day_and_boking_area">
+                                        <div class="day_area">
+                                            <span class="day_tex">
+                                                Completed:
+                                            </span>
+                                        </div>
+                                        <div
+                                            class="boking_area d-flex justify-content-center align-items-center pt-0 fw-bolder">
+                                            <span class="boking_text">
+                                                {{ $item->course_percent }} %
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!-- day_and_boking_area end -->
+
+                                    <!-- amount_and_button_area start -->
+                                    <div class="amount_and_button_area">
+
+                                        <!-- button_area start -->
+                                        <a href="{{ route('mycourse_details', $item->course->slug) . '?batch_id=' . $item->batch->id }}"
+                                            class="text-center button_all">
+                                            <span class="btn-text">Course Details</span>
+                                            <span class="btn_icon">
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                            </span>
+                                        </a>
+                                        <!-- button_area end-->
+                                    </div>
+                                    <!-- amount_and_button_area end -->
                                 </div>
-                                <!-- amount_and_button_area end -->
+                                <!-- card_title_area end -->
                             </div>
-                            <!-- card_title_area end -->
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
+            
             @if ($complete_courses->count() > 0)
                 <div class="my_contunued_courses">
                     <div class="my_contunued_courses_title">Completed Courses</div>
@@ -122,7 +127,8 @@
                                 <!-- card_title_area start -->
                                 <div class="card_title_area">
                                     <!-- card_title start -->
-                                    <a href="{{ route('mycourse_details', $comp_item->course->slug) . '?batch_id=' . $comp_item->batch->id }}" class="card_title">
+                                    <a href="{{ route('mycourse_details', $comp_item->course->slug) . '?batch_id=' . $comp_item->batch->id }}"
+                                        class="card_title">
                                         <p class="title_text">{{ $comp_item->course->title }}</p>
                                     </a>
                                     <!-- card_title end -->
