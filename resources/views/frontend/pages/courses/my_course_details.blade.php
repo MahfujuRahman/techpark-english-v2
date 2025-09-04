@@ -103,8 +103,8 @@
                                                                 <div data-key="{{ $key }}"
                                                                     data-link="`{{ $class->link }}`"
                                                                     class="live_class_and_topic" style="cursor: pointer"
-                                                                    onclick="getClassVideolink(`{{ $class->class_video_link }}`)"
-                                                                    courseCompletion('{{ $course->id }}',
+                                                                    onclick="getClassVideolink(`{{ $class->class_video_link }}`); 
+                                                                    courseCompletion({{ $course->id }},
                                                                     {{ $course_mile_stone->id }}, {{ $item->id }},
                                                                     {{ $class->id }})">
                                                                     @if ($class->is_complete)
@@ -143,10 +143,14 @@
                                                                         @endif
 
                                                                         <div class="quiz">কুইজঃ </div>
-                                                                        <div class="mcq">
+                                                                        {{-- <div class="mcq">
                                                                             {{ $class->class_quiz->quiz->title ?? '' }}
-                                                                            {{-- MCQ Question about basics of Bootstrap --}}
-                                                                        </div>
+                                                                        </div> --}}
+                                                                        <a href="{{ route('quiz.show', $class->class_quiz->quiz->slug) }}?courseid={{ $course->id }}&classid={{ $class->id }}"
+                                                                            onclick="courseCompletion('{{ $course->id }}', '{{ $course_mile_stone->id }}', '{{ $item->id }}', '{{ $class->id }}', '{{ $class->class_quiz->quiz->id }}')"
+                                                                            class="mcq">
+                                                                            {{ $class->class_quiz->quiz->title ?? '' }}
+                                                                        </a>
                                                                     </div>
                                                                 @endif
 
@@ -186,14 +190,13 @@
                         <div class="course_lession_video">
                             <div class="course_lession_video_thum">
 
-                                <iframe id="class_video_link" width="100%" height="450"
-                                    src=""
+                                <iframe id="class_video_link" width="100%" height="450" src=""
                                     title="YouTube video player" frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"
                                     allowfullscreen>
                                 </iframe>
                             </div>
-                          
+
 
                         </div>
 
@@ -291,7 +294,7 @@
                     }
                 }
             @endphp
-            @foreach($allClasses as $class)
+            @foreach ($allClasses as $class)
                 classVideos.push('{{ $class->class_video_link }}');
             @endforeach
 
@@ -326,10 +329,10 @@
 
         function nextVideo() {
             if (currentIndex < classVideos.length - 1) {
-            currentIndex++;
-            getClassVideolink(classVideos[currentIndex]);
+                currentIndex++;
+                getClassVideolink(classVideos[currentIndex]);
             } else {
-            alert('No more videos in this course.');
+                alert('No more videos in this course.');
             }
         }
 
@@ -340,18 +343,49 @@
             // Convert YouTube watch URL to embed URL if needed
             let embedLink = link;
             if (link.includes('youtube.com/watch')) {
-            const videoId = link.split('v=')[1].split('&')[0];
-            embedLink = `https://www.youtube.com/embed/${videoId}`;
+                const videoId = link.split('v=')[1].split('&')[0];
+                embedLink = `https://www.youtube.com/embed/${videoId}`;
             }
             document.getElementById('class_video_link').src = embedLink;
             document.getElementById("course_section").scrollIntoView();
         }
 
-        function courseCompletion(courseId, milestoneId, moduleId, classId) {
-            // Placeholder: Implement logic to mark the class as complete
-            console.log('Marking class as complete:', courseId, milestoneId, moduleId, classId);
-            // Add AJAX call or other logic here to update completion status
-        }
+        function courseCompletion(courseId, mileStoneId, moduleId, classId, quizId) {
 
+            console.log('Submitting course completion data:', {
+                courseId: courseId,
+                mileStoneId: mileStoneId,
+                moduleId: moduleId,
+                classId: classId,
+                quizId: quizId
+            });
+
+            fetch('/course_completion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        course_id: courseId,
+                        milestone_id: mileStoneId,
+                        module_id: moduleId,
+                        class_id: classId,
+                        quiz_id: quizId
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Course completion data submitted:', data);
+                })
+                .catch(error => {
+                    console.error('Error submitting course completion data:', error);
+                });
+        }
     </script>
 @endsection

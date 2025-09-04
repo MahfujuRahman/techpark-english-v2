@@ -5,6 +5,8 @@ namespace App\Modules\Management\QuizManagement\Quiz\Models;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use  App\Modules\Management\QuizManagement\QuizQuestion\Models\Model as QuizQuestion;
+
 class QuizQuizQuestionModel extends EloquentModel
 {
     use SoftDeletes;
@@ -39,5 +41,10 @@ class QuizQuizQuestionModel extends EloquentModel
      public function scopeTrased($q)
     {
         return $q->onlyTrashed();
+    }
+
+      public function quizQuestion()
+    {
+        return $this->hasOne(QuizQuestion::class, 'id', 'quiz_question_id');
     }
 }

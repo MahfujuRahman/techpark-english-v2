@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('course_module_task_complete_by_users', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('course_id')->nullable();
+            $table->bigInteger('milestone_id')->nullable();
             $table->bigInteger('module_id')->nullable();
             $table->bigInteger('class_id')->nullable();
             $table->bigInteger('user_id')->nullable();

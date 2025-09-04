@@ -1,18 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\WebsiteController;
-
 use App\Http\Controllers\Auth\AuthController;
+
 use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\About\AboutController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Policy\PolicyController;
+use App\Http\Controllers\Quiz\QuizGivenController;
 
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Gallery\GalleryController;
+use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Seminer\SeminerController;
 use App\Http\Controllers\Teacher\TeacherController;
@@ -107,3 +108,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'profileUpdate'])->name('update_profile');
 });
+
+Route::get('/quiz/{quiz_id}', [QuizGivenController::class, 'showQuiz'])->name('quiz.show');
+Route::post('/quiz/submit', [QuizGivenController::class, 'submitQuiz'])->name('quiz.submit');
+Route::post('/course_completion', [QuizGivenController::class, 'course_completion'])->name('course_completion');
+
+Route::post('/clear-return-to-module', function () {
+    request()->session()->forget('return_to_module');
+    return response()->noContent();
+})->name('clear.return.to.module');

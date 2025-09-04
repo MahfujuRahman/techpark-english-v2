@@ -50,7 +50,7 @@ class CourseDetails
             $check_enrolled = EnrollInformation::where('student_id', auth()->user()->id)
                 ->where('course_id', $data->id)->exists();
         }
-
+        // dd($check_enrolled, $data, $batch_details);
         // Check if admission has started (using Bangladesh time)
         $is_admission_open = false;
         $is_admission_closed = false;

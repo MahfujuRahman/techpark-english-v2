@@ -50,4 +50,7 @@ class Model extends EloquentModel
     {
         return $this->hasMany(self::$QuizQuestionOptionModel, 'quiz_question_id', 'id');
     }
+    public function options() {
+        return $this->hasMany(self::$QuizQuestionOptionModel,'quiz_question_id');
+    }
 }
