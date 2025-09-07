@@ -2,6 +2,7 @@
 
 namespace App\Modules\Management\CourseManagement\Course\Models;
 
+
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +12,8 @@ use App\Modules\Management\CourseManagement\CourseHowIsStructured\Models\Model a
 use App\Modules\Management\CourseManagement\CourseYouWillLearn\Models\Model as CourseYouWillLearn;
 use App\Modules\Management\CourseManagement\CourseForWhom\Models\Model as CourseForWhom;
 use App\Modules\Management\CourseManagement\CourseWhyYouLearnFromUs\Models\Model as CourseWhyYouLearnFromUs;
+
+use App\Modules\Management\CourseManagement\Course\Others\SendSubscriberEmail;
 
 class Model extends EloquentModel
 {
@@ -32,8 +35,13 @@ class Model extends EloquentModel
                 $data->creator = auth()->user()->id;
             }
             $data->save();
+
+            // Send email to subscribers
+            SendSubscriberEmail::dispatch($data);
         });
     }
+
+
 
     public function scopeActive($q)
     {
@@ -56,17 +64,17 @@ class Model extends EloquentModel
     {
         return $this->hasMany(self::$course_batch, 'course_id', 'id');
     }
-    
+
     public function milestones()
     {
         return $this->hasMany(\App\Modules\Management\CourseManagement\CourseMilestone\Models\Model::class, 'course_id', 'id');
     }
-    
+
     public function modules()
     {
         return $this->hasMany(\App\Modules\Management\CourseManagement\CourseModule\Models\Model::class, 'course_id', 'id');
     }
-    
+
     public function classes()
     {
         return $this->hasMany(\App\Modules\Management\CourseManagement\CourseModuleClass\Models\Model::class, 'course_id', 'id');
