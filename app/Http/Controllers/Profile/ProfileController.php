@@ -18,8 +18,8 @@ class ProfileController extends Controller
     }
 
     public function profileUpdate(Request $request)
-    { 
-       
+    {
+
         $validatedData = $request->validate([
             'first_name'        => 'required|string|max:255',
             'last_name'         => 'nullable|string|max:255',
@@ -107,20 +107,20 @@ class ProfileController extends Controller
         StudentDetails::updateOrCreate(
             ['user_id' => $user->id],
             [
-                'father_name'       => $validatedData['father_name'] ?? $user->father_name,
-                'mother_name'      => $validatedData['mother_name'] ?? $user->mother_name,
-                'gender'            => $validatedData['gender'] ?? $user->gender,
-                'guardian_number'   => $validatedData['guardian_number'] ?? $user->guardian_number,
-                'blood_group'       => $validatedData['blood_group'] ?? $user->blood_group,
+                'father_name'           => $validatedData['father_name'] ?? $user->father_name,
+                'mother_name'           => $validatedData['mother_name'] ?? $user->mother_name,
+                'gender'                => $validatedData['gender'] ?? $user->gender,
+                'guardian_number'       => $validatedData['guardian_number'] ?? $user->guardian_number,
+                'blood_group'           => $validatedData['blood_group'] ?? $user->blood_group,
 
-                'occupation'        => $validatedData['occupation'] ?? $user->occupation,
-                'designation'       => $validatedData['designation'] ?? $user->designation,
-                'organization'       => $validatedData['organization'] ?? $user->organization,
+                'occupation'            => $validatedData['occupation'] ?? $user->occupation,
+                'designation'           => $validatedData['designation'] ?? $user->designation,
+                'organization'          => $validatedData['organization'] ?? $user->organization,
 
-                'institution'       => $validatedData['institution'] ?? $user->institution,
-                'class' => $validatedData['class'] ?? $user->class,
+                'institution'           => $validatedData['institution'] ?? $user->institution,
+                'class'                 => $validatedData['class'] ?? $user->class,
                 'last_certificate_name' => $validatedData['last_certificate_name'] ?? $user->last_certificate_name,
-                'reference_source'  => $validatedData['reference_source'] ?? $user->reference_source,
+                'reference_source'      => $validatedData['reference_source'] ?? $user->reference_source,
             ]
         );
 

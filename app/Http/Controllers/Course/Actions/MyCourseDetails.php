@@ -101,7 +101,7 @@ class MyCourseDetails
             });
         });
 
-        $progress = round(($total_class_attend / $total_class) * 100, 2);
+        $progress = $total_class > 0 ? round(($total_class_attend / $total_class) * 100, 2) : 0;
 
         $course_percentage = CourseBatchStudent::where('student_id', auth()->user()->id)
             ->where('batch_id', request()->input('batch_id'))
