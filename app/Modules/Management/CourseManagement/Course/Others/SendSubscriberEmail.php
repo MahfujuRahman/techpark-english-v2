@@ -63,14 +63,14 @@ class SendSubscriberEmail implements ShouldQueue
         try {
             // Data should already be an array due to constructor conversion
             $emailData = $this->data;
-            
+
             Log::info('SendSubscriberEmail: About to send emails', [
                 'email_count' => count($this->emails),
                 'data_type' => gettype($emailData),
                 'data_keys' => is_array($emailData) ? array_keys($emailData) : 'not array',
                 'title' => $emailData['title'] ?? 'no title'
             ]);
-            
+
             if (count($this->emails) <= 50) {
                 // Send emails directly for small batches
                 foreach ($this->emails as $email) {
@@ -80,12 +80,15 @@ class SendSubscriberEmail implements ShouldQueue
                 // Create batches for larger email lists - pass already converted array data
                 $chunks = collect($this->emails)->chunk(50);
                 $jobs = [];
-                
+
                 foreach ($chunks as $chunk) {
                     $jobs[] = new SendSubscriberEmail($emailData, $chunk->toArray());
                 }
-                
-                Bus::batch($jobs)->dispatch();
+
+                Bus::batch($jobs)
+                    ->name("Subscriber Notification Emails")
+                    ->onQueue('subscriber_emails')
+                    ->dispatch();
             }
         } catch (\Exception $e) {
             Log::error('SendSubscriberEmail failed: ' . $e->getMessage() . ' Data type: ' . gettype($this->data));

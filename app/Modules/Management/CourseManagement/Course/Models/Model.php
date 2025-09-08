@@ -3,17 +3,18 @@
 namespace App\Modules\Management\CourseManagement\Course\Models;
 
 
-use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\Management\CourseManagement\CourseInstructors\Models\Model as CourseInstructors;
-use App\Modules\Management\CourseManagement\CourseInstructors\Models\CourseCourseInstructorModel as CourseCourseInstructors;
-use App\Modules\Management\CourseManagement\CourseHowIsStructured\Models\Model as CourseHowIsStructured;
-use App\Modules\Management\CourseManagement\CourseYouWillLearn\Models\Model as CourseYouWillLearn;
-use App\Modules\Management\CourseManagement\CourseForWhom\Models\Model as CourseForWhom;
-use App\Modules\Management\CourseManagement\CourseWhyYouLearnFromUs\Models\Model as CourseWhyYouLearnFromUs;
-
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 use App\Modules\Management\CourseManagement\Course\Others\SendSubscriberEmail;
+use App\Modules\Management\CourseManagement\CourseForWhom\Models\Model as CourseForWhom;
+use App\Modules\Management\CourseManagement\CourseInstructors\Models\Model as CourseInstructors;
+use App\Modules\Management\CourseManagement\CourseYouWillLearn\Models\Model as CourseYouWillLearn;
+use App\Modules\Management\CourseManagement\CourseHowIsStructured\Models\Model as CourseHowIsStructured;
+
+use App\Modules\Management\CourseManagement\CourseWhyYouLearnFromUs\Models\Model as CourseWhyYouLearnFromUs;
+use App\Modules\Management\CourseManagement\CourseInstructors\Models\CourseCourseInstructorModel as CourseCourseInstructors;
 
 class Model extends EloquentModel
 {
@@ -37,7 +38,10 @@ class Model extends EloquentModel
             $data->save();
 
             // Send email to subscribers
-            SendSubscriberEmail::dispatch($data);
+            SendSubscriberEmail::dispatch($data)->onQueue('subscriber_emails');
+
+            // Immediately run your worker in background
+            Artisan::call('queue:process-once');
         });
     }
 
@@ -124,5 +128,4 @@ class Model extends EloquentModel
     {
         return $this->hasMany(\App\Modules\Management\CourseManagement\CourseEssentialRequirement\Models\Model::class, 'course_id');
     }
-
 }
