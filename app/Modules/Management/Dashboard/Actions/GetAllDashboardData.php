@@ -9,7 +9,6 @@ class GetAllDashboardData
     public static function execute()
     {
         try {
-
             $data = [
                 'total_students' => \App\Modules\Management\UserManagement\User\Models\Model::where('role_id', config('roleManagement.student'))->count(),
                 'total_courses' => \App\Modules\Management\CourseManagement\Course\Models\Model::count(),
@@ -20,9 +19,15 @@ class GetAllDashboardData
                 'total_seminars' => \App\Modules\Management\SeminerManagement\Seminer\Models\Model::count(),
                 'total_subscribers' => \App\Modules\Management\CommunicationManagement\Subscriber\Models\Model::count(),
             ];
-            return entityResponse($data);
+
+            // Return plain array instead of Response
+            return $data;
         } catch (\Exception $e) {
-            return messageResponse($e->getMessage(), [], 500, 'server_error');
+            // You can throw exception or return error array
+            return [
+                'error' => true,
+                'message' => $e->getMessage()
+            ];
         }
     }
 }
