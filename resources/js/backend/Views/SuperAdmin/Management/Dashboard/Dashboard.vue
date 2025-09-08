@@ -228,7 +228,10 @@
             <h4 class="card-title">Active Users & Sessions Over Time</h4>
           </div>
           <div class="card-body">
-            <canvas id="metricsChart" width="800" height="400"></canvas>
+            <!-- Limit max height so chart doesn't grow too large on wide screens -->
+            <div class="chart-container" style="max-height:400px; height:400px;">
+              <canvas id="metricsChart" style="width:100%; height:100%;"></canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -240,8 +243,10 @@
           <div class="card-header">
             <h4 class="card-title">Top Pages</h4>
           </div>
-          <div class="card-body">
-            <canvas id="topPagesChart" width="400" height="300"></canvas>
+          <div class="card-body d-flex align-items-center justify-content-center">
+            <div class="chart-container" style="max-height:350px; height:350px; width:100%;">
+              <canvas id="topPagesChart" style="width:100%; height:100%;"></canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -250,8 +255,10 @@
           <div class="card-header">
             <h4 class="card-title">Users by Country</h4>
           </div>
-          <div class="card-body">
-            <canvas id="countryChart" width="400" height="300"></canvas>
+          <div class="card-body d-flex align-items-center justify-content-center">
+            <div class="chart-container" style="max-height:350px; height:350px;">
+              <canvas id="countryChart" style="width:100%; height:100%;"></canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -269,6 +276,7 @@
 import { Chart, registerables } from 'chart.js';
 import { nextTick } from 'vue';
 import axios from 'axios';
+import { color } from 'chart.js/helpers';
 
 Chart.register(...registerables);
 
@@ -294,8 +302,8 @@ export default {
       return this.googleAnalytics.metrics_over_time.reduce((sum, day) => sum + day.pageviews, 0);
     },
     topCountry() {
-      return this.googleAnalytics.users_by_country.length > 0 
-        ? this.googleAnalytics.users_by_country[0].country 
+      return this.googleAnalytics.users_by_country.length > 0
+        ? this.googleAnalytics.users_by_country[0].country
         : 'N/A';
     }
   },
@@ -311,14 +319,14 @@ export default {
         if (response.status === 200) {
           this.data = response.data.data;
           console.log('Dashboard data received:', this.data);
-          
+
           // Set default empty arrays if Google Analytics data is missing
           this.googleAnalytics = {
             metrics_over_time: this.data.google_analytics?.metrics_over_time || [],
             top_pages: this.data.google_analytics?.top_pages || [],
             users_by_country: this.data.google_analytics?.users_by_country || []
           };
-          
+
           console.log('Google Analytics data:', this.googleAnalytics);
         }
       } catch (error) {
@@ -326,9 +334,14 @@ export default {
       }
     },
     renderCharts() {
+      // Set global Chart.js defaults for white text
+      Chart.defaults.color = '#fff';
+      Chart.defaults.font.family = 'Arial, sans-serif';
+      Chart.defaults.font.size = 12;
+
       // Metrics over time chart
       const metricsCtx = document.getElementById("metricsChart").getContext("2d");
-      
+
       if (this.googleAnalytics.metrics_over_time.length === 0) {
         // Render empty chart with message
         new Chart(metricsCtx, {
@@ -342,7 +355,12 @@ export default {
             plugins: {
               title: {
                 display: true,
-                text: 'No metrics data available'
+                text: 'No metrics data available',
+                color: '#fff',
+                font: {
+                  size: 16,
+                  weight: 'bold'
+                }
               }
             }
           }
@@ -388,10 +406,21 @@ export default {
             plugins: {
               title: {
                 display: true,
-                text: 'Analytics Metrics Over Time'
+                text: 'Analytics Metrics Over Time',
+                color: '#fff',
+                font: {
+                  size: 16,
+                  weight: 'bold'
+                }
               },
               legend: {
                 position: 'top',
+                labels: {
+                  color: '#fff',
+                  font: {
+                    size: 14
+                  }
+                }
               }
             },
             scales: {
@@ -399,16 +428,38 @@ export default {
                 display: true,
                 title: {
                   display: true,
-                  text: 'Date'
+                  text: 'Date',
+                  color: '#fff',
+                  font: {
+                    size: 14,
+                    weight: 'bold'
+                  }
+                },
+                ticks: {
+                  color: '#fff'
+                },
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.1)'
                 }
               },
               y: {
                 display: true,
                 title: {
                   display: true,
-                  text: 'Count'
+                  text: 'Count',
+                  color: '#fff',
+                  font: {
+                    size: 14,
+                    weight: 'bold'
+                  }
                 },
-                beginAtZero: true
+                beginAtZero: true,
+                ticks: {
+                  color: '#fff'
+                },
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.1)'
+                }
               }
             }
           }
@@ -417,7 +468,7 @@ export default {
 
       // Top Pages chart
       const topPagesCtx = document.getElementById("topPagesChart").getContext("2d");
-      
+
       if (this.googleAnalytics.top_pages.length === 0) {
         new Chart(topPagesCtx, {
           type: "bar",
@@ -430,7 +481,12 @@ export default {
             plugins: {
               title: {
                 display: true,
-                text: 'No top pages data available'
+                text: 'No top pages data available',
+                color: '#fff',
+                font: {
+                  size: 16,
+                  weight: 'bold'
+                }
               }
             }
           }
@@ -465,7 +521,12 @@ export default {
             plugins: {
               title: {
                 display: true,
-                text: 'Top Pages by Pageviews'
+                text: 'Top Pages by Pageviews',
+                color: '#fff',
+                font: {
+                  size: 16,
+                  weight: 'bold'
+                }
               },
               legend: {
                 display: false
@@ -476,13 +537,35 @@ export default {
                 beginAtZero: true,
                 title: {
                   display: true,
-                  text: 'Pageviews'
+                  text: 'Pageviews',
+                  color: '#fff',
+                  font: {
+                    size: 14,
+                    weight: 'bold'
+                  }
+                },
+                ticks: {
+                  color: '#fff'
+                },
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.1)'
                 }
               },
               x: {
                 title: {
                   display: true,
-                  text: 'Pages'
+                  text: 'Pages',
+                  color: '#fff',
+                  font: {
+                    size: 14,
+                    weight: 'bold'
+                  }
+                },
+                ticks: {
+                  color: '#fff'
+                },
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.1)'
                 }
               }
             }
@@ -492,7 +575,7 @@ export default {
 
       // Users by Country chart
       const countryCtx = document.getElementById("countryChart").getContext("2d");
-      
+
       if (this.googleAnalytics.users_by_country.length === 0) {
         new Chart(countryCtx, {
           type: "doughnut",
@@ -505,7 +588,12 @@ export default {
             plugins: {
               title: {
                 display: true,
-                text: 'No country data available'
+                text: 'No country data available',
+                color: '#fff',
+                font: {
+                  size: 16,
+                  weight: 'bold'
+                }
               }
             }
           }
@@ -520,7 +608,7 @@ export default {
               data: this.googleAnalytics.users_by_country.map(d => d.active_users),
               backgroundColor: [
                 '#dc3545',
-                '#007bff', 
+                '#007bff',
                 '#28a745',
                 '#fd7e14',
                 '#6f42c1',
@@ -536,10 +624,21 @@ export default {
             plugins: {
               title: {
                 display: true,
-                text: 'Active Users by Country'
+                text: 'Active Users by Country',
+                color: '#fff',
+                font: {
+                  size: 16,
+                  weight: 'bold'
+                }
               },
               legend: {
-                position: 'right'
+                position: 'right',
+                labels: {
+                  color: '#fff',
+                  font: {
+                    size: 14
+                  }
+                }
               }
             }
           }
@@ -553,4 +652,4 @@ export default {
 
 
 
-<style></style>
+<style scoped></style>
