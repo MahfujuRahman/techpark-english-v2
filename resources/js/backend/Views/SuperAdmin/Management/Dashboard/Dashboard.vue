@@ -166,7 +166,7 @@
                 <div class="card text-white bg-primary">
                   <div class="card-body">
                     <h5 class="text-white mb-0">
-                      {{ totalActiveUsers }}
+                      {{ realtimeActiveUsers }}
                       <span class="float-right"><i class="fa fa-users"></i></span>
                     </h5>
                     <p class="mb-0 text-white small-font mt-2">
@@ -192,7 +192,7 @@
                 <div class="card text-white bg-info">
                   <div class="card-body">
                     <h5 class="text-white mb-0">
-                      {{ totalPageviews }}
+                      {{ realtimePageviews }}
                       <span class="float-right"><i class="fa fa-file-text-o"></i></span>
                     </h5>
                     <p class="mb-0 text-white small-font mt-2">
@@ -285,26 +285,48 @@ export default {
     return {
       data: {},
       googleAnalytics: {
-        metrics_over_time: [],
-        top_pages: [],
-        users_by_country: []
-      }
+        realtime: {
+          active_users: 0,
+          pageviews: 0,
+          top_pages: []
+        },
+        historical: {
+          metrics_over_time: [],
+          top_pages: [],
+          users_by_country: []
+        }
+      },
+      charts: {
+        metricsChart: null,
+        topPagesChart: null,
+        countryChart: null
+      },
+      chartsRendered: false
     };
   },
   computed: {
     totalActiveUsers() {
-      return this.googleAnalytics.metrics_over_time.reduce((sum, day) => sum + day.active_users, 0);
+      return this.googleAnalytics.historical.metrics_over_time.reduce((sum, day) => sum + day.active_users, 0);
     },
     totalSessions() {
-      return this.googleAnalytics.metrics_over_time.reduce((sum, day) => sum + day.sessions, 0);
+      return this.googleAnalytics.historical.metrics_over_time.reduce((sum, day) => sum + day.sessions, 0);
     },
     totalPageviews() {
-      return this.googleAnalytics.metrics_over_time.reduce((sum, day) => sum + day.pageviews, 0);
+      return this.googleAnalytics.historical.metrics_over_time.reduce((sum, day) => sum + day.pageviews, 0);
     },
     topCountry() {
-      return this.googleAnalytics.users_by_country.length > 0
-        ? this.googleAnalytics.users_by_country[0].country
+      return this.googleAnalytics.historical.users_by_country.length > 0
+        ? this.googleAnalytics.historical.users_by_country[0].country
         : 'N/A';
+    },
+    realtimeActiveUsers() {
+      return this.googleAnalytics.realtime.active_users || 0;
+    },
+    realtimePageviews() {
+      return this.googleAnalytics.realtime.pageviews || 0;
+    },
+    realtimeTopPages() {
+      return this.googleAnalytics.realtime.top_pages || [];
     }
   },
   async created() {
@@ -322,329 +344,730 @@ export default {
 
           // Set default empty arrays if Google Analytics data is missing
           this.googleAnalytics = {
-            metrics_over_time: this.data.google_analytics?.metrics_over_time || [],
-            top_pages: this.data.google_analytics?.top_pages || [],
-            users_by_country: this.data.google_analytics?.users_by_country || []
+            realtime: this.data.google_analytics?.realtime || {
+              active_users: 0,
+              pageviews: 0,
+              top_pages: []
+            },
+            historical: this.data.google_analytics?.historical || {
+              metrics_over_time: [],
+              top_pages: [],
+              users_by_country: []
+            }
           };
 
           console.log('Google Analytics data:', this.googleAnalytics);
+
+          // Update charts if they already exist, otherwise they will be rendered in created()
+          if (this.chartsRendered) {
+            await nextTick();
+            this.updateCharts();
+          }
         }
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       }
     },
     renderCharts() {
+      // Prevent multiple chart renderings
+      if (this.chartsRendered) {
+        return;
+      }
+
+      // Destroy existing charts to prevent memory leaks
+      Object.values(this.charts).forEach(chart => {
+        if (chart) {
+          chart.destroy();
+        }
+      });
+
       // Set global Chart.js defaults for white text
       Chart.defaults.color = '#fff';
       Chart.defaults.font.family = 'Arial, sans-serif';
       Chart.defaults.font.size = 12;
 
       // Metrics over time chart
-      const metricsCtx = document.getElementById("metricsChart").getContext("2d");
+      const metricsCtx = document.getElementById("metricsChart");
+      if (metricsCtx) {
+        const metricsContext = metricsCtx.getContext("2d");
 
-      if (this.googleAnalytics.metrics_over_time.length === 0) {
-        // Render empty chart with message
-        new Chart(metricsCtx, {
-          type: "line",
-          data: {
-            labels: [],
-            datasets: []
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'No metrics data available',
-                color: '#fff',
-                font: {
-                  size: 16,
-                  weight: 'bold'
+        if (this.googleAnalytics.historical.metrics_over_time.length === 0) {
+          // Render empty chart with message
+          this.charts.metricsChart = new Chart(metricsContext, {
+            type: "line",
+            data: {
+              labels: [],
+              datasets: []
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'No metrics data available',
+                  color: '#fff',
+                  font: {
+                    size: 16,
+                    weight: 'bold'
+                  }
                 }
               }
             }
-          }
-        });
-      } else {
-        new Chart(metricsCtx, {
-          type: "line",
-          data: {
-            labels: this.googleAnalytics.metrics_over_time.map(d => d.date),
-            datasets: [
-              {
-                label: "Active Users",
-                data: this.googleAnalytics.metrics_over_time.map(d => d.active_users),
-                borderColor: "#007bff",
-                backgroundColor: "rgba(0, 123, 255, 0.1)",
-                tension: 0.4,
-                fill: true
-              },
-              {
-                label: "Sessions",
-                data: this.googleAnalytics.metrics_over_time.map(d => d.sessions),
-                borderColor: "#28a745",
-                backgroundColor: "rgba(40, 167, 69, 0.1)",
-                tension: 0.4,
-                fill: false
-              },
-              {
-                label: "Pageviews",
-                data: this.googleAnalytics.metrics_over_time.map(d => d.pageviews),
-                borderColor: "#fd7e14",
-                backgroundColor: "rgba(253, 126, 20, 0.1)",
-                tension: 0.4,
-                fill: false
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            interaction: {
-              mode: 'index',
-              intersect: false,
-            },
-            plugins: {
-              title: {
-                display: true,
-                text: 'Analytics Metrics Over Time',
-                color: '#fff',
-                font: {
-                  size: 16,
-                  weight: 'bold'
+          });
+        } else {
+          this.charts.metricsChart = new Chart(metricsContext, {
+            type: "line",
+            data: {
+              labels: this.googleAnalytics.historical.metrics_over_time.map(d => d.date),
+              datasets: [
+                {
+                  label: "Active Users",
+                  data: this.googleAnalytics.historical.metrics_over_time.map(d => d.active_users),
+                  borderColor: "#007bff",
+                  backgroundColor: "rgba(0, 123, 255, 0.1)",
+                  tension: 0.4,
+                  fill: true
+                },
+                {
+                  label: "Sessions",
+                  data: this.googleAnalytics.historical.metrics_over_time.map(d => d.sessions),
+                  borderColor: "#28a745",
+                  backgroundColor: "rgba(40, 167, 69, 0.1)",
+                  tension: 0.4,
+                  fill: false
+                },
+                {
+                  label: "Pageviews",
+                  data: this.googleAnalytics.historical.metrics_over_time.map(d => d.pageviews),
+                  borderColor: "#fd7e14",
+                  backgroundColor: "rgba(253, 126, 20, 0.1)",
+                  tension: 0.4,
+                  fill: false
                 }
-              },
-              legend: {
-                position: 'top',
-                labels: {
-                  color: '#fff',
-                  font: {
-                    size: 14
-                  }
-                }
-              }
+              ]
             },
-            scales: {
-              x: {
-                display: true,
+            options: {
+              responsive: true,
+              interaction: {
+                mode: 'index',
+                intersect: false,
+              },
+              plugins: {
                 title: {
                   display: true,
-                  text: 'Date',
+                  text: 'Analytics Metrics Over Time',
                   color: '#fff',
                   font: {
-                    size: 14,
+                    size: 16,
                     weight: 'bold'
                   }
                 },
-                ticks: {
-                  color: '#fff'
-                },
-                grid: {
-                  color: 'rgba(255, 255, 255, 0.1)'
+                legend: {
+                  position: 'top',
+                  labels: {
+                    color: '#fff',
+                    font: {
+                      size: 14
+                    }
+                  }
                 }
               },
-              y: {
-                display: true,
-                title: {
+              scales: {
+                x: {
                   display: true,
-                  text: 'Count',
-                  color: '#fff',
-                  font: {
-                    size: 14,
-                    weight: 'bold'
+                  title: {
+                    display: true,
+                    text: 'Date',
+                    color: '#fff',
+                    font: {
+                      size: 14,
+                      weight: 'bold'
+                    }
+                  },
+                  ticks: {
+                    color: '#fff'
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
                   }
                 },
-                beginAtZero: true,
-                ticks: {
-                  color: '#fff'
-                },
-                grid: {
-                  color: 'rgba(255, 255, 255, 0.1)'
+                y: {
+                  display: true,
+                  title: {
+                    display: true,
+                    text: 'Count',
+                    color: '#fff',
+                    font: {
+                      size: 14,
+                      weight: 'bold'
+                    }
+                  },
+                  beginAtZero: true,
+                  ticks: {
+                    color: '#fff'
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
                 }
               }
             }
-          }
-        });
+          });
+        }
       }
 
       // Top Pages chart
-      const topPagesCtx = document.getElementById("topPagesChart").getContext("2d");
+      const topPagesCtx = document.getElementById("topPagesChart");
+      if (topPagesCtx) {
+        const topPagesContext = topPagesCtx.getContext("2d");
 
-      if (this.googleAnalytics.top_pages.length === 0) {
-        new Chart(topPagesCtx, {
-          type: "bar",
-          data: {
-            labels: [],
-            datasets: []
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'No top pages data available',
-                color: '#fff',
-                font: {
-                  size: 16,
-                  weight: 'bold'
-                }
-              }
-            }
-          }
-        });
-      } else {
-        new Chart(topPagesCtx, {
-          type: "bar",
-          data: {
-            labels: this.googleAnalytics.top_pages.map(d => d.page),
-            datasets: [{
-              label: "Pageviews",
-              data: this.googleAnalytics.top_pages.map(d => d.pageviews),
-              backgroundColor: [
-                '#6f42c1',
-                '#e83e8c',
-                '#fd7e14',
-                '#20c997',
-                '#6610f2'
-              ],
-              borderColor: [
-                '#6f42c1',
-                '#e83e8c',
-                '#fd7e14',
-                '#20c997',
-                '#6610f2'
-              ],
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'Top Pages by Pageviews',
-                color: '#fff',
-                font: {
-                  size: 16,
-                  weight: 'bold'
-                }
-              },
-              legend: {
-                display: false
-              }
+        if (this.googleAnalytics.historical.top_pages.length === 0) {
+          this.charts.topPagesChart = new Chart(topPagesContext, {
+            type: "bar",
+            data: {
+              labels: [],
+              datasets: []
             },
-            scales: {
-              y: {
-                beginAtZero: true,
+            options: {
+              responsive: true,
+              plugins: {
                 title: {
                   display: true,
-                  text: 'Pageviews',
+                  text: 'No top pages data available',
                   color: '#fff',
                   font: {
-                    size: 14,
+                    size: 16,
                     weight: 'bold'
                   }
-                },
-                ticks: {
-                  color: '#fff'
-                },
-                grid: {
-                  color: 'rgba(255, 255, 255, 0.1)'
-                }
-              },
-              x: {
-                title: {
-                  display: true,
-                  text: 'Pages',
-                  color: '#fff',
-                  font: {
-                    size: 14,
-                    weight: 'bold'
-                  }
-                },
-                ticks: {
-                  color: '#fff'
-                },
-                grid: {
-                  color: 'rgba(255, 255, 255, 0.1)'
                 }
               }
             }
-          }
-        });
+          });
+        } else {
+          this.charts.topPagesChart = new Chart(topPagesContext, {
+            type: "bar",
+            data: {
+              labels: this.googleAnalytics.historical.top_pages.map(d => d.page),
+              datasets: [{
+                label: "Pageviews",
+                data: this.googleAnalytics.historical.top_pages.map(d => d.pageviews),
+                backgroundColor: [
+                  '#6f42c1',
+                  '#e83e8c',
+                  '#fd7e14',
+                  '#20c997',
+                  '#6610f2'
+                ],
+                borderColor: [
+                  '#6f42c1',
+                  '#e83e8c',
+                  '#fd7e14',
+                  '#20c997',
+                  '#6610f2'
+                ],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Top Pages by Pageviews',
+                  color: '#fff',
+                  font: {
+                    size: 16,
+                    weight: 'bold'
+                  }
+                },
+                legend: {
+                  display: false
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Pageviews',
+                    color: '#fff',
+                    font: {
+                      size: 14,
+                      weight: 'bold'
+                    }
+                  },
+                  ticks: {
+                    color: '#fff'
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Pages',
+                    color: '#fff',
+                    font: {
+                      size: 14,
+                      weight: 'bold'
+                    }
+                  },
+                  ticks: {
+                    color: '#fff'
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }
+              }
+            }
+          });
+        }
       }
 
       // Users by Country chart
-      const countryCtx = document.getElementById("countryChart").getContext("2d");
+      const countryCtx = document.getElementById("countryChart");
+      if (countryCtx) {
+        const countryContext = countryCtx.getContext("2d");
 
-      if (this.googleAnalytics.users_by_country.length === 0) {
-        new Chart(countryCtx, {
-          type: "doughnut",
-          data: {
-            labels: [],
-            datasets: []
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'No country data available',
-                color: '#fff',
-                font: {
-                  size: 16,
-                  weight: 'bold'
-                }
-              }
-            }
-          }
-        });
-      } else {
-        new Chart(countryCtx, {
-          type: "doughnut",
-          data: {
-            labels: this.googleAnalytics.users_by_country.map(d => d.country),
-            datasets: [{
-              label: "Active Users",
-              data: this.googleAnalytics.users_by_country.map(d => d.active_users),
-              backgroundColor: [
-                '#dc3545',
-                '#007bff',
-                '#28a745',
-                '#fd7e14',
-                '#6f42c1',
-                '#e83e8c',
-                '#20c997'
-              ],
-              borderWidth: 2,
-              borderColor: '#fff'
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'Active Users by Country',
-                color: '#fff',
-                font: {
-                  size: 16,
-                  weight: 'bold'
-                }
-              },
-              legend: {
-                position: 'right',
-                labels: {
+        if (this.googleAnalytics.historical.users_by_country.length === 0) {
+          this.charts.countryChart = new Chart(countryContext, {
+            type: "doughnut",
+            data: {
+              labels: [],
+              datasets: []
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'No country data available',
                   color: '#fff',
                   font: {
-                    size: 14
+                    size: 16,
+                    weight: 'bold'
                   }
                 }
               }
             }
-          }
-        });
+          });
+        } else {
+          this.charts.countryChart = new Chart(countryContext, {
+            type: "doughnut",
+            data: {
+              labels: this.googleAnalytics.historical.users_by_country.map(d => d.country),
+              datasets: [{
+                label: "Active Users",
+                data: this.googleAnalytics.historical.users_by_country.map(d => d.active_users),
+                backgroundColor: [
+                  '#dc3545',
+                  '#007bff',
+                  '#28a745',
+                  '#fd7e14',
+                  '#6f42c1',
+                  '#e83e8c',
+                  '#20c997'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Active Users by Country',
+                  color: '#fff',
+                  font: {
+                    size: 16,
+                    weight: 'bold'
+                  }
+                },
+                legend: {
+                  position: 'right',
+                  labels: {
+                    color: '#fff',
+                    font: {
+                      size: 14
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+
+      this.chartsRendered = true;
+    },
+    renderCharts() {
+      // Prevent multiple chart renderings
+      if (this.chartsRendered) {
+        return;
+      }
+
+      // Destroy existing charts to prevent memory leaks
+      Object.values(this.charts).forEach(chart => {
+        if (chart) {
+          chart.destroy();
+        }
+      });
+
+      // Set global Chart.js defaults for white text
+      Chart.defaults.color = '#fff';
+      Chart.defaults.font.family = 'Arial, sans-serif';
+      Chart.defaults.font.size = 12;
+
+      // Metrics over time chart
+      const metricsCtx = document.getElementById("metricsChart");
+      if (metricsCtx) {
+        const metricsContext = metricsCtx.getContext("2d");
+
+        if (this.googleAnalytics.historical.metrics_over_time.length === 0) {
+          // Render empty chart with message
+          this.charts.metricsChart = new Chart(metricsContext, {
+            type: "line",
+            data: {
+              labels: [],
+              datasets: []
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'No metrics data available',
+                  color: '#fff',
+                  font: {
+                    size: 16,
+                    weight: 'bold'
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          this.charts.metricsChart = new Chart(metricsContext, {
+            type: "line",
+            data: {
+              labels: this.googleAnalytics.historical.metrics_over_time.map(d => d.date),
+              datasets: [
+                {
+                  label: "Active Users",
+                  data: this.googleAnalytics.historical.metrics_over_time.map(d => d.active_users),
+                  borderColor: "#007bff",
+                  backgroundColor: "rgba(0, 123, 255, 0.1)",
+                  tension: 0.4,
+                  fill: true
+                },
+                {
+                  label: "Sessions",
+                  data: this.googleAnalytics.historical.metrics_over_time.map(d => d.sessions),
+                  borderColor: "#28a745",
+                  backgroundColor: "rgba(40, 167, 69, 0.1)",
+                  tension: 0.4,
+                  fill: false
+                },
+                {
+                  label: "Pageviews",
+                  data: this.googleAnalytics.historical.metrics_over_time.map(d => d.pageviews),
+                  borderColor: "#fd7e14",
+                  backgroundColor: "rgba(253, 126, 20, 0.1)",
+                  tension: 0.4,
+                  fill: false
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              interaction: {
+                mode: 'index',
+                intersect: false,
+              },
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Analytics Metrics Over Time',
+                  color: '#fff',
+                  font: {
+                    size: 16,
+                    weight: 'bold'
+                  }
+                },
+                legend: {
+                  position: 'top',
+                  labels: {
+                    color: '#fff',
+                    font: {
+                      size: 14
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  display: true,
+                  title: {
+                    display: true,
+                    text: 'Date',
+                    color: '#fff',
+                    font: {
+                      size: 14,
+                      weight: 'bold'
+                    }
+                  },
+                  ticks: {
+                    color: '#fff'
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
+                },
+                y: {
+                  display: true,
+                  title: {
+                    display: true,
+                    text: 'Count',
+                    color: '#fff',
+                    font: {
+                      size: 14,
+                      weight: 'bold'
+                    }
+                  },
+                  beginAtZero: true,
+                  ticks: {
+                    color: '#fff'
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+
+      // Top Pages chart
+      const topPagesCtx = document.getElementById("topPagesChart");
+      if (topPagesCtx) {
+        const topPagesContext = topPagesCtx.getContext("2d");
+
+        if (this.googleAnalytics.historical.top_pages.length === 0) {
+          this.charts.topPagesChart = new Chart(topPagesContext, {
+            type: "bar",
+            data: {
+              labels: [],
+              datasets: []
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'No top pages data available',
+                  color: '#fff',
+                  font: {
+                    size: 16,
+                    weight: 'bold'
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          this.charts.topPagesChart = new Chart(topPagesContext, {
+            type: "bar",
+            data: {
+              labels: this.googleAnalytics.historical.top_pages.map(d => d.page),
+              datasets: [{
+                label: "Pageviews",
+                data: this.googleAnalytics.historical.top_pages.map(d => d.pageviews),
+                backgroundColor: [
+                  '#6f42c1',
+                  '#e83e8c',
+                  '#fd7e14',
+                  '#20c997',
+                  '#6610f2'
+                ],
+                borderColor: [
+                  '#6f42c1',
+                  '#e83e8c',
+                  '#fd7e14',
+                  '#20c997',
+                  '#6610f2'
+                ],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Top Pages by Pageviews',
+                  color: '#fff',
+                  font: {
+                    size: 16,
+                    weight: 'bold'
+                  }
+                },
+                legend: {
+                  display: false
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Pageviews',
+                    color: '#fff',
+                    font: {
+                      size: 14,
+                      weight: 'bold'
+                    }
+                  },
+                  ticks: {
+                    color: '#fff'
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Pages',
+                    color: '#fff',
+                    font: {
+                      size: 14,
+                      weight: 'bold'
+                    }
+                  },
+                  ticks: {
+                    color: '#fff'
+                  },
+                  grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+
+      // Users by Country chart
+      const countryCtx = document.getElementById("countryChart");
+      if (countryCtx) {
+        const countryContext = countryCtx.getContext("2d");
+
+        if (this.googleAnalytics.historical.users_by_country.length === 0) {
+          this.charts.countryChart = new Chart(countryContext, {
+            type: "doughnut",
+            data: {
+              labels: [],
+              datasets: []
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'No country data available',
+                  color: '#fff',
+                  font: {
+                    size: 16,
+                    weight: 'bold'
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          this.charts.countryChart = new Chart(countryContext, {
+            type: "doughnut",
+            data: {
+              labels: this.googleAnalytics.historical.users_by_country.map(d => d.country),
+              datasets: [{
+                label: "Active Users",
+                data: this.googleAnalytics.historical.users_by_country.map(d => d.active_users),
+                backgroundColor: [
+                  '#dc3545',
+                  '#007bff',
+                  '#28a745',
+                  '#fd7e14',
+                  '#6f42c1',
+                  '#e83e8c',
+                  '#20c997'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Active Users by Country',
+                  color: '#fff',
+                  font: {
+                    size: 16,
+                    weight: 'bold'
+                  }
+                },
+                legend: {
+                  position: 'right',
+                  labels: {
+                    color: '#fff',
+                    font: {
+                      size: 14
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+
+      this.chartsRendered = true;
+    },
+    updateCharts() {
+      // Update existing charts with new data instead of recreating them
+      if (this.charts.metricsChart && this.googleAnalytics.historical.metrics_over_time.length > 0) {
+        this.charts.metricsChart.data.labels = this.googleAnalytics.historical.metrics_over_time.map(d => d.date);
+        this.charts.metricsChart.data.datasets[0].data = this.googleAnalytics.historical.metrics_over_time.map(d => d.active_users);
+        this.charts.metricsChart.data.datasets[1].data = this.googleAnalytics.historical.metrics_over_time.map(d => d.sessions);
+        this.charts.metricsChart.data.datasets[2].data = this.googleAnalytics.historical.metrics_over_time.map(d => d.pageviews);
+        this.charts.metricsChart.update();
+      }
+
+      if (this.charts.topPagesChart && this.googleAnalytics.historical.top_pages.length > 0) {
+        this.charts.topPagesChart.data.labels = this.googleAnalytics.historical.top_pages.map(d => d.page);
+        this.charts.topPagesChart.data.datasets[0].data = this.googleAnalytics.historical.top_pages.map(d => d.pageviews);
+        this.charts.topPagesChart.update();
+      }
+
+      if (this.charts.countryChart && this.googleAnalytics.historical.users_by_country.length > 0) {
+        this.charts.countryChart.data.labels = this.googleAnalytics.historical.users_by_country.map(d => d.country);
+        this.charts.countryChart.data.datasets[0].data = this.googleAnalytics.historical.users_by_country.map(d => d.active_users);
+        this.charts.countryChart.update();
       }
     }
+  },
+  beforeUnmount() {
+    // Clean up charts to prevent memory leaks
+    Object.values(this.charts).forEach(chart => {
+      if (chart) {
+        chart.destroy();
+      }
+    });
   }
 };
 

@@ -20,23 +20,30 @@ class Controller extends ControllersController
 
     public function GetAllDashboardData()
     {
-        $metricsOverTime = $this->ga->getMetricsOverTime('2daysAgo', 'today');
+        // Get historical data (last 7 days)
+        $metricsOverTime = $this->ga->getMetricsOverTime();
         $topPages = $this->ga->getTopPages();
         $usersByCountry = $this->ga->getUsersByCountry();
 
-        $data = GetAllDashboardData::execute(); // now it's an array
+        // Get real-time data (current day/last 30 minutes)
+        $realtimeActiveUsers = $this->ga->getRealTimeActiveUsers();
+        $realtimePageviews = $this->ga->getRealtimePageviews();
+        $realtimeTopPages = $this->ga->getRealtimeTopPages();
 
-        $data['google_analytics'] = [
-            'metrics_over_time' => $metricsOverTime,
-            'top_pages' => $topPages,
-            'users_by_country' => $usersByCountry,
-        ];
+        $data = GetAllDashboardData::execute(); // now it's an array
 
         return entityResponse(array_merge($data, [
             'google_analytics' => [
-                'metrics_over_time' => $metricsOverTime,
-                'top_pages' => $topPages,
-                'users_by_country' => $usersByCountry,
+                'historical' => [
+                    'metrics_over_time' => $metricsOverTime,
+                    'top_pages' => $topPages,
+                    'users_by_country' => $usersByCountry,
+                ],
+                'realtime' => [
+                    'active_users' => $realtimeActiveUsers,
+                    'pageviews' => $realtimePageviews,
+                    'top_pages' => $realtimeTopPages
+                ]
             ]
         ]));
     }

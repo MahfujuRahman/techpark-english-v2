@@ -116,25 +116,49 @@ class GoogleAnalyticsService
 
         $response = $this->runReport($body);
 
-        // If no data from GA4, return dummy data for demo
+        // If no data from GA4, return demo data for demo
         if (empty($response['rows'])) {
             Log::warning('No GA4 data available, returning demo data');
             return $this->getDemoMetricsData();
         }
 
-        $data = [];
+        // Create a map of all dates in the range with zero values
+        $startTimestamp = strtotime($startDate);
+        $endTimestamp = strtotime($endDate) + 86399; // Include the full day
+        $dateMap = [];
+
+        // Ensure we include all days from start to end
+        for ($timestamp = $startTimestamp; $timestamp <= $endTimestamp; $timestamp += 86400) {
+            $dateKey = date('Y-m-d', $timestamp);
+            $dateMap[$dateKey] = [
+                'date' => $dateKey,
+                'active_users' => 0,
+                'sessions' => 0,
+                'pageviews' => 0,
+            ];
+        }
+
+        // Fill in actual data from GA4 response
         foreach ($response['rows'] ?? [] as $row) {
             $dateValue = $row['dimensionValues'][0]['value'];
             $formattedDate = date('Y-m-d', strtotime($dateValue));
-            
-            $data[] = [
-                'date' => $formattedDate,
-                'active_users' => intval($row['metricValues'][0]['value']),
-                'sessions' => intval($row['metricValues'][1]['value']),
-                'pageviews' => intval($row['metricValues'][2]['value']),
-            ];
+
+            if (isset($dateMap[$formattedDate])) {
+                $dateMap[$formattedDate] = [
+                    'date' => $formattedDate,
+                    'active_users' => intval($row['metricValues'][0]['value']),
+                    'sessions' => intval($row['metricValues'][1]['value']),
+                    'pageviews' => intval($row['metricValues'][2]['value']),
+                ];
+            }
         }
-        
+
+        // Convert map to array and sort by date
+        $data = array_values($dateMap);
+        usort($data, function($a, $b) {
+            return strtotime($a['date']) - strtotime($b['date']);
+        });
+
         Log::info('Metrics over time data: ', $data);
         return $data;
     }
@@ -248,7 +272,7 @@ class GoogleAnalyticsService
     }
 
     /**
-     * Get real-time active users (may work with different permissions)
+     * Get real-time active users (last 30 minutes)
      */
     public function getRealTimeActiveUsers()
     {
@@ -272,15 +296,107 @@ class GoogleAnalyticsService
 
             $result = $response->json();
             Log::info('GA4 Realtime API Response: ', $result);
-            
+
             if (isset($result['rows'][0]['metricValues'][0]['value'])) {
                 return intval($result['rows'][0]['metricValues'][0]['value']);
             }
-            
+
             return 0;
         } catch (\Exception $e) {
             Log::error('Error running GA4 realtime report: ' . $e->getMessage());
             return 0;
+        }
+    }
+
+    /**
+     * Get real-time pageviews (last 30 minutes)
+     */
+    public function getRealtimePageviews()
+    {
+        if (!$this->accessToken) {
+            Log::error('No access token available for GA4 realtime API request');
+            return 0;
+        }
+
+        try {
+            $response = Http::withToken($this->accessToken)
+                ->post("https://analyticsdata.googleapis.com/v1beta/properties/{$this->propertyId}:runRealtimeReport", [
+                    'metrics' => [
+                        ['name' => 'screenPageViews']
+                    ]
+                ]);
+
+            if (!$response->successful()) {
+                Log::error('GA4 Realtime Pageviews API request failed: ' . $response->body());
+                return 0;
+            }
+
+            $result = $response->json();
+            Log::info('GA4 Realtime Pageviews API Response: ', $result);
+
+            if (isset($result['rows'][0]['metricValues'][0]['value'])) {
+                return intval($result['rows'][0]['metricValues'][0]['value']);
+            }
+
+            return 0;
+        } catch (\Exception $e) {
+            Log::error('Error running GA4 realtime pageviews report: ' . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Get real-time top pages/locations (last 30 minutes)
+     * Note: Real-time API has very limited dimensions available
+     */
+    public function getRealtimeTopPages($limit = 10)
+    {
+        if (!$this->accessToken) {
+            Log::error('No access token available for GA4 realtime API request');
+            return [];
+        }
+
+        try {
+            // Real-time API has very limited dimensions. Let's try 'city' as suggested by the error
+            $response = Http::withToken($this->accessToken)
+                ->post("https://analyticsdata.googleapis.com/v1beta/properties/{$this->propertyId}:runRealtimeReport", [
+                    'dimensions' => [
+                        ['name' => 'city']
+                    ],
+                    'metrics' => [
+                        ['name' => 'activeUsers'],
+                        ['name' => 'screenPageViews']
+                    ],
+                    'orderBys' => [
+                        ['metric' => ['metricName' => 'activeUsers'], 'desc' => true]
+                    ],
+                    'limit' => $limit
+                ]);
+
+            if (!$response->successful()) {
+                Log::error('GA4 Realtime Top Pages API request failed: ' . $response->body());
+                // Return empty array instead of failing - real-time top pages is not critical
+                return [];
+            }
+
+            $result = $response->json();
+            Log::info('GA4 Realtime Top Cities API Response: ', $result);
+
+            $data = [];
+            if (isset($result['rows'])) {
+                foreach ($result['rows'] as $row) {
+                    $data[] = [
+                        'location' => $row['dimensionValues'][0]['value'] ?: 'Unknown Location',
+                        'active_users' => intval($row['metricValues'][0]['value']),
+                        'pageviews' => intval($row['metricValues'][1]['value'])
+                    ];
+                }
+            }
+
+            return $data;
+        } catch (\Exception $e) {
+            Log::error('Error running GA4 realtime top cities report: ' . $e->getMessage());
+            return [];
         }
     }
 
