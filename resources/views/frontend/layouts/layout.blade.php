@@ -2,6 +2,19 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0PM08PK3E8"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-0PM08PK3E8');
+    </script>
+    
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -100,7 +113,7 @@
         <!-- go_to_top_area end -->
     </section>
     <!-- chating_and_go_to_top_area end -->
-    
+
     <script>
         $('.owl-carousel').owlCarousel({
             loop: true,
@@ -119,4 +132,5 @@
     @stack('scripts')
 
 </body>
+
 </html>

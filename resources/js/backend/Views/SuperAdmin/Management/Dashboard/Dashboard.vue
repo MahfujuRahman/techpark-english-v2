@@ -7,14 +7,14 @@
           <div class="col-12 col-lg-6 col-xl-3 border-light">
             <div class="card-body">
               <h5 class="text-white mb-0">
-                {{ data.getTotalIncomes }}
+                {{ data.total_students }}
                 <!-- <span class="float-right"><i class="fa fa-users"></i></span> -->
               </h5>
               <div class="progress my-3" style="height: 3px">
                 <!-- <div class="progress-bar" style="width: 55%"></div> -->
               </div>
               <p class="mb-0 text-white small-font">
-                Total Income
+                Total Students
                 <span class="float-right">
                   <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
                 </span>
@@ -24,14 +24,14 @@
           <div class="col-12 col-lg-6 col-xl-3 border-light">
             <div class="card-body">
               <h5 class="text-white mb-0">
-                {{ data.getTotalExpenses }}
+                {{ data.total_courses }}
                 <!-- <span class="float-right"><i class="fa fa-book"></i></span> -->
               </h5>
               <div class="progress my-3" style="height: 3px">
                 <!-- <div class="progress-bar" style="width: 55%"></div> -->
               </div>
               <p class="mb-0 text-white small-font">
-                Total Expenses
+                Total Courses
                 <span class="float-right">
                   <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
                 </span>
@@ -41,14 +41,14 @@
           <div class="col-12 col-lg-6 col-xl-3 border-light">
             <div class="card-body">
               <h5 class="text-white mb-0">
-                {{ data.getTotalProducts }}
+                {{ data.total_instructors }}
                 <!-- <span class="float-right"><i class="fa fa-eye"></i></span> -->
               </h5>
               <div class="progress my-3" style="height: 3px">
                 <!-- <div class="progress-bar" style="width: 55%"></div> -->
               </div>
               <p class="mb-0 text-white small-font">
-                Total Products
+                Total Instructors
                 <span class="float-right">
                   <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
                 </span>
@@ -58,14 +58,14 @@
           <div class="col-12 col-lg-6 col-xl-3 border-light">
             <div class="card-body">
               <h5 class="text-white mb-0">
-                {{ data.getTotalPurchaseOrders }}
+                {{ data.total_quizzes }}
                 <!-- <span class="float-right"><i class="fa fa-envira"></i></span> -->
               </h5>
               <div class="progress my-3" style="height: 3px">
                 <!-- <div class="progress-bar" style="width: 55%"></div> -->
               </div>
               <p class="mb-0 text-white small-font">
-                Total Purchase Orders
+                Total Quizzes
                 <span class="float-right">
                   <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
                 </span>
@@ -81,14 +81,14 @@
           <div class="col-12 col-lg-6 col-xl-3 border-light">
             <div class="card-body">
               <h5 class="text-white mb-0">
-                {{ data.getTotalSuppliers }}
+                {{ data.total_blogs }}
                 <!-- <span class="float-right"><i class="fa fa-users"></i></span> -->
               </h5>
               <div class="progress my-3" style="height: 3px">
                 <!-- <div class="progress-bar" style="width: 55%"></div> -->
               </div>
               <p class="mb-0 text-white small-font">
-                Total Suppliers
+                Total Blogs
                 <span class="float-right">
                   <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
                 </span>
@@ -98,14 +98,14 @@
           <div class="col-12 col-lg-6 col-xl-3 border-light">
             <div class="card-body">
               <h5 class="text-white mb-0">
-                {{ data.getTotalWarehouses }}
+                {{ data.total_enrollments }}
                 <!-- <span class="float-right"><i class="fa fa-book"></i></span> -->
               </h5>
               <div class="progress my-3" style="height: 3px">
                 <!-- <div class="progress-bar" style="width: 55%"></div> -->
               </div>
               <p class="mb-0 text-white small-font">
-                Total Warehouses
+                Total Enrollments
                 <span class="float-right">
                   <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
                 </span>
@@ -115,14 +115,14 @@
           <div class="col-12 col-lg-6 col-xl-3 border-light">
             <div class="card-body">
               <h5 class="text-white mb-0">
-                {{ data.getTotalCustomers }}
+                {{ data.total_seminars }}
                 <!-- <span class="float-right"><i class="fa fa-eye"></i></span> -->
               </h5>
               <div class="progress my-3" style="height: 3px">
                 <!-- <div class="progress-bar" style="width: 55%"></div> -->
               </div>
               <p class="mb-0 text-white small-font">
-                Total Customers
+                Total Seminars
                 <span class="float-right">
                   <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
                 </span>
@@ -132,14 +132,14 @@
           <div class="col-12 col-lg-6 col-xl-3 border-light">
             <div class="card-body">
               <h5 class="text-white mb-0">
-                {{ data.getTotalSalesOrders }}
+                {{ data.total_subscribers }}
                 <!-- <span class="float-right"><i class="fa fa-envira"></i></span> -->
               </h5>
               <div class="progress my-3" style="height: 3px">
                 <!-- <div class="progress-bar" style="width: 55%"></div> -->
               </div>
               <p class="mb-0 text-white small-font">
-                Total Sales Orders
+                Total Subscribers
                 <span class="float-right">
                   <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
                 </span>
