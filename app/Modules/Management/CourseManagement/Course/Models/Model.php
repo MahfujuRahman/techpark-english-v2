@@ -124,4 +124,5 @@ class Model extends EloquentModel
     {
         return $this->hasMany(\App\Modules\Management\CourseManagement\CourseEssentialRequirement\Models\Model::class, 'course_id');
     }
+
 }

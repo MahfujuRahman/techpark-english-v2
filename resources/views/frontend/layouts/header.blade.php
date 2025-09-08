@@ -89,6 +89,7 @@
                                  <div id="myDropdown" class="dropdown-content">
                                      <a class="dropdown-single-item" href="{{ route('profile') }}">My Profile</a>
                                      <a class="dropdown-single-item" href="{{ route('myCourse') }}">My Courses</a>
+                                     <a class="dropdown-single-item" href="{{ route('wishlist.view') }}">My Wishlist</a>
                                      <a class="dropdown-single-item" href="javascript:void(0)"
                                          onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                          Logout

@@ -17,6 +17,7 @@ use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Seminer\SeminerController;
 use App\Http\Controllers\Teacher\TeacherController;
+use App\Http\Controllers\Wishlist\WishlistController;
 use App\Http\Controllers\Course\CourseEnrollController;
 use App\Modules\Controllers\Frontend\FrontendController;
 use App\Modules\Controllers\Frontend\Auth\AuthController as BackendAuthController;
@@ -111,4 +112,10 @@ Route::middleware(['auth'])->group(function () {
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'profileUpdate'])->name('update_profile');
+
+
+    // Wishlist Routes
+    Route::post('/wishlist/add/{course}', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
+    Route::post('/wishlist/remove/{course}', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
+    Route::get('/wishlist', [WishlistController::class, 'viewWishlist'])->name('wishlist.view');
 });

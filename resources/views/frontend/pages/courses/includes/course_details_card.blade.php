@@ -50,6 +50,7 @@
             @endif
         </div>
 
+
         <div class="course_fee">
 
             @if ($batch_info)
@@ -66,22 +67,63 @@
             @endif
         </div>
         <div class="admit_course">
-            @if ($check_enrolled)
-                <a href="{{ url('my-course', $data->slug) }}" class="admit_course_title_and_icon">
-                    <div class="admit_course_title">View Course</div>
-                    <div class="admit_course_icon"><i class="fa-solid fa-angle-right"></i></div>
-                </a>
-            @elseif ($is_admission_open || $is_admission_closed)
-                <div class="admit_course_title_and_icon" style="cursor: not-allowed; opacity: 0.5;">
-                    <div class="admit_course_title">Enrollment Closed</div>
-                    <div class="admit_course_icon"><i class="fa-solid fa-angle-right"></i></div>
+            <div class="d-flex justify-content-between align-items-center gap-2">
+                <div style="flex-grow: 1;">
+                    @if ($check_enrolled)
+                        <a href="{{ url('my-course', $data->slug) }}" class="admit_course_title_and_icon">
+                            <div class="admit_course_title">View Course</div>
+                            <div class="admit_course_icon"><i class="fa-solid fa-angle-right"></i></div>
+                        </a>
+                    @elseif ($is_admission_open || $is_admission_closed)
+                        <div class="admit_course_title_and_icon" style="cursor: not-allowed; opacity: 0.5;">
+                            <div class="admit_course_title">Enrollment Closed</div>
+                            <div class="admit_course_icon"><i class="fa-solid fa-angle-right"></i></div>
+                        </div>
+                    @else
+                        <a href="{{ route('course_enroll', $data->slug) }}" class="admit_course_title_and_icon">
+                            <div class="admit_course_title">Enroll in Course</div>
+                            <div class="admit_course_icon"><i class="fa-solid fa-angle-right"></i></div>
+                        </a>
+                    @endif
                 </div>
-            @else
-                <a href="{{ route('course_enroll', $data->slug) }}" class="admit_course_title_and_icon">
-                    <div class="admit_course_title">Enroll in Course</div>
-                    <div class="admit_course_icon"><i class="fa-solid fa-angle-right"></i></div>
-                </a>
-            @endif
+                <div>
+                    @if (Auth::check())
+                        @if ($data->is_in_wishlist)
+                            {{-- Remove from wishlist --}}
+                            <form id="wishlist-remove-{{ $data->id }}"
+                                action="{{ route('wishlist.remove', $data->id) }}" method="POST"
+                                style="display:none;">
+                                @csrf
+                            </form>
+                            <a href="javascript:void(0)"
+                                onclick="document.getElementById('wishlist-remove-{{ $data->id }}').submit();"
+                                class="admit_course_title_and_icon">
+                                <div class="admit_course_icon wishlist-icon" style="font-size: 1.2em; ">
+                                    <i class="fa-solid fa-heart"></i>
+                                </div>
+                            </a>
+                        @else
+                            <form id="wishlist-add-{{ $data->id }}"
+                                action="{{ route('wishlist.add', $data->id) }}" method="POST" style="display:none;">
+                                @csrf
+                            </form>
+                            <a href="javascript:void(0)"
+                                onclick="document.getElementById('wishlist-add-{{ $data->id }}').submit();"
+                                class="admit_course_title_and_icon ">
+                                <div class="admit_course_icon wishlist-icon" style="font-size: 1.2em;">
+                                    <i class="fa-regular fa-heart"></i>
+                                </div>
+                            </a>
+                        @endif
+                    @else
+                        <a href="{{ route('login') }}" class="admit_course_title_and_icon">
+                            <div class="admit_course_icon wishlist-icon" style="font-size: 1.2em;"><i
+                                    class="fa-regular fa-heart"></i></div>
+                        </a>
+                    @endif
+                </div>
+            </div>
+
 
             <div class="admit_course_batch">
                 <div class="admit_course_batch_title">Batch <span>{{ $batch_info->batch_name }}</span>
@@ -219,3 +261,17 @@
         </div>
     </div>
 </div>
+
+<style>
+    .course_details_area .course_details_part .course_info .course_info_div .admit_course .admit_course_title_and_icon .admit_course_icon.wishlist-icon {
+        width: 24px;
+        height: 30px;
+        color: #fff;
+    }
+
+    .admit_course_icon.wishlist-icon {
+        width: 24px;
+        height: 30px !important;
+        color: #fff;
+    }
+</style>

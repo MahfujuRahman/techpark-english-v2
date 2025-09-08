@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Course\Actions;
 use Carbon\Carbon;
 use App\Modules\Management\CourseManagement\Course\Models\Model as Course;
 use  App\Modules\Management\EnrollInformation\Models\Model as EnrollInformation;
+use App\Modules\Management\CourseManagement\Course\Models\WishlistModel;
 
 
 class CourseDetails
@@ -15,6 +16,7 @@ class CourseDetails
         $tz = env('TIMEZONE', config('app.timezone', 'UTC'));
 
         $data = Course::active()->where('slug', $slug)->first();
+        $data->is_in_wishlist = self::is_in_wishlist($data->id);
 
         $instructors = $data->course_instructors()->get();
 
@@ -63,7 +65,7 @@ class CourseDetails
         if ($now->gt(Carbon::parse($batch_details->admission_end_date, $tz))) {
             $is_admission_closed = true;
         }
-    
+
         return view(
             'frontend.pages.courses.course_details',
             [
@@ -76,5 +78,13 @@ class CourseDetails
                 'is_admission_closed' => $is_admission_closed
             ]
         );
+    }
+
+    public static function is_in_wishlist($courseId)
+    {
+        if (auth()->check()) {
+            return WishlistModel::where('user_id', auth()->user()->id)->where('course_id', $courseId)->exists();
+        }
+        return false;
     }
 }
