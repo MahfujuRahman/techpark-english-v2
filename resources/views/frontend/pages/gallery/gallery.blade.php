@@ -7,6 +7,11 @@
     ];
 @endphp
 @extends('frontend.layouts.layout', $meta)
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('frontend/assets/fancybox/jquery.fancybox.min.css') }}" />
+@endpush
+
 @section('contents')
     <!-- my_tema_area start -->
     <section>
@@ -17,7 +22,7 @@
                         <ul class="flex-wrap pt-4 gallery_nav">
                             <li>
                                 <a href="?page=1" class="{{ !request()->has('gallery_category_id') ? ' active' : ' ' }}">
-                                    সকল কোর্স
+                                    All
                                 </a>
                             </li>
                             @php
@@ -45,14 +50,14 @@
     <section class="my_tema_area all_area mt-4">
         <div class="container">
             <div class="gallery_area">
-                {{-- <div class="gallery_title">
-                    <p class="title">আমাদের টিম</p>
-                </div> --}}
                 <div class="gallery_content">
                     @foreach ($galleryImages as $gmat)
-                        {{-- <li><a href="">{{ $gmat->title }}</a></li>     --}}
                         <div class="gallery_content_img">
-                            <img src="{{ $gmat->image }}" alt="{{ $gmat->title }}">
+                            <a href="{{ assetHelper(optional($gmat)->image) }}" data-fancybox="gallery"
+                                data-caption="{{ $gmat->title }}">
+                                <img src="{{ assetHelper(optional($gmat)->image) }}" alt="{{ $gmat->title }}"
+                                    loading="lazy">
+                            </a>
                         </div>
                     @endforeach
 
@@ -65,3 +70,25 @@
     </section>
     <!-- my_tema_area end-->
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('frontend/assets/fancybox/jquery.fancybox.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('[data-fancybox="gallery"]').fancybox({
+                loop: true,
+                buttons: [
+                    "zoom",
+                    "share",
+                    "slideShow",
+                    "fullScreen",
+                    "download",
+                    "thumbs",
+                    "close"
+                ],
+                animationEffect: "fade",
+                transitionEffect: "fade"
+            });
+        });
+    </script>
+@endpush
