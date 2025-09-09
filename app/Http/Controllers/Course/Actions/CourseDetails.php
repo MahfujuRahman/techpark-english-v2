@@ -57,13 +57,19 @@ class CourseDetails
         $is_admission_open = false;
         $is_admission_closed = false;
         $now = Carbon::now($tz);
-        if ($now->lt(Carbon::parse($batch_details->admission_start_date, $tz))) {
-            $is_admission_open = true;
+        
+        // Ensure batch details exist and dates are present before parsing to avoid null property access
+        if ($batch_details && !empty($batch_details->admission_start_date)) {
+            if ($now->lt(Carbon::parse($batch_details->admission_start_date, $tz))) {
+                $is_admission_open = true;
+            }
         }
 
         // Check if admission has ended (using Bangladesh time)
-        if ($now->gt(Carbon::parse($batch_details->admission_end_date, $tz))) {
-            $is_admission_closed = true;
+        if ($batch_details && !empty($batch_details->admission_end_date)) {
+            if ($now->gt(Carbon::parse($batch_details->admission_end_date, $tz))) {
+                $is_admission_closed = true;
+            }
         }
 
         return view(

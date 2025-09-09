@@ -126,25 +126,33 @@
 
 
             <div class="admit_course_batch">
-                <div class="admit_course_batch_title">Batch <span>{{ $batch_info->batch_name }}</span>
+                <div class="admit_course_batch_title">Batch <span>{{ $batch_info?->batch_name }}</span>
                 </div>
                 <div class="admit_course_start_and_deadline">
                     <div class="admit_course_start">
                         <div class="admit_course_start_title"><span><i
                                     class="fa-regular fa-calendar-days"></i></span><span>Admission Starts:</span>
                         </div>
-                        <div class="admit_course_start_date">
-                            {{ \Carbon\Carbon::parse($batch_info->admission_start_date)->format('d M Y ') }}
-                        </div>
+                        @if (!empty($batch_info) && !empty($batch_info->admission_start_date))
+                            <div class="admit_course_start_date">
+                                {{ \Carbon\Carbon::parse($batch_info->admission_start_date)->format('d M Y') }}
+                            </div>
+                        @else
+                            <div class="admit_course_start_date">N/A</div>
+                        @endif
                     </div>
                     <div class="admit_course_line"></div>
                     <div class="admit_course_deadline">
                         <div class="admit_course_deadline_title"><span><i
                                     class="fa-regular fa-calendar-xmark"></i></span><span>Admission Ends:</span>
                         </div>
-                        <div class="admit_course_deadline_date">
-                            {{ \Carbon\Carbon::parse($batch_info->admission_end_date)->format('d M Y g:i A') }}
-                        </div>
+                        @if (!empty($batch_info) && !empty($batch_info->admission_end_date))
+                            <div class="admit_course_start_date">
+                                {{ \Carbon\Carbon::parse($batch_info->admission_end_date)->format('d M Y g:i A') }}
+                            </div>
+                        @else
+                            <div class="admit_course_start_date">N/A</div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -154,19 +162,29 @@
                         <i class="fa-regular fa-calendar-days"></i>
                     </span>
                     Orientation & First Class:
-                    {{ \Carbon\Carbon::parse($batch_info->first_class_date)->format('d M l Y') }}
-                    </span>
+                    @if (!empty($batch_info) && !empty($batch_info->first_class_date))
+                        <div class="admit_course_start_date">
+                            {{ \Carbon\Carbon::parse($batch_info->first_class_date)->format('d M l Y') }}
+                        </div>
+                    @else
+                        <div class="admit_course_start_date">N/A</div>
+                    @endif
                 </div>
                 <div class="admit_course_class_date">
                     <span><i class="fa-regular fa-calendar-days"></i></span>
-                    <span>Class Days: {{ $batch_info->class_days }}</span>
+                    <span>Class Days: {{ $batch_info?->class_days }}</span>
                 </div>
                 <div class="admit_course_class_time"><span>
                         <i class="fa-regular fa-calendar-days"></i></span>
-                    <span>Class Time:
-                        {{ \Carbon\Carbon::parse($batch_info->class_start_time)->format('g:i A') }} -
-                        {{ \Carbon\Carbon::parse($batch_info->class_end_time)->format('g:i A') }}
-                    </span>
+                    @if (!empty($batch_info) && (!empty($batch_info->class_start_time) || !empty($batch_info->class_end_time)))
+                        <span>Class Time:
+                            {{ !empty($batch_info->class_start_time) ? \Carbon\Carbon::parse($batch_info->class_start_time)->format('g:i A') : 'N/A' }}
+                            -
+                            {{ !empty($batch_info->class_end_time) ? \Carbon\Carbon::parse($batch_info->class_end_time)->format('g:i A') : 'N/A' }}
+                        </span>
+                    @else
+                        <span>Class Time: N/A</span>
+                    @endif
                 </div>
             </div>
         </div>
