@@ -1,6 +1,6 @@
 <template lang="">
     <div class="d-flex footer-actions">
-         <create />
+         <!-- <create /> -->
         <export-all />
         <export-selected />
         <import />

@@ -1,18 +1,18 @@
 <template>
     <div>
         <!-- Topic Filter Dropdown -->
-        <div class="mb-3">
+        <!-- <div class="mb-3">
             <label for="topicFilter" class="form-label font-weight-bold">Filter by Topic</label>
             <select id="topicFilter" v-model="selectedTopic" @change="onTopicChange" class="form-control">
                 <option value="">All Topics</option>
                 <option v-for="topic in topics" :key="topic.id" :value="topic.id">{{ topic.title }}</option>
             </select>
-        </div>
+        </div> -->
         <!-- Display Filtered Questions -->
-        <div v-if="filteredQuestions.data && filteredQuestions.data.length">
+        <!-- <div v-if="filteredQuestions.data && filteredQuestions.data.length">
             <h5>Questions ({{ filteredQuestions.data.length }} found)</h5>
             <p>Selected: {{ selectedQuestions.length }} questions</p>
-        </div>
+        </div> -->
         <form @submit.prevent="submitHandler">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
@@ -40,10 +40,22 @@
                             <common-input :label="form_field.label" :type="form_field.type" :name="form_field.name"
                                 :multiple="form_field.multiple" :value="form_field.value"
                                 :data_list="form_field.data_list" :is_visible="form_field.is_visible"
-                                :row_col_class="form_field.row_col_class" 
-                                />
+                                :row_col_class="form_field.row_col_class" />
 
                         </template>
+
+                        <!-- Topic Filter Dropdown -->
+                        <div class="col-12 mt-4">
+                            <div class="mb-3">
+                                <label for="topicFilter" class="form-label font-weight-bold">Filter by Topic</label>
+                                <select id="topicFilter" v-model="selectedTopic" @change="onTopicChange"
+                                    class="form-control">
+                                    <option value="">All Topics</option>
+                                    <option v-for="topic in topics" :key="topic.id" :value="topic.id">{{ topic.title }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="col-12 mt-4">
                             <h5>Quiz Questions
@@ -85,7 +97,7 @@
                                             <br>
                                             <small class="text-muted">
                                                 Topic: {{ question.quiz_question_topic_id ?
-                                                question.quiz_question_topic_id.title : 'N/A' }} |
+                                                    question.quiz_question_topic_id.title : 'N/A' }} |
                                                 Level: {{ question.question_level || 'N/A' }} |
                                                 Mark: {{ question.mark || 0 }}
                                             </small>
@@ -142,7 +154,7 @@ export default {
         this.$nextTick(() => {
             const input = document.querySelector('input[name="negative_value"]');
             if (input) {
-                input.addEventListener('input', function(e) {
+                input.addEventListener('input', function (e) {
                     // Remove any non-digit characters (allow negative sign and decimal)
                     let val = input.value;
                     val = val.replace(/[^0-9.-]/g, '');

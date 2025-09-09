@@ -47,7 +47,7 @@ class DataStoreValidation extends FormRequest
             'question_level' => 'required | sometimes',
             'mark' => 'required | sometimes',
             'is_multiple' => 'required | sometimes',
-            'session_year' => 'required | sometimes',
+            'session_year' => 'nullable | sometimes',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
             'options' => 'array | sometimes',
             'options.*.value' => 'required_with:options | sometimes',

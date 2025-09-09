@@ -18,7 +18,7 @@ class GetAllData
             $start_date = request()->input('start_date');
             $end_date = request()->input('end_date');
 
-                            $with = ['seminar_id'];
+            $with = ['seminar_id'];
 
             $condition = [];
 
@@ -27,19 +27,18 @@ class GetAllData
             if (request()->has('search') && request()->input('search')) {
                 $searchKey = request()->input('search');
                 $data = $data->where(function ($q) use ($searchKey) {
-    $q->where('seminar_id', 'like', '%' . $searchKey . '%');    
+                    $q->where('seminar_id', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('comment', 'like', '%' . $searchKey . '%');    
+                    $q->orWhere('comment', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('rating', 'like', '%' . $searchKey . '%');    
+                    $q->orWhere('rating', 'like', '%' . $searchKey . '%');
 
-    $q->orWhere('comment_reply', 'like', '%' . $searchKey . '%');              
-
+                    $q->orWhere('comment_reply', 'like', '%' . $searchKey . '%');
                 });
             }
 
             if ($start_date && $end_date) {
-                 if ($end_date > $start_date) {
+                if ($end_date > $start_date) {
                     $data->whereBetween('created_at', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
                 } elseif ($end_date == $start_date) {
                     $data->whereDate('created_at', $start_date);
@@ -59,7 +58,7 @@ class GetAllData
                     ->limit($pageLimit)
                     ->orderBy($orderByColumn, $orderByType)
                     ->get();
-                     return entityResponse($data);
+                return entityResponse($data);
             } else if ($status == 'trased') {
                 $data = $data
                     ->with($with)
@@ -68,11 +67,18 @@ class GetAllData
                     ->orderBy($orderByColumn, $orderByType)
                     ->paginate($pageLimit);
             } else {
+                $ids = self::$model::query()
+                    ->where($condition)
+                    ->where('status', $status)
+                    ->groupBy('seminar_id')
+                    ->selectRaw('MAX(id) as id')
+                    ->pluck('id')
+                    ->toArray();
+
                 $data = $data
                     ->with($with)
                     ->select($fields)
-                    ->where($condition)
-                    ->where('status', $status)
+                    ->whereIn('id', $ids ?: [0])
                     ->orderBy($orderByColumn, $orderByType)
                     ->paginate($pageLimit);
             }
@@ -83,7 +89,6 @@ class GetAllData
                 "inactive_data_count" => self::$model::inactive()->count(),
                 "trased_data_count" => self::$model::trased()->count(),
             ]);
-
         } catch (\Exception $e) {
             return messageResponse($e->getMessage(), [], 500, 'server_error');
         }
