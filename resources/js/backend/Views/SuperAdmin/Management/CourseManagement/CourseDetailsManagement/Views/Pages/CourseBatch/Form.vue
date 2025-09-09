@@ -16,34 +16,21 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="batch_name" class="form-label">Batch Name *</label>
-                                    <input 
-                                        type="text" 
-                                        id="batch_name"
-                                        v-model="formData.batch_name"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.batch_name }"
-                                        placeholder="Batch 1"
-                                        required
-                                    >
+                                    <input type="text" id="batch_name" v-model="formData.batch_name"
+                                        class="form-control" :class="{ 'is-invalid': errors.batch_name }"
+                                        placeholder="Batch 1" required>
                                     <div v-if="errors.batch_name" class="invalid-feedback">
                                         {{ errors.batch_name }}
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="batch_student_limit" class="form-label">Student Limit *</label>
-                                    <input 
-                                        type="number" 
-                                        id="batch_student_limit"
-                                        v-model="formData.batch_student_limit"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.batch_student_limit }"
-                                        placeholder="50"
-                                        min="1"
-                                        required
-                                    >
+                                    <input type="number" id="batch_student_limit" v-model="formData.batch_student_limit"
+                                        class="form-control" :class="{ 'is-invalid': errors.batch_student_limit }"
+                                        placeholder="50" min="1" required>
                                     <div v-if="errors.batch_student_limit" class="invalid-feedback">
                                         {{ errors.batch_student_limit }}
                                     </div>
@@ -53,16 +40,9 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="booked_percent" class="form-label">Seat Booked (%)</label>
-                                    <input 
-                                        type="number" 
-                                        id="booked_percent"
-                                        v-model="formData.booked_percent"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.booked_percent }"
-                                        placeholder="50"
-                                        min="1"
-                                        required
-                                    >
+                                    <input type="number" id="booked_percent" v-model="formData.booked_percent"
+                                        class="form-control" :class="{ 'is-invalid': errors.booked_percent }"
+                                        placeholder="50" min="1" required>
                                     <div v-if="errors.booked_percent" class="invalid-feedback">
                                         {{ errors.booked_percent }}
                                     </div>
@@ -78,29 +58,21 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="admission_start_date" class="form-label">Admission Start Date</label>
-                                    <input 
-                                        type="datetime-local" 
-                                        id="admission_start_date"
-                                        v-model="formData.admission_start_date"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.admission_start_date }"
-                                    >
+                                    <input type="date" id="admission_start_date"
+                                        v-model="formData.admission_start_date" class="form-control"
+                                        :class="{ 'is-invalid': errors.admission_start_date }">
                                     <div v-if="errors.admission_start_date" class="invalid-feedback">
                                         {{ errors.admission_start_date }}
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="admission_end_date" class="form-label">Admission End Date</label>
-                                    <input 
-                                        type="datetime-local" 
-                                        id="admission_end_date"
-                                        v-model="formData.admission_end_date"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.admission_end_date }"
-                                    >
+                                    <input type="date" id="admission_end_date"
+                                        v-model="formData.admission_end_date" class="form-control"
+                                        :class="{ 'is-invalid': errors.admission_end_date }">
                                     <div v-if="errors.admission_end_date" class="invalid-feedback">
                                         {{ errors.admission_end_date }}
                                     </div>
@@ -116,57 +88,33 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="course_price" class="form-label">Course Price *</label>
-                                    <input 
-                                        type="number" 
-                                        id="course_price"
-                                        v-model="formData.course_price"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.course_price }"
-                                        placeholder="5000"
-                                        min="0"
-                                        step="0.01"
-                                        required
-                                        @input="calculateDiscountPrice"
-                                    >
+                                    <input type="number" id="course_price" v-model="formData.course_price"
+                                        class="form-control" :class="{ 'is-invalid': errors.course_price }"
+                                        placeholder="5000" min="0" step="0.01" required @input="calculateDiscountPrice">
                                     <div v-if="errors.course_price" class="invalid-feedback">
                                         {{ errors.course_price }}
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="course_discount" class="form-label">Discount (%)</label>
-                                    <input 
-                                        type="number" 
-                                        id="course_discount"
-                                        v-model="formData.course_discount"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.course_discount }"
-                                        placeholder="10"
-                                        min="0"
-                                        max="100"
-                                        step="0.01"
-                                        @input="calculateDiscountPrice"
-                                    >
+                                    <input type="number" id="course_discount" v-model="formData.course_discount"
+                                        class="form-control" :class="{ 'is-invalid': errors.course_discount }"
+                                        placeholder="10" min="0" max="100" step="0.01" @input="calculateDiscountPrice">
                                     <div v-if="errors.course_discount" class="invalid-feedback">
                                         {{ errors.course_discount }}
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="after_discount_price" class="form-label">Final Price</label>
-                                    <input 
-                                        type="number" 
-                                        id="after_discount_price"
-                                        v-model="formData.after_discount_price"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.after_discount_price }"
-                                        step="0.01"
-                                        readonly
-                                    >
+                                    <input type="number" id="after_discount_price"
+                                        v-model="formData.after_discount_price" class="form-control"
+                                        :class="{ 'is-invalid': errors.after_discount_price }" step="0.01" readonly>
                                     <div v-if="errors.after_discount_price" class="invalid-feedback">
                                         {{ errors.after_discount_price }}
                                     </div>
@@ -182,64 +130,44 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="first_class_date" class="form-label">First Class Date</label>
-                                    <input 
-                                        type="date" 
-                                        id="first_class_date"
-                                        v-model="formData.first_class_date"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.first_class_date }"
-                                    >
+                                    <input type="date" id="first_class_date" v-model="formData.first_class_date"
+                                        class="form-control" :class="{ 'is-invalid': errors.first_class_date }">
                                     <div v-if="errors.first_class_date" class="invalid-feedback">
                                         {{ errors.first_class_date }}
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="class_days" class="form-label">Class Days</label>
-                                    <input 
-                                        type="text" 
-                                        id="class_days"
-                                        v-model="formData.class_days"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.class_days }"
-                                        placeholder="Sunday, Tuesday, Thursday"
-                                    >
+                                    <input type="text" id="class_days" v-model="formData.class_days"
+                                        class="form-control" :class="{ 'is-invalid': errors.class_days }"
+                                        placeholder="Sunday, Tuesday, Thursday">
                                     <div v-if="errors.class_days" class="invalid-feedback">
                                         {{ errors.class_days }}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="class_start_time" class="form-label">Class Start Time</label>
-                                    <input 
-                                        type="time" 
-                                        id="class_start_time"
-                                        v-model="formData.class_start_time"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.class_start_time }"
-                                    >
+                                    <input type="time" id="class_start_time" v-model="formData.class_start_time"
+                                        class="form-control" :class="{ 'is-invalid': errors.class_start_time }">
                                     <div v-if="errors.class_start_time" class="invalid-feedback">
                                         {{ errors.class_start_time }}
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="class_end_time" class="form-label">Class End Time</label>
-                                    <input 
-                                        type="time" 
-                                        id="class_end_time"
-                                        v-model="formData.class_end_time"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.class_end_time }"
-                                    >
+                                    <input type="time" id="class_end_time" v-model="formData.class_end_time"
+                                        class="form-control" :class="{ 'is-invalid': errors.class_end_time }">
                                     <div v-if="errors.class_end_time" class="invalid-feedback">
                                         {{ errors.class_end_time }}
                                     </div>
@@ -254,13 +182,10 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="show_percentage_on_cards" class="form-label">Show Booking Percentage</label>
-                                    <select 
-                                        id="show_percentage_on_cards"
-                                        v-model="formData.show_percentage_on_cards"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.show_percentage_on_cards }"
-                                    >
+                                    <label for="show_percentage_on_cards" class="form-label">Show Booking
+                                        Percentage</label>
+                                    <select id="show_percentage_on_cards" v-model="formData.show_percentage_on_cards"
+                                        class="form-control" :class="{ 'is-invalid': errors.show_percentage_on_cards }">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
@@ -269,16 +194,12 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="status" class="form-label">Status</label>
-                                    <select 
-                                        id="status"
-                                        v-model="formData.status"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': errors.status }"
-                                    >
+                                    <select id="status" v-model="formData.status" class="form-control"
+                                        :class="{ 'is-invalid': errors.status }">
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
                                     </select>
@@ -293,21 +214,12 @@
                     <!-- Form Actions -->
                     <div class="form-actions">
                         <div class="d-flex justify-content-between">
-                            <button 
-                                type="button" 
-                                @click="goBack" 
-                                class="btn btn-secondary"
-                                :disabled="submitting"
-                            >
+                            <button type="button" @click="goBack" class="btn btn-secondary" :disabled="submitting">
                                 <i class="fas fa-arrow-left mr-1"></i>
                                 Back
                             </button>
-                            
-                            <button 
-                                type="submit" 
-                                class="btn btn-primary"
-                                :disabled="submitting"
-                            >
+
+                            <button type="submit" class="btn btn-primary" :disabled="submitting">
                                 <i v-if="submitting" class="fas fa-spinner fa-spin mr-1"></i>
                                 <i v-else :class="isEditMode ? 'fas fa-save mr-1' : 'fas fa-plus mr-1'"></i>
                                 {{ submitting ? 'Processing...' : (isEditMode ? 'Update Batch' : 'Create Batch') }}
@@ -333,7 +245,7 @@ import { useCourseDetailsStore } from '@/Views/SuperAdmin/Management/CourseManag
 
 export default {
     name: 'CourseBatchForm',
-    
+
     data() {
         return {
             submitting: false,
@@ -358,33 +270,33 @@ export default {
             },
         };
     },
-    
+
     computed: {
         ...mapState(useCourseDetailsStore, ['currentCourse']),
-        
+
         isEditMode() {
             return this.$route.name === 'CourseBatchEdit' && this.$route.params.batch_id;
         },
-        
+
         courseId() {
             return this.currentCourse?.id;
         },
 
-        batchSlug(){
+        batchSlug() {
             return this.$route.currentCourse?.slug; // This is actually the slug from the route
         },
         batchId() {
             return this.$route.params.batch_id;
         }
     },
-    
+
     methods: {
         ...mapActions(useCourseDetailsStore, ['getCourseDetails']),
-        
+
         calculateDiscountPrice() {
             const price = parseFloat(this.formData.course_price) || 0;
             const discount = parseFloat(this.formData.course_discount) || 0;
-            
+
             if (price > 0 && discount > 0) {
                 const discountAmount = (price * discount) / 100;
                 this.formData.after_discount_price = (price - discountAmount).toFixed(2);
@@ -392,19 +304,19 @@ export default {
                 this.formData.after_discount_price = price.toFixed(2);
             }
         },
-        
+
         async loadBatchData() {
             if (!this.isEditMode || !this.batchId) return;
-            
+
             this.loading = true;
             try {
                 const batchSlug = this.batchId; // Now this contains the slug from route params
                 console.log('Loading batch data for slug:', batchSlug);
                 // According to your routes: Route::get('{slug}', [Controller::class,'show']);
                 const response = await axios.get(`course-batches/${batchSlug}`);
-                
+
                 console.log('Form - API Response:', response.data);
-                
+
                 if (response.data && response.data.status === 'success') {
                     this.batchData = response.data.data;
                     this.populateForm();
@@ -418,17 +330,17 @@ export default {
                 this.loading = false;
             }
         },
-        
+
         populateForm() {
             if (!this.batchData) return;
-            
+
             // Populate form with existing data
             Object.keys(this.formData).forEach(key => {
                 if (this.batchData[key] !== undefined && this.batchData[key] !== null) {
                     this.formData[key] = this.batchData[key];
                 }
             });
-            
+
             // Format datetime fields for inputs
             if (this.batchData.admission_start_date) {
                 this.formData.admission_start_date = this.formatDateTimeForInput(this.batchData.admission_start_date);
@@ -437,98 +349,99 @@ export default {
                 this.formData.admission_end_date = this.formatDateTimeForInput(this.batchData.admission_end_date);
             }
             if (this.batchData.first_class_date) {
-                if (this.batchData.first_class_date) {
-                    const d = new Date(this.batchData.first_class_date);
-                    const year = d.getFullYear();
-                    const month = String(d.getMonth() + 1).padStart(2, '0');
-                    const day = String(d.getDate()).padStart(2, '0');
-                    this.formData.first_class_date = `${year}-${month}-${day}`; // YYYY-MM-DD (date only)
-                }
+                this.formData.first_class_date = this.formatDateTimeForInput(this.batchData.first_class_date);
             }
         },
-        
+
         formatDateTimeForInput(datetime) {
             if (!datetime) return '';
             // Convert to format required by datetime-local input (YYYY-MM-DDTHH:MM)
-            const date = new Date(datetime);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
+            // const date = new Date(datetime);
+            // const year = date.getFullYear();
+            // const month = String(date.getMonth() + 1).padStart(2, '0');
+            // const day = String(date.getDate()).padStart(2, '0');
+            // const hours = String(date.getHours()).padStart(2, '0');
+            // const minutes = String(date.getMinutes()).padStart(2, '0');
+
+            // return `${year}-${month}-${day}T${hours}:${minutes}`;
+
+            const d = new Date(this.batchData.first_class_date);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
             
-            return `${year}-${month}-${day}T${hours}:${minutes}`;
+            return `${year}-${month}-${day}`;
         },
-        
+
         validateForm() {
             this.errors = {};
-            
+
             if (!this.formData.batch_name?.trim()) {
                 this.errors.batch_name = 'Batch name is required';
             }
-            
+
             if (!this.formData.batch_student_limit || this.formData.batch_student_limit < 1) {
                 this.errors.batch_student_limit = 'Student limit must be 1 or greater';
             }
-            
+
             if (!this.formData.course_price || this.formData.course_price <= 0) {
                 this.errors.course_price = 'Course price is required and must be greater than 0';
             }
-            
+
             // Validate admission dates
             if (this.formData.admission_start_date && this.formData.admission_end_date) {
                 const startDate = new Date(this.formData.admission_start_date);
                 const endDate = new Date(this.formData.admission_end_date);
-                
+
                 if (startDate >= endDate) {
                     this.errors.admission_end_date = 'Admission end date must be after start date';
                 }
             }
-            
+
             // Validate class times
             if (this.formData.class_start_time && this.formData.class_end_time) {
                 if (this.formData.class_start_time >= this.formData.class_end_time) {
                     this.errors.class_end_time = 'Class end time must be after start time';
                 }
             }
-            
+
             return Object.keys(this.errors).length === 0;
         },
-        
+
         async submitForm() {
             if (!this.validateForm()) {
                 window.s_warning('Please fill all required fields correctly.');
                 return;
             }
-            
+
             if (!this.courseId) {
                 window.s_error('Course ID not found.');
                 return;
             }
-            
+
             this.submitting = true;
-            
+
             try {
                 const batchData = {
                     ...this.formData,
                     course_id: this.courseId,
                 };
-                
+
                 // For create mode, add default values
                 if (!this.isEditMode) {
                     batchData.seat_booked = 0;
                     batchData.booked_percent = 0;
                 }
-                
+
                 // Remove empty values
                 Object.keys(batchData).forEach(key => {
                     if (batchData[key] === '' || batchData[key] === null) {
                         delete batchData[key];
                     }
                 });
-                
+
                 console.log('Submitting batch data:', batchData);
-                
+
                 let response;
                 if (this.isEditMode) {
                     const batchSlug = this.batchId; // This is actually the slug from route params
@@ -536,19 +449,19 @@ export default {
                 } else {
                     response = await axios.post('course-batches/store', batchData);
                 }
-                
+
                 console.log('Submit - API Response:', response.data);
-                
+
                 if (response.data && response.data.status === 'success') {
                     window.s_alert(this.isEditMode ? 'Batch updated successfully!' : 'Batch created successfully!');
                     this.goBack();
                 } else {
                     window.s_error(response.data.message || 'Failed to save batch');
                 }
-                
+
             } catch (error) {
                 console.error('Error saving batch:', error);
-                
+
                 if (error.response?.data?.errors) {
                     this.errors = error.response.data.errors;
                     window.s_warning('Form has errors. Please correct them.');
@@ -559,22 +472,22 @@ export default {
                 this.submitting = false;
             }
         },
-        
+
         goBack() {
-            this.$router.push({ 
-                name: 'CourseBatchAll', 
-                params: { id: this.$route.params.id } 
+            this.$router.push({
+                name: 'CourseBatchAll',
+                params: { id: this.$route.params.id }
             });
         },
     },
-    
+
     async mounted() {
         // Ensure we have course details
         const courseSlug = this.$route.params.id;
         if (courseSlug && !this.currentCourse) {
             await this.getCourseDetails(courseSlug);
         }
-        
+
         // Load batch data if in edit mode
         if (this.isEditMode) {
             await this.loadBatchData();
@@ -694,16 +607,16 @@ export default {
         padding: 15px;
         margin-bottom: 20px;
     }
-    
+
     .form-actions {
         text-align: center;
     }
-    
+
     .form-actions .btn {
         width: 100%;
         margin: 5px 0;
     }
-    
+
     .section-title {
         font-size: 1rem;
     }
@@ -713,7 +626,7 @@ export default {
     .form-section {
         padding: 10px;
     }
-    
+
     .section-title::before {
         width: 15px;
         margin-right: 8px;

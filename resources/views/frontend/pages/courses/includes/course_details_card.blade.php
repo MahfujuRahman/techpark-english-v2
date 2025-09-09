@@ -148,7 +148,7 @@
                         </div>
                         @if (!empty($batch_info) && !empty($batch_info->admission_end_date))
                             <div class="admit_course_start_date">
-                                {{ \Carbon\Carbon::parse($batch_info->admission_end_date)->format('d M Y g:i A') }}
+                                {{ \Carbon\Carbon::parse($batch_info->admission_end_date)->format('d M Y') }}
                             </div>
                         @else
                             <div class="admit_course_start_date">N/A</div>

@@ -43,9 +43,17 @@ class CourseDetails
 
         $admissionEndDate = $batch_details->admission_end_date ?? null;
 
-        $formattedDate = $admissionEndDate
-            ? Carbon::parse($admissionEndDate)->format('Y-m-d H:i:s')
-            : null;
+        $formattedDate = null;
+        if ($admissionEndDate) {
+            $end = Carbon::parse($admissionEndDate, $tz);
+            // If stored as a date (midnight), treat it as end of that day (23:59:59)
+            if ($end->hour === 0 && $end->minute === 0 && $end->second === 0) {
+                $end = $end->endOfDay();
+            }
+            $formattedDate = $end->format('Y-m-d H:i:s');
+        }
+
+        // dd($formattedDate);
 
         $check_enrolled = false;
         if (auth()->check()) {
@@ -57,7 +65,7 @@ class CourseDetails
         $is_admission_open = false;
         $is_admission_closed = false;
         $now = Carbon::now($tz);
-        
+
         // Ensure batch details exist and dates are present before parsing to avoid null property access
         if ($batch_details && !empty($batch_details->admission_start_date)) {
             if ($now->lt(Carbon::parse($batch_details->admission_start_date, $tz))) {
@@ -67,7 +75,17 @@ class CourseDetails
 
         // Check if admission has ended (using Bangladesh time)
         if ($batch_details && !empty($batch_details->admission_end_date)) {
-            if ($now->gt(Carbon::parse($batch_details->admission_end_date, $tz))) {
+
+            $end = Carbon::parse($batch_details->admission_end_date, $tz);
+            
+            // If stored as a date (midnight), treat it as end of that day (23:59:59)
+            if ($end->hour === 0 && $end->minute === 0 && $end->second === 0) {
+                $end = $end->endOfDay();
+            }
+
+            $formattedDate = $end->format('Y-m-d H:i:s');
+
+            if ($now->gt($formattedDate)) {
                 $is_admission_closed = true;
             }
         }

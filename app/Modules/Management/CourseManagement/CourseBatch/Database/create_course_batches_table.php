@@ -16,15 +16,15 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('course_id')->nullable();
             $table->string('batch_name', 100)->nullable();
-            $table->datetime('admission_start_date')->nullable();
-            $table->datetime('admission_end_date')->nullable();
+            $table->date('admission_start_date')->nullable();
+            $table->date('admission_end_date')->nullable();
             $table->bigInteger('batch_student_limit')->nullable();
             $table->integer('seat_booked')->nullable();
             $table->float('booked_percent')->nullable();
             $table->float('course_price')->nullable();
             $table->float('course_discount')->nullable();
             $table->float('after_discount_price')->nullable();
-            $table->datetime('first_class_date')->nullable();
+            $table->date('first_class_date')->nullable();
             $table->string('class_days', 255)->nullable();
             $table->time('class_start_time')->nullable();
             $table->time('class_end_time')->nullable();
