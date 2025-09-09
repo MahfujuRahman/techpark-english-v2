@@ -6,7 +6,7 @@
             How the course is structured
         </h2>
         <div class="job_categories">
-            @foreach ($data->course_how_is_structured()->get() as $item)
+            @foreach ($data->course_how_is_structured()->orderBy('serial')->get() as $item)
                 <div class="job_categorie">
                     <div class="job_categorie_icon">
                         <i class="fa-regular fa-circle-check"></i>

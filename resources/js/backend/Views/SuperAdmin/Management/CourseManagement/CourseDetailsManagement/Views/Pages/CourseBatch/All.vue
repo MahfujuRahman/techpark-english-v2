@@ -56,7 +56,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <strong class="text-success">{{ formatCurrency(batch.after_discount_price) }}</strong>
+                                    <strong>{{ formatCurrency(batch.after_discount_price) }}</strong>
                                 </td>
                                 <td>
                                     <span v-if="batch.status === 'active'" class="badge badge-success">Active</span>
@@ -66,12 +66,12 @@
                                     <div class="btn-group" role="group">
                                         <router-link
                                             :to="{ name: 'CourseBatchDetails', params: { id: $route.params.id, batch_id: batch.slug } }"
-                                            class="btn btn-sm btn-outline-primary" title="View Details">
+                                            class="btn btn-sm btn-outline-primary mr-2" title="View Details">
                                             <i class="fas fa-eye"></i>
                                         </router-link>
                                         <router-link
                                             :to="{ name: 'CourseBatchEdit', params: { id: $route.params.id, batch_id: batch.slug } }"
-                                            class="btn btn-sm btn-outline-warning" title="Edit">
+                                            class="btn btn-sm btn-outline-warning mr-2" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </router-link>
                                         <button @click="deleteBatch(batch)" class="btn btn-sm btn-outline-danger"
