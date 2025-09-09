@@ -119,13 +119,13 @@
                                                 <select id="gender" name="gender" class="form-select">
                                                     <option value="">Choose...</option>
                                                     <option value="Male"
-                                                        {{ old('gender', $user->studentDetails->gender) == 'Male' ? 'selected' : '' }}>
+                                                        {{ old('gender', $user->studentDetails?->gender) == 'Male' ? 'selected' : '' }}>
                                                         Male</option>
                                                     <option value="Female"
-                                                        {{ old('gender', $user->studentDetails->gender) == 'Female' ? 'selected' : '' }}>
+                                                        {{ old('gender', $user->studentDetails?->gender) == 'Female' ? 'selected' : '' }}>
                                                         Female</option>
                                                     <option value="Other"
-                                                        {{ old('gender', $user->studentDetails->gender) == 'Other' ? 'selected' : '' }}>
+                                                        {{ old('gender', $user->studentDetails?->gender) == 'Other' ? 'selected' : '' }}>
                                                         Other</option>
                                                 </select>
                                                 @error('gender')
@@ -174,7 +174,7 @@
                                                 <label for="reference_source" class="form-label">Reference</label>
                                                 <select id="reference_source" name="reference_source" class="form-select">
                                                     <option value="">Select</option>
-                                                    @php $ref = old('reference_source', $user->studentDetails->reference_source); @endphp
+                                                    @php $ref = old('reference_source', $user->studentDetails?->reference_source); @endphp
                                                     @foreach (['Facebook', 'Youtube', 'Organization', 'Ex-Student', 'Employee', 'Telesales', 'Offline Marketing', 'Friend', 'Other'] as $r)
                                                         <option value="{{ $r }}"
                                                             {{ $ref == $r ? 'selected' : '' }}>{{ $r }}
@@ -208,7 +208,7 @@
                                                 <label for="whatsapp_number" class="form-label">WhatsApp</label>
                                                 <input id="whatsapp_number" name="whatsapp_number" type="text"
                                                     class="form-control"
-                                                    value="{{ old('whatsapp_number', is_array(json_decode($user->address->phone_number)) ? json_decode($user->address->phone_number)[1] : '') }}"
+                                                    value="{{ old('whatsapp_number', $user->address && $user->address->phone_number ? (is_array($decoded = json_decode($user->address->phone_number)) && isset($decoded[1]) ? $decoded[1] : '') : '') }}"
                                                     placeholder="01XXXXXXXXX">
                                                 @error('whatsapp_number')
                                                     <div class="text-danger small">{{ $message }}</div>
@@ -220,7 +220,7 @@
                                                 <label for="guardian_number" class="form-label">Guardian's number</label>
                                                 <input id="guardian_number" name="guardian_number" type="text"
                                                     class="form-control"
-                                                    value="{{ old('guardian_number', $user->studentDetails->guardian_number) }}"
+                                                    value="{{ old('guardian_number', $user->studentDetails?->guardian_number ?? '') }}"
                                                     placeholder="Optional">
                                                 @error('guardian_number')
                                                     <div class="text-danger small">{{ $message }}</div>
@@ -277,7 +277,7 @@
                                                 <label for="occupation" class="form-label">Occupation</label>
                                                 <input id="occupation" name="occupation" type="text"
                                                     class="form-control"
-                                                    value="{{ old('occupation', $user->studentDetails->occupation) }}"
+                                                    value="{{ old('occupation', $user->studentDetails?->occupation) }}"
                                                     placeholder="e.g. Student / Developer">
                                             </div>
                                         </div>
@@ -286,7 +286,7 @@
                                                 <label for="organization" class="form-label">Organization</label>
                                                 <input id="organization" name="organization" type="text"
                                                     class="form-control"
-                                                    value="{{ old('organization', $user->studentDetails->organization) }}"
+                                                    value="{{ old('organization', $user->studentDetails?->organization) }}"
                                                     placeholder="Organization">
                                             </div>
                                         </div>
@@ -295,7 +295,7 @@
                                                 <label for="designation" class="form-label">Designation</label>
                                                 <input id="designation" name="designation" type="text"
                                                     class="form-control"
-                                                    value="{{ old('designation', $user->studentDetails->designation) }}"
+                                                    value="{{ old('designation', $user->studentDetails?->designation) }}"
                                                     placeholder="Job title">
                                             </div>
                                         </div>
@@ -311,7 +311,7 @@
                                                 <label for="institution" class="form-label">Institution</label>
                                                 <input id="institution" name="institution" type="text"
                                                     class="form-control"
-                                                    value="{{ old('institution', $user->studentDetails->institution) }}"
+                                                    value="{{ old('institution', $user->studentDetails?->institution) }}"
                                                     placeholder="Organization / School">
                                             </div>
                                         </div>
@@ -319,7 +319,7 @@
                                             <div class="mb-3">
                                                 <label for="class" class="form-label">Class </label>
                                                 <input id="class" name="class" type="text" class="form-control"
-                                                    value="{{ old('class', $user->studentDetails->class) }}"
+                                                    value="{{ old('class', $user->studentDetails?->class) }}"
                                                     placeholder="Class">
                                             </div>
                                         </div>
@@ -329,7 +329,7 @@
                                                     certificate</label>
                                                 <input id="last_certificate_name" name="last_certificate_name"
                                                     type="text" class="form-control"
-                                                    value="{{ old('last_certificate_name', $user->studentDetails->last_certificate_name) }}"
+                                                    value="{{ old('last_certificate_name', $user->studentDetails?->last_certificate_name) }}"
                                                     placeholder="e.g. HSC / Diploma">
                                             </div>
                                         </div>
