@@ -19,7 +19,7 @@ class UserProfileUpdate
             }
 
             $requestData = $request->validated();
-            
+
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $requestData['image'] = uploader($image, 'uploads/users');
@@ -34,8 +34,8 @@ class UserProfileUpdate
             ]);
 
             $address = "{$requestData['state']} , {$requestData['city']} , {$requestData['post']} , {$requestData['country']}";
-           
-           
+
+
             // Convert phone_numbers to JSON array if present
             $phoneNumber = null;
             if (isset($requestData['phone_numbers'])) {
@@ -54,18 +54,6 @@ class UserProfileUpdate
                 }
             }
 
-            // Parse social_media JSON string to array
-            $socialMediaData = [];
-            if (isset($requestData['social_media'])) {
-                if (is_string($requestData['social_media'])) {
-                    $socialMediaData = json_decode($requestData['social_media'], true);
-                    if (json_last_error() !== JSON_ERROR_NONE) {
-                        $socialMediaData = [];
-                    }
-                } elseif (is_array($requestData['social_media'])) {
-                    $socialMediaData = $requestData['social_media'];
-                }
-            }
 
             // Update or create address
             self::$UserAddressModel::query()->updateOrCreate(
@@ -81,6 +69,19 @@ class UserProfileUpdate
                     'address'      => $address,
                 ]
             );
+
+            // Parse social_media JSON string to array
+            $socialMediaData = [];
+            if (isset($requestData['social_media'])) {
+                if (is_string($requestData['social_media'])) {
+                    $socialMediaData = json_decode($requestData['social_media'], true);
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        $socialMediaData = [];
+                    }
+                } elseif (is_array($requestData['social_media'])) {
+                    $socialMediaData = $requestData['social_media'];
+                }
+            }
 
             // Update social media links - delete existing and create new ones
             self::$UserSocialLinkModel::query()->where('user_id', $data->id)->forceDelete();

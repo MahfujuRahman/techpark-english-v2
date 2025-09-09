@@ -63,7 +63,7 @@
         <button class="btn btn-sm btn-outline-danger" :style="{
           width: '50%',
           marginTop: !errors['contributor']?.[index]?.media_name ? '30px' : '0',
-        }" @click.prevent="delete_row('contributor', index)">
+        }" @click.prevent="delete_row(index)">
           <i class="fa fa-trash"></i>
         </button>
       </div>

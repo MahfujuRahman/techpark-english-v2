@@ -87,7 +87,7 @@ class UpdateData
             );
 
             // Update social media links - delete existing and create new ones
-            self::$UserSocialLinkModel::query()->where('user_id', $data->id)->delete();
+            self::$UserSocialLinkModel::query()->where('user_id', $data->id)->forceDelete();
             if (!empty($socialMediaData)) {
                 foreach ($socialMediaData as $item) {
                     if (!empty($item['media_name']) || !empty($item['media_link'])) {
