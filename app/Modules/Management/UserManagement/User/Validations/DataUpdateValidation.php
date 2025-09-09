@@ -43,7 +43,7 @@ class DataUpdateValidation extends FormRequest
     {
         return [
             'role_id' => 'required | sometimes',
-            'user_name' => 'required|string|max:255',
+            'user_name' => 'nullable|string|max:255',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'image' => 'nullable | sometimes',
@@ -53,7 +53,7 @@ class DataUpdateValidation extends FormRequest
                 Rule::unique('users')->ignore($this->route('slug'), 'slug'),
             ],
             'password' => 'nullable|string|min:6',
-            'state' => 'required|string|max:255',
+            'state' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'post' => 'nullable|string|max:255',
             'country' => 'nullable|string|max:255',

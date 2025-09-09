@@ -11,15 +11,16 @@ use App\Modules\Management\UserManagement\User\Actions\UpdateData;
 use App\Modules\Management\UserManagement\User\Actions\BulkActions;
 use App\Modules\Management\UserManagement\User\Actions\DestroyData;
 use App\Modules\Management\UserManagement\User\Actions\RestoreData;
-use App\Modules\Management\UserManagement\User\Actions\GetSingleData;
+use App\Modules\Management\UserManagement\User\Actions\UpdateStatus;
 
+use App\Modules\Management\UserManagement\User\Actions\GetSingleData;
 use App\Modules\Management\UserManagement\User\Actions\DestroyImageData;
 use App\Modules\Management\UserManagement\User\Actions\UserProfileUpdate;
 use App\Modules\Management\UserManagement\User\Actions\UserChangePassword;
 use App\Modules\Management\UserManagement\User\Validations\DataStoreValidation;
 use App\Modules\Management\UserManagement\User\Validations\DataUpdateValidation;
-use App\Modules\Management\UserManagement\User\Validations\BulkActionsValidation;
 
+use App\Modules\Management\UserManagement\User\Validations\BulkActionsValidation;
 use App\Modules\Management\UserManagement\User\Validations\UserProfileUpdateValidation;
 use App\Modules\Management\UserManagement\User\Validations\UserChangePasswordValidation;
 
@@ -93,6 +94,12 @@ class Controller extends ControllersController
     public function imageDelete($dbName, $slug)
     {
         $data = DestroyImageData::execute($dbName, $slug);
+        return $data;
+    }
+
+    public function updateStatus()
+    {
+        $data = UpdateStatus::execute();
         return $data;
     }
 }

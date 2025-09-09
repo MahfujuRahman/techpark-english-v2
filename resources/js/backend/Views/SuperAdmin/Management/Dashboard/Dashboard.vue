@@ -166,7 +166,7 @@
                 <div class="card text-white bg-primary">
                   <div class="card-body">
                     <h5 class="text-white mb-0">
-                      {{ realtimeActiveUsers }}
+                      {{ totalActiveUsers }}
                       <span class="float-right"><i class="fa fa-users"></i></span>
                     </h5>
                     <p class="mb-0 text-white small-font mt-2">
@@ -192,7 +192,7 @@
                 <div class="card text-white bg-info">
                   <div class="card-body">
                     <h5 class="text-white mb-0">
-                      {{ realtimePageviews }}
+                      {{ totalPageviews }}
                       <span class="float-right"><i class="fa fa-file-text-o"></i></span>
                     </h5>
                     <p class="mb-0 text-white small-font mt-2">

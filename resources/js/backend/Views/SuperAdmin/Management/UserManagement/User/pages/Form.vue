@@ -23,16 +23,16 @@
           </div>
         </div>
         <div class="card-body card_body_fixed_height">
-           <div class="d-flex justify-content-between align-items-center pb-2 section-title">
+          <div class="d-flex justify-content-between align-items-center pb-2 section-title">
             <h5 class="m-0">User Information</h5>
-        </div>
+          </div>
           <div class="row">
             <template v-for="(form_field, index) in form_fields" v-bind:key="index">
               <common-input :label="form_field.label" :type="form_field.type" :name="form_field.name"
                 :multiple="form_field.multiple" :value="form_field.value" :data_list="form_field.data_list"
                 :is_visible="form_field.is_visible" :row_col_class="form_field.row_col_class" />
             </template>
-            <address-input :name="`phone_number`" />
+            <address-input />
             <multi-chip :name="`phone_number`" />
             <multiple-input-field :name="'social_link'" />
           </div>

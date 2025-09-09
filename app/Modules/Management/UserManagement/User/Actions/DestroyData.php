@@ -14,6 +14,10 @@ class DestroyData
                 return messageResponse('Data not found...', $data, 404, 'error');
             }
 
+            if ($data->image && file_exists(public_path($data->image))) {
+                @unlink(public_path($data->image));
+            }
+
             $data->forceDelete();
 
             return messageResponse('Item Successfully deleted', [], 200, 'success');
