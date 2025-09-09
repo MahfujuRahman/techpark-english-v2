@@ -168,7 +168,8 @@ class Controller extends ControllersController
         $parent = SeminarReviews::find($parentId);
         $replyData = [
             'id' => uniqid('r_'),
-            'name' => config('app.name', 'Admin'),
+            'name' => 'Admin',
+            // 'name' => config('app.name', 'Admin'),
             'email' => auth()->user()->email ?? $request->email,
             'user_id' => auth()->id(),
             'rating' => 0,

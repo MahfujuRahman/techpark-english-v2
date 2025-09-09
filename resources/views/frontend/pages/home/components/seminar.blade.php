@@ -132,6 +132,7 @@
         <script>
             var seminar_modal = new bootstrap.Modal(document.getElementById('seminar_modal'));
 
+
             function showSeminarModel(seminar) {
                 window.seminar_id = seminar.id;
                 document.getElementById('seminar_form').reset();
@@ -157,10 +158,10 @@
                     return response;
                 }).then(res => {
                     if (res.status === 422) {
+                        res.data.err_message = 'Validation errors occurred. Please check the form.';
                         error_response(res.data)
                     }
                     if (res.status === 200) {
-
                         window.toaster("Registration for the seminar submitted!");
                         seminar_modal.toggle();
                         document.getElementById('seminar_form').reset();

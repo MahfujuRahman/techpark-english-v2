@@ -60,12 +60,14 @@ class SeminerController extends Controller
         $validator = Validator::make(request()->all(), [
             'full_name' => ['required'],
             'phone_number' => ['required'],
-            'email' => ['email', 'nullable'],
+            'email' => ['email', 'required'],
             'address' => ['string'],
         ]);
 
         if ($validator->fails()) {
-            return response()->back()->with('error', 'Validation error occurred.');
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $seminar = new SeminarParticipants();
@@ -134,7 +136,7 @@ class SeminerController extends Controller
 
         // prevent submitting reviews before the seminar has finished
         if ($now->lt($seminarTime)) {
-           return redirect()->back()->with('error', 'Reviews can only be submitted after the Seminar has finished.');
+            return redirect()->back()->with('error', 'Reviews can only be submitted after the Seminar has finished.');
         }
 
         // Save the top-level review. Initialize comment_reply as empty JSON array.
