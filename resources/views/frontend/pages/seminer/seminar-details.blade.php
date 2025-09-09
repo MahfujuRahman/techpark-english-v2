@@ -25,7 +25,6 @@
                         <div class="title_image">
                             <img src="/{{ $seminar->poster }}" alt="tech park it">
                         </div>
-
                         <div class="timer seminar-time" style="margin-top: 20px;">
                             <h3>
                                 <strong>
@@ -168,8 +167,6 @@
                             @include('frontend.pages.seminer.partials._review', ['review' => $review])
                         @endforeach
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -179,8 +176,7 @@
     <script>
         setTimeout(function() {
             timezz(document.querySelector('.timer'), {
-                //'Dec 01, 2024 20:00:00' 
-                date: `{{ Carbon\Carbon::parse($seminar->date_time)->format('M d, Y h:i:s') }}`,
+                date: `{{ Carbon\Carbon::parse($seminar->date_time)->format('M d, Y H:i:s') }}`,
                 pause: false,
                 stopOnZero: true,
                 beforeCreate() {},

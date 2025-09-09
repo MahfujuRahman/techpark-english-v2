@@ -60,7 +60,7 @@ class DataStoreValidation extends FormRequest
                 'required',
                 'sometimes',
                 'date',
-                'after:' . \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+                'after:' . \Carbon\Carbon::now(env('TIMEZONE', config('app.timezone', 'UTC')))->format('Y-m-d H:i:s'),
             ],
             'promo_video' => 'required | sometimes',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],

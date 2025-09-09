@@ -40,11 +40,11 @@
                     <div class="date_line_area date_line_area_copy">
 
                         @php
-                        $date1 = \Carbon\Carbon::now(); 
+                        $date1 = \Carbon\Carbon::now('Asia/Dhaka'); 
                         $date2 = \Carbon\Carbon::parse($item->date_time);
 
                         $diff = $date1->diffInDays($date2);
-
+               
                        @endphp
 
                         <div class="date date_copy">

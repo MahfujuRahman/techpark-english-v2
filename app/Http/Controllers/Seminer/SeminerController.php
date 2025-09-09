@@ -110,17 +110,31 @@ class SeminerController extends Controller
             'rating' => ['required', 'integer', 'between:1,5'],
             'comment' => ['required', 'string'],
         ];
+
         if (!auth()->check()) {
             $rules['name'] = ['required', 'string'];
             $rules['email'] = ['required', 'email'];
         }
 
         $validator = Validator::make(request()->all(), $rules);
+
         if ($validator->fails()) {
             return response()->json([
                 'err_message' => 'validation error',
                 'errors' => $validator->errors(),
             ], 422);
+        }
+
+        // load seminar (even if past) so we can check its date/time
+        $seminar = Seminars::find(request()->seminar_id);
+
+        $tz = env('TIMEZONE', config('app.timezone', 'UTC'));
+        $seminarTime = Carbon::parse($seminar->date_time, $tz);
+        $now = Carbon::now($tz);
+
+        // prevent submitting reviews before the seminar has finished
+        if ($now->lt($seminarTime)) {
+           return redirect()->back()->with('error', 'Reviews can only be submitted after the Seminar has finished.');
         }
 
         // Save the top-level review. Initialize comment_reply as empty JSON array.
