@@ -183,7 +183,7 @@
                                 <div class="form-group">
                                     <label for="first_class_date" class="form-label">First Class Date</label>
                                     <input 
-                                        type="datetime-local" 
+                                        type="date" 
                                         id="first_class_date"
                                         v-model="formData.first_class_date"
                                         class="form-control"
@@ -437,7 +437,13 @@ export default {
                 this.formData.admission_end_date = this.formatDateTimeForInput(this.batchData.admission_end_date);
             }
             if (this.batchData.first_class_date) {
-                this.formData.first_class_date = this.formatDateTimeForInput(this.batchData.first_class_date);
+                if (this.batchData.first_class_date) {
+                    const d = new Date(this.batchData.first_class_date);
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    this.formData.first_class_date = `${year}-${month}-${day}`; // YYYY-MM-DD (date only)
+                }
             }
         },
         
