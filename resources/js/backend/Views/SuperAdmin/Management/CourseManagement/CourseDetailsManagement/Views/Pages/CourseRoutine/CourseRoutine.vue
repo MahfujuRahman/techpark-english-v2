@@ -490,6 +490,7 @@ export default {
         formatDay(date) {
             if (!date) return '';
             const d = new Date(date);
+            console.log(d.getDate().toString().padStart(2, '0'));
             return d.getDate().toString().padStart(2, '0');
         },
 

@@ -238,8 +238,8 @@
                                             <tbody>
                                                 @foreach ($routine as $class_routine)
                                                     <tr>
-                                                        <td>ক্লাস
-                                                            {{ $class_routine->class ? $class_routine->class->class_no : '' }}
+                                                        <td>
+                                                            {{ $loop->iteration }}
                                                         </td>
                                                         <td>{{ \Carbon\Carbon::parse($class_routine->date)->format('d F') }}
                                                             -
@@ -247,7 +247,7 @@
                                                             -
                                                             {{ \Carbon\Carbon::parse($class_routine->date)->format('Y') }}
                                                         </td>
-                                                        <td>রাত
+                                                        <td>
                                                             {{ \Carbon\Carbon::parse($class_routine->time)->format('g:i A') }}
                                                         </td>
                                                         <td>
